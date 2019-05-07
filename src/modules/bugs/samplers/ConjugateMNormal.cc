@@ -31,9 +31,45 @@ using std::string;
 namespace jags {
 namespace bugs {
 
+    int randomsample_full(double *x, double const *b, double const *L,
+			  unsigned long nrow, RNG *rng)
+    {
+	// L is the Cholesky decomposition of precision matrix A
+	// A = L %*% t(L)
+	
+	// Copy b as its value will be overwritten in LAPACK calls below
+	vector<double> bcopy(nrow);
+	copy(b, b+nrow, bcopy.begin());
+
+	int one = 1;
+	int info = 0;
+	int nr = asInteger(nrow);
+
+	//solve A %*% x = b to get posterior mean. The solution will
+	//be in bcopy after the call to dpotrs.
+	F77_DPOTRS("L", &nr, &one, L, &nr, bcopy.data(), &nr, &info);
+	if (info != 0) return info;
+	
+	//Use the cholesky factorization L to generate a multivariate
+	//normal random vector with mean 0 and precision A.
+	vector<double> eps(nrow);
+	for (unsigned long i = 0; i < nrow; ++i) {
+	    eps[i] = rng->normal();
+	}
+	F77_DTRSV("L", "T", "N", &nr, L, &nr, eps.data(), &one);
+	
+	// Copy back sampled values
+	for (unsigned int i = 0; i < nrow; ++i) {
+	    x[i] += bcopy[i] + eps[i];
+	}
+	return info;
+    }
+
     /* Sample partially observed multivariate normal */
-    int randomsample(double *x, double const *b, double const *A, unsigned long nrow,
-		     vector<bool> const &observed, unsigned long nobs, RNG *rng)
+    int randomsample_part(double *x, double const *b, double const *A,
+			  unsigned long nrow,
+			  vector<bool> const &observed, unsigned long nobs,
+			  RNG *rng)
     {
 	unsigned long nfree = nrow - nobs;
 	unsigned long N = nfree*nfree;
@@ -55,7 +91,8 @@ namespace bugs {
 		    unsigned long q = 0;
 		    for (unsigned long j = 0; j < nrow; ++j) {
 			if (!observed[j]) {
-			    Af[p * nfree + q++] = A[i * nrow + j];
+			    Af[p * nfree + q] = A[i * nrow + j];
+			    q++;
 			}
 		    }
 		    bf[p++] = b[i];
@@ -69,7 +106,7 @@ namespace bugs {
 
 	//solve Af %*% x = bf to get posterior mean. The solution will
 	//be in bf after the call to dpotrs.
-//	F77_DPOTRS("L", &nf, &one, Af.data(), &nf, bf.data(), &nf, &info);
+	F77_DPOTRS("L", &nf, &one, Af.data(), &nf, bf.data(), &nf, &info);
 	if (info != 0) return info;
 	
 	//Af now holds the Cholesky factorization of Af. Use
@@ -79,7 +116,7 @@ namespace bugs {
 	for (unsigned int i = 0; i < nfree; ++i) {
 	    eps[i] = rng->normal();
 	}
-//	F77_DTRSV("L", "T", "N", &nfree, Af.data(), eps.data(), &one);
+	F77_DTRSV("L", "T", "N", &nf, Af.data(), &nf, eps.data(), &one);
 		  
 	// Copy back sampled values
 	unsigned long p = 0;
@@ -339,25 +376,26 @@ void ConjugateMNormal::update(unsigned int chain, RNG *rng) const
        We have to take a copy of A as it is overwritten during
        the call to DPOSV. The result is stored in b
     */
-    vector<double> F(A);
+    vector<double> L(A);
 
     int one = 1;
     int info;
     int ni = asInteger(nrow);
     
-    F77_DPOSV ("L", &ni, &one, F.data(), &ni, b.data(), &ni, &info);
+    F77_DPOSV ("L", &ni, &one, L.data(), &ni, b.data(), &ni, &info);
     if (info != 0) {
 	throwNodeError(snode,
 		       "unable to solve linear equations in ConjugateMNormal");
     }
 
-    //Shift origin back to original scale
+    //FIXME???
+    //Shift origin back to original scale???
     for (unsigned long i = 0; i < nrow; ++i) {
 	b[i] += xold[i];
     }
     vector<double> xnew(nrow);
     //NB. This uses the lower triangle of A
-    DMNorm::randomsample(xnew.data(), b.data(), A.data(), true, nrow, rng);
+    //randomsample(xnew.data(), b.data(), A.data(), nrow, snode->observedMask(), nobs, rng);
     _gv->setValue(xnew, chain);
 }
 

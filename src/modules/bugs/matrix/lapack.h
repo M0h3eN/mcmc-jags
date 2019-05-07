@@ -21,6 +21,7 @@
 #define F77_DTRTRI F77_FUNC(dtrtri, DTRTRI)
 #define F77_DTRMM  F77_FUNC(dtrmm, DTRMM)
 #define F77_DSYRK  F77_FUNC(dsyrk, DSYRK)
+#define F77_DPOTRS F77_FUNC(dpotrs, DPOTRS)
     
 extern "C" {
 /*
@@ -50,10 +51,15 @@ extern "C" {
 		    int* info);
 
     void F77_DPOTRF (const char *uplo, const int *n, double *a,
-		     const int *lda, const int *info);
+		     const int *lda, int *info);
 
     void F77_DPOTRI (const char *uplo, const int *n, double *a,
-		     const int *lda, const int *info);
+		     const int *lda, int *info);
+
+    void F77_DPOTRS (const char *uplo, const int *n, const int *nrhs,
+		     double const *a, const int *lda,
+		     double *b, const int *ldb,
+		     int *info);
 
     double F77_DLANGE (const char *norm, const int *m, const int *n,
 		       const double *a, const int *lda, double *work);
@@ -106,6 +112,10 @@ extern "C" {
 		   const int *k,
 		   const double *alpha, const double *a, const int *lda,
 		   const double *beta, double *c, const int *ldc);
+
+    void F77_DTRSV (const char *uplo, const char *trans, const char *diag,
+		    const int *n, const double *a, const int *lda,
+		    double *x, const int *incx);
 }
 
 #endif
