@@ -10,12 +10,14 @@
 #include <module/ModuleError.h>
 #include <util/integer.h>
 
+#include "blas.h"
 #include "lapack.h"
 
 #include <set>
 #include <vector>
 #include <cmath>
 #include <string>
+#include <algorithm>
 
 #include "ConjugateMNormal.h"
 #include "DMNorm.h"
@@ -27,6 +29,7 @@ using std::vector;
 using std::set;
 using std::sqrt;
 using std::string;
+using std::count;
 
 namespace jags {
 namespace bugs {
@@ -45,18 +48,19 @@ namespace bugs {
 	int info = 0;
 	int nr = asInteger(nrow);
 
-	//solve A %*% x = b to get posterior mean. The solution will
-	//be in bcopy after the call to dpotrs.
-	F77_DPOTRS("L", &nr, &one, L, &nr, bcopy.data(), &nr, &info);
+	//solve A %*% x = b (using the Cholesky factorization L of A)
+	//to get the posterior mean. The solution will be in bcopy
+	//after the call to dpotrs.
+	jags_dpotrs("L", &nr, &one, L, &nr, bcopy.data(), &nr, &info);
 	if (info != 0) return info;
 	
-	//Use the cholesky factorization L to generate a multivariate
+	//Use the Cholesky factorization L to generate a multivariate
 	//normal random vector with mean 0 and precision A.
 	vector<double> eps(nrow);
 	for (unsigned long i = 0; i < nrow; ++i) {
 	    eps[i] = rng->normal();
 	}
-	F77_DTRSV("L", "T", "N", &nr, L, &nr, eps.data(), &one);
+	jags_dtrsv("L", "T", "N", &nr, L, &nr, eps.data(), &one);
 	
 	// Copy back sampled values
 	for (unsigned int i = 0; i < nrow; ++i) {
@@ -68,35 +72,24 @@ namespace bugs {
     /* Sample partially observed multivariate normal */
     int randomsample_part(double *x, double const *b, double const *A,
 			  unsigned long nrow,
-			  vector<bool> const &observed, unsigned long nobs,
-			  RNG *rng)
+			  vector<bool> const &observed, RNG *rng)
     {
-	unsigned long nfree = nrow - nobs;
+	unsigned long nfree = count(observed.begin(), observed.end(), false);
 	unsigned long N = nfree*nfree;
 
 	// Copy Af = A[f,f], bf = b[f] where f represents indices of
 	// free (unobserved) elements
 	vector<double> Af(N), bf(nfree);
-	if (nobs == 0) {
-	    //Completely free
-	    copy(b, b + nrow, bf.begin());
-	    copy(A, A + N, Af.begin());
-	}
-	else {
-	    //Partly observed, use boolean vector "observed" to find
-	    //free elements
-	    unsigned long p = 0;
-	    for (unsigned long i = 0; i < nrow; ++i) {
-		if (!observed[i]) {
-		    unsigned long q = 0;
-		    for (unsigned long j = 0; j < nrow; ++j) {
-			if (!observed[j]) {
-			    Af[p * nfree + q] = A[i * nrow + j];
-			    q++;
-			}
+	unsigned long p = 0;
+	for (unsigned long i = 0; i < nrow; ++i) {
+	    if (!observed[i]) {
+		unsigned long q = 0;
+		for (unsigned long j = 0; j < nrow; ++j) {
+		    if (!observed[j]) {
+			Af[p * nfree + q++] = A[i * nrow + j];
 		    }
-		    bf[p++] = b[i];
 		}
+		bf[p++] = b[i];
 	    }
 	}
 
@@ -106,7 +99,7 @@ namespace bugs {
 
 	//solve Af %*% x = bf to get posterior mean. The solution will
 	//be in bf after the call to dpotrs.
-	F77_DPOTRS("L", &nf, &one, Af.data(), &nf, bf.data(), &nf, &info);
+	jags_dposv("L", &nf, &one, Af.data(), &nf, bf.data(), &nf, &info);
 	if (info != 0) return info;
 	
 	//Af now holds the Cholesky factorization of Af. Use
@@ -116,11 +109,10 @@ namespace bugs {
 	for (unsigned int i = 0; i < nfree; ++i) {
 	    eps[i] = rng->normal();
 	}
-	F77_DTRSV("L", "T", "N", &nf, Af.data(), &nf, eps.data(), &one);
+	jags_dtrsv("L", "T", "N", &nf, Af.data(), &nf, eps.data(), &one);
 		  
 	// Copy back sampled values
-	unsigned long p = 0;
-	for (unsigned int i = 0; i < nrow; ++i) {
+	for (unsigned int i = 0, p = 0; i < nrow; ++i) {
 	    if (!observed[i]) {
 		x[i] += bf[p] + eps[p];
 		++p;
@@ -283,11 +275,11 @@ void ConjugateMNormal::update(unsigned int chain, RNG *rng) const
 	    double const *tau = stoch_children[j]->parents()[1]->value(chain);
 	    double alpha = 1;
 
-	    F77_DAXPY (&Ni, &alpha, tau, &i1, A.data(), &i1);
+	    jags_daxpy (&Ni, &alpha, tau, &i1, A.data(), &i1);
 	    for (unsigned long i = 0; i < nrow; ++i) {
 		delta[i] = Y[i] - xold[i];
 	    }
-	    F77_DGEMV ("N", &ni, &ni, &alpha, tau, &ni, delta.data(), &i1,
+	    jags_dgemv ("N", &ni, &ni, &alpha, tau, &ni, delta.data(), &i1,
 		       &d1, b.data(), &i1);
 	}
     }
@@ -341,25 +333,25 @@ void ConjugateMNormal::update(unsigned int chain, RNG *rng) const
 	    if (nrow_child == 1) {
 		// Scalar children: normal
 		double alpha = tau[0];
-		F77_DSYR("L", &ni, &alpha, beta_j, &i1, A.data(), &ni);
+		jags_dsyr("L", &ni, &alpha, beta_j, &i1, A.data(), &ni);
 		alpha *= (Y[0] - mu[0]);
-		F77_DAXPY(&ni, &alpha, beta_j, &i1, b.data(), &i1);
+		jags_daxpy(&ni, &alpha, beta_j, &i1, b.data(), &i1);
 	    }
 	    else {
 		// Vector children: multivariate normal
 		double alpha = 1;
 		int nc = asInteger(nrow_child);
 
-		F77_DSYMM("R", "L", &ni, &nc, &alpha, tau,
-                          &nc, beta_j, &ni, &zero, C.data(), &ni);
+		jags_dsymm("R", "L", &ni, &nc, &alpha, tau,
+			   &nc, beta_j, &ni, &zero, C.data(), &ni);
 
 		for (unsigned int i = 0; i < nrow_child; ++i) {
 		    delta[i] = Y[i] - mu[i];
 		}
-		F77_DGEMV("N", &ni, &nc, &d1, C.data(), &ni,
-			  delta.data(), &i1, &d1, b.data(), &i1);
-		F77_DGEMM("N","T", &ni, &ni, &nc,
-			  &d1, C.data(), &ni, beta_j, &ni, &d1, A.data(), &ni);
+		jags_dgemv("N", &ni, &nc, &d1, C.data(), &ni,
+			   delta.data(), &i1, &d1, b.data(), &i1);
+		jags_dgemm("N","T", &ni, &ni, &nc,
+			   &d1, C.data(), &ni, beta_j, &ni, &d1, A.data(), &ni);
 	    }
 	       
 	    beta_j += nrow_child * nrow;
@@ -382,20 +374,23 @@ void ConjugateMNormal::update(unsigned int chain, RNG *rng) const
     int info;
     int ni = asInteger(nrow);
     
-    F77_DPOSV ("L", &ni, &one, L.data(), &ni, b.data(), &ni, &info);
+    jags_dposv ("L", &ni, &one, L.data(), &ni, b.data(), &ni, &info);
     if (info != 0) {
 	throwNodeError(snode,
 		       "unable to solve linear equations in ConjugateMNormal");
     }
 
-    //FIXME???
-    //Shift origin back to original scale???
-    for (unsigned long i = 0; i < nrow; ++i) {
-	b[i] += xold[i];
-    }
     vector<double> xnew(nrow);
-    //NB. This uses the lower triangle of A
-    //randomsample(xnew.data(), b.data(), A.data(), nrow, snode->observedMask(), nobs, rng);
+    copy(xold, xold + nrow, xnew.begin());
+
+    if (anyTrue(*snode->observedMask())) {
+	randomsample_part(xnew.data(), b.data(), A.data(), nrow,
+			  *snode->observedMask(), rng);
+    }
+    else {
+	randomsample_full(xnew.data(), b.data(), L.data(), nrow, rng);
+    }
+
     _gv->setValue(xnew, chain);
 }
 
