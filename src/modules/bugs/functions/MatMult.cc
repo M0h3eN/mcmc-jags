@@ -4,7 +4,7 @@
 #include <util/dim.h>
 #include <util/integer.h>
 
-#include "lapack.h"
+#include "blas.h"
 
 using std::vector;
 
@@ -40,8 +40,8 @@ namespace bugs {
 	}
     
 	double one = 1, zero = 0;
-	F77_DGEMM ("N", "N", &d1, &d3, &d2, &one,
-		   args[0], &d1, args[1], &d2, &zero, value, &d1);
+	jags_dgemm ("N", "N", &d1, &d3, &d2, &one,
+		    args[0], &d1, args[1], &d2, &zero, value, &d1);
     }
 
     bool MatMult::isDifferentiable(unsigned long i) const

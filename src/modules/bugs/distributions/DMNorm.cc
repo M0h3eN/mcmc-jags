@@ -82,11 +82,11 @@ void DMNorm::randomsample(double *x, double const *mu, double const *T,
   int lwork = -1;
   int nr = asInteger(nrow);
   // Workspace query
-  F77_DSYEV ("V", "L", &nr, &Tcopy[0], &nr, &w[0], &worktest, &lwork, &info);
+  jags_dsyev ("V", "L", &nr, &Tcopy[0], &nr, &w[0], &worktest, &lwork, &info);
   // Now get eigenvalues/vectors with optimal work space
   lwork = static_cast<int>(worktest);
   vector<double> work(static_cast<unsigned long>(lwork));
-  F77_DSYEV ("V", "L", &nr, &Tcopy[0], &nr, &w[0], &work[0], &lwork, &info);
+  jags_dsyev ("V", "L", &nr, &Tcopy[0], &nr, &w[0], &work[0], &lwork, &info);
 
   /* Generate independent random normal variates, scaled by
      the eigen values. We reuse the array w. */

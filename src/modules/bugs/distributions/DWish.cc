@@ -6,6 +6,7 @@
 #include <module/ModuleError.h>
 #include <util/integer.h>
 
+#include "blas.h"
 #include "lapack.h"
 #include "matrix.h"
 #include "DWish.h"
@@ -84,11 +85,11 @@ void DWish::randomSample(double *X,
     copy(R, R + length, C.rbegin());
     int info = 0;
     int ni = asInteger(nrow);
-    F77_DPOTRF("L", &ni, &C[0], &ni, &info);
+    jags_dpotrf("L", &ni, &C[0], &ni, &info);
     if (info != 0) {
 	jags::throwRuntimeError("Failed to get Cholesky decomposition of R");
     }
-    F77_DTRTRI("L", "N", &ni, &C[0], &ni, &info);
+    jags_dtrtri("L", "N", &ni, &C[0], &ni, &info);
     if (info != 0) {
 	jags::throwRuntimeError("Failed to invert Cholesky decomposition of R");
     }
@@ -113,11 +114,11 @@ void DWish::randomSample(double *X,
 
     // Z = Z %*% C 
     double one = 1;
-    F77_DTRMM("R", "U", "N", "N", &ni, &ni, &one, &C[0], &ni, &Z[0], &ni);
+    jags_dtrmm("R", "U", "N", "N", &ni, &ni, &one, &C[0], &ni, &Z[0], &ni);
 
     // X = t(Z) %*% Z
     double zero = 0;
-    F77_DSYRK("U", "T", &ni, &ni, &one, &Z[0], &ni, &zero, X, &ni);
+    jags_dsyrk("U", "T", &ni, &ni, &one, &Z[0], &ni, &zero, X, &ni);
 
     // Copy lower triangle of X from upper triangle
     for (unsigned long i = 0; i < nrow; ++i) {

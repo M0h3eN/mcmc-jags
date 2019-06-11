@@ -3,7 +3,7 @@
 #include <util/integer.h>
 
 #include "InProd.h"
-#include "lapack.h"
+#include "blas.h"
 
 #include <algorithm>
 
@@ -21,7 +21,7 @@ namespace bugs {
 			      vector<unsigned long> const &lengths) const
     {
         int one = 1, N = asInteger(lengths[0]);
-        return F77_DDOT(&N, args[0], &one, args[1], &one);
+        return jags_ddot(&N, args[0], &one, args[1], &one);
     }
 
     bool InProd::isDifferentiable(unsigned long i) const

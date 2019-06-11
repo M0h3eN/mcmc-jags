@@ -1,0 +1,104 @@
+module jags_blas
+  use, intrinsic :: iso_c_binding, only: c_char, c_int, c_double
+  implicit none
+  
+contains
+
+  SUBROUTINE JAGS_DSYMM(SIDE,UPLO,M,N,ALPHA,A,LDA,B,LDB,BETA,C,LDC)&
+       & BIND(C, NAME="jags_dsymm")
+    EXTERNAL :: DSYMM
+    REAL(c_double), INTENT(IN) :: ALPHA,BETA
+    INTEGER(c_int), INTENT(IN) :: LDA,LDB,LDC,M,N
+    CHARACTER(c_char), INTENT(IN) :: SIDE,UPLO
+    REAL(c_double), INTENT(IN) :: A(LDA,*),B(LDB,*)
+    REAL(c_double), INTENT(INOUT) :: C(LDC,*)
+    CALL DSYMM(SIDE,UPLO,M,N,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+  END SUBROUTINE JAGS_DSYMM
+
+  SUBROUTINE JAGS_DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)&
+       & BIND(C, NAME="jags_dgemv")
+    REAL(c_double), INTENT(IN) :: ALPHA,BETA
+    INTEGER(c_int), INTENT(IN) :: INCX,INCY,LDA,M,N
+    CHARACTER(c_char), INTENT(IN) :: TRANS
+    REAL(c_double), INTENT(IN) :: A(LDA,*),X(*)
+    REAL(c_double), INTENT(INOUT) :: Y(*)
+    CALL DGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
+  END SUBROUTINE JAGS_DGEMV
+
+  SUBROUTINE JAGS_DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)&
+       & BIND(C, NAME="jags_dgemm")
+    REAL(c_double), INTENT(IN) :: ALPHA,BETA
+    INTEGER(c_int), INTENT(IN) :: K,LDA,LDB,LDC,M,N
+    CHARACTER(c_char), INTENT(IN) :: TRANSA,TRANSB
+    REAL(c_double), INTENT(IN) :: A(LDA,*),B(LDB,*)
+    REAL(c_double), INTENT(INOUT) :: C(LDC,*)
+    CALL DGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
+  END SUBROUTINE JAGS_DGEMM
+      
+  SUBROUTINE JAGS_DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)&
+       &BIND(C, NAME="jags_dsyr")
+    REAL(c_double), INTENT(IN) :: ALPHA
+    INTEGER(c_int), INTENT(IN) :: INCX,LDA,N
+    CHARACTER(c_char), INTENT(IN) :: UPLO
+    REAL(c_double), INTENT(INOUT) :: A(LDA,*)
+    REAL(c_double), INTENT(IN) :: X(*)
+    CALL DSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
+  END SUBROUTINE JAGS_DSYR
+
+  SUBROUTINE JAGS_DAXPY(N,DA,DX,INCX,DY,INCY)&
+       & BIND(C, NAME="jags_daxpy")
+    REAL(c_double), INTENT(IN) :: DA
+    INTEGER(c_int), INTENT(IN) :: INCX,INCY,N
+    REAL(c_double), INTENT(IN) :: DX(*)
+    REAL(c_double), INTENT(INOUT) :: DY(*)
+    CALL DAXPY(N,DA,DX,INCX,DY,INCY)
+  END SUBROUTINE JAGS_DAXPY
+  
+  SUBROUTINE JAGS_DSCAL(N,DA,DX,INCX)&
+       & BIND(C, NAME="jags_dscal")
+    REAL(c_double), INTENT(IN) :: DA
+    INTEGER(c_int), INTENT(IN) :: INCX,N
+    REAL(c_double), INTENT(INOUT) :: DX(*)
+    CALL DSCAL(N,DA,DX,INCX)
+  END SUBROUTINE JAGS_DSCAL
+  
+  FUNCTION JAGS_DDOT(N,DX,INCX,DY,INCY)&
+       & BIND(C, NAME="jags_ddot")
+    REAL(c_double) :: JAGS_DDOT
+    INTEGER(c_int), INTENT(IN) :: INCX,INCY,N
+    REAL(c_double), INTENT(IN) :: DX(*),DY(*)
+    REAL(c_double), EXTERNAL :: DDOT
+    JAGS_DDOT = DDOT(N,DX,INCX,DY,INCY)
+  END FUNCTION JAGS_DDOT
+  
+  SUBROUTINE JAGS_DTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)&
+       & BIND(C, NAME="jags_dtrmm")
+    REAL(c_double), INTENT(IN) :: ALPHA
+    INTEGER(c_int), INTENT(IN) :: LDA,LDB,M,N
+    CHARACTER(c_char), INTENT(IN) :: DIAG,SIDE,TRANSA,UPLO
+    REAL(c_double), INTENT(IN) :: A(LDA,*)
+    REAL(c_double), INTENT(INOUT) :: B(LDB,*)
+    CALL DTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
+  END SUBROUTINE JAGS_DTRMM
+  
+  SUBROUTINE JAGS_DSYRK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC)&
+       & BIND(C, NAME="jags_dsyrk")
+    REAL(c_double), INTENT(IN) :: ALPHA,BETA
+    INTEGER(c_int), INTENT(IN) :: K,LDA,LDC,N
+    CHARACTER(c_char), INTENT(IN) :: TRANS,UPLO
+    REAL(c_double), INTENT(IN) :: A(LDA,*)
+    REAL(c_double), INTENT(INOUT) :: C(LDC,*)
+    CALL DSYRK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC)
+  END SUBROUTINE JAGS_DSYRK
+  
+  SUBROUTINE JAGS_DTRSV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)&
+       & BIND(C, NAME="jags_dtrsv")
+    INTEGER(c_int), INTENT(IN) :: INCX,LDA,N
+    CHARACTER(c_char), INTENT(IN) :: DIAG,TRANS,UPLO
+    REAL(c_double), INTENT(IN) :: A(LDA,*)
+    REAL(c_double), INTENT(INOUT) :: X(*)
+    CALL DTRSV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)
+  END SUBROUTINE JAGS_DTRSV
+  
+endmodule jags_blas
+

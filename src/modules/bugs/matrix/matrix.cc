@@ -32,13 +32,13 @@ double logdet(double const *a, unsigned long n)
   double worktest = 0;
   int info = 0;
   int ni = asInteger(n);
-  F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &worktest, &lwork, &info);
+  jags_dsyev("N","L", &ni, &acopy[0], &ni, &w[0], &worktest, &lwork, &info);
   if (info != 0) {
     throwRuntimeError("unable to calculate workspace size for dsyev");
   }
   lwork = static_cast<int>(worktest);
   vector<double> work(static_cast<unsigned long>(lwork));
-  F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &work[0], &lwork, &info);
+  jags_dsyev("N","L", &ni, &acopy[0], &ni, &w[0], &work[0], &lwork, &info);
   if (info != 0) {
     throwRuntimeError("unable to calculate eigenvalues in dsyev");
   }
@@ -151,14 +151,14 @@ bool inverse_chol (double *X, double const *A, unsigned long n)
 
     int info = 0;
     int ni = asInteger(n);
-    F77_DPOTRF ("L", &ni, X, &ni, &info);
+    jags_dpotrf ("L", &ni, X, &ni, &info);
     if (info < 0) {
 	throwLogicError("Illegal argument in inverse_chol");
     }
     else if (info > 0) {
 	throwRuntimeError("Cannot invert matrix: not positive definite");
     }
-    F77_DPOTRI ("L", &ni, X, &ni, &info); 
+    jags_dpotri ("L", &ni, X, &ni, &info); 
     if (info != 0) {
 	throwRuntimeError("Cannot invert symmetric positive definite matrix");
     }
@@ -191,7 +191,7 @@ bool inverse_lu (double *X, double const *A, unsigned long n)
     int info = 0;
     int ni = asInteger(n);
     vector<int> ipiv(n);
-    F77_DGESV (&ni, &ni, &Acopy[0], &ni, &ipiv[0], X, &ni, &info);
+    jags_dgesv (&ni, &ni, &Acopy[0], &ni, &ipiv[0], X, &ni, &info);
     return info == 0;
 }
 
