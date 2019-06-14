@@ -93,5 +93,21 @@ double DNorm::randomSample(vector<double const *> const &par,
 	return ((mu0 - mu1) * (mu0 - mu1) * tau1 + tau1/tau0 - 1 + 
 		log(tau0/tau1)) / 2;
     }
+
+    double DNorm::score(double x, vector<double const *> const &par,
+			unsigned long i) const
+    {
+	double tau = TAU(par);
+	double mu = MU(par);
+	
+	if (i == 0) {
+	    return tau*(x - mu);
+	}
+	else {
+	    return (1/tau - (x-mu)*(x-mu))/2;
+	}
+	
+    }
+
     
 }}

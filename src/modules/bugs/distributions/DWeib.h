@@ -29,6 +29,8 @@ public:
    * Checks that a > 0, b > 0
    */
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
+  double score(double x, std::vector<double const *> const &parameters,
+	       unsigned long i) const;
 };
 
 }}

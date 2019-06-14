@@ -39,6 +39,8 @@ class DNorm : public RScalarDist {
 		      RNG *rng) const;
   double KL(std::vector<double const *> const &par0,
 	    std::vector<double const *> const &par1) const;
+  double score(double x, std::vector<double const *> const &parameters,
+	       unsigned long i) const;
 };
 
 }}

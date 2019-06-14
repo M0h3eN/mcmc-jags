@@ -106,4 +106,17 @@ double DDexp::r(vector<double const *> const &par, RNG *rng) const
 	return r * (delta + exp(-delta)) - 1 - log(r);
     }
 
+    bool DDexp::hasScore(unsigned long i) const
+    {
+	//Score exists with respect to scale parameter, but not wrt
+	//location when x == mu.
+	return i == 1;
+    }
+    
+    double DDexp::score(double x, vector<double const *> const &parameters,
+			unsigned long i) const
+    {
+	return SCALE(parameters) - fabs(x - MU(parameters));
+    }
+
 }}

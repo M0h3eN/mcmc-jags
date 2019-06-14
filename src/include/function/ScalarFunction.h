@@ -43,7 +43,7 @@ public:
     bool isPower(std::vector<bool> const &mask,
 		 std::vector<bool> const &isfixed) const;
     /**
-     *
+     * FIXME
      */
     virtual double gradient(std::vector <double const *> const &args,
 			    unsigned long i) const;

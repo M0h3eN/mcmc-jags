@@ -30,6 +30,8 @@ class DExp : public RScalarDist {
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
   double KL(std::vector<double const *> const &par0,
 	    std::vector<double const *> const &par1) const;
+  double score(double x, std::vector<double const *> const &parameters,
+	       unsigned long i) const;
 };
 
 }}

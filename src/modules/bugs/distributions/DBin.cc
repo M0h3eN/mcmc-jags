@@ -105,4 +105,19 @@ double DBin::KL(vector<double const *> const &par0,
     }
 }
 
+    /*
+    bool DBin::hasScore(unsigned long i) const
+    {
+	return i == 0;
+    }
+    */
+    
+    double DBin::score(double x, vector<double const *> const &parameters,
+		       unsigned long i) const
+    {
+	double N = SIZE(parameters);
+	double p = PROB(parameters);
+	return x/p - (N - x)/(1 - p);
+    }
+
 }}

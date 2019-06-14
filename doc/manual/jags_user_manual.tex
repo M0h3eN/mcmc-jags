@@ -2983,6 +2983,7 @@ is parameterized in terms of the mean and the variance-covariance matrix.
 y[1:N] ~ dmnorm.vcov(mu[1:N], Sigma[1:N, 1:N])
 \end{verbatim}
 
+
 \subsubsection{Multivariate t}
 
 The multivariate t distribution is a generalization of the Student
@@ -3058,11 +3059,6 @@ weights and $k$ is an integer in the range $1 \ldots N$ giving the
 number of samples to draw. The outcome $y$, is a vector of binary
 indicators of length $N$, so that $y_i = 1$ if element $i$ has been
 sampled and $y_i = 0$ otherwise.
-
-There are currently no samplers in JAGS that can handle unobserved
-nodes with a \texttt{dsample} prior distribution. Hence this
-distribution can only be used for observed stochastic nodes.
-%FIXME: Add a sampler?
 
 There are currently no samplers in JAGS that can handle unobserved
 nodes with a \texttt{dsample} prior distribution. Hence this

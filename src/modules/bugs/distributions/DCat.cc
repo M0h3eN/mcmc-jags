@@ -8,6 +8,7 @@
 #include <cfloat>
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 
 #include <JRmath.h>
 
@@ -15,6 +16,8 @@ using std::min;
 using std::max;
 using std::vector;
 using std::max_element;
+using std::accumulate;
+using std::fill;
 
 #define PROB(par) (par[0])
 #define NCAT(lengths) (lengths[0])
@@ -137,5 +140,21 @@ unsigned long DCat::length(vector<unsigned long> const &) const
 	y -= (log(psum0) - log(psum1));
 	return y;
     }
+
+    void DCat::score(double *s, double const *x,
+		     vector<double const *> const &par,
+		     vector<unsigned long> const &lengths,
+		     unsigned long i) const
+    {
+	double const *prob = PROB(par);
+	unsigned long N = NCAT(lengths);
+	
+	double S = accumulate(prob, prob + N, 0.0);
+	fill(s, s+N, -1/S);
+
+	unsigned long y = static_cast<unsigned long>(*x) - 1;
+	s[y] += 1/prob[y];
+    }
+
 
 }}

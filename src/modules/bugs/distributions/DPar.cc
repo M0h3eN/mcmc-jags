@@ -105,4 +105,15 @@ bool DPar::isSupportFixed(vector<bool> const &fixmask) const
     return fixmask[1]; //Fixed if C is fixed
 }
 
+    bool DPar::hasScore(unsigned long i) const
+    {
+	return i == 0;
+    }
+    
+    double DPar::score(double x, vector<double const *> const &parameters,
+		       unsigned long i) const
+    {
+	1/ALPHA(parameters) + log(C(parameters)) - log(x);
+    }
+
 }}

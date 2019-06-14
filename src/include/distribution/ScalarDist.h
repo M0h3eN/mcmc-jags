@@ -118,7 +118,13 @@ class ScalarDist : public Distribution
    */
   virtual double KL(std::vector<double const *> const &,
 		    std::vector<double const *> const &) const;
-  
+  /**
+   * FIXME
+   * Add this virtual method after we have an implementation for all 
+   * sub-classes
+  virtual double score(double x, std::vector <double const *> const &args,
+		       unsigned long i) const = 0;
+  */
 };
 
 } /* namespace jags */

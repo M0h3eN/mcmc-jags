@@ -57,4 +57,20 @@ namespace bugs {
 	return rweibull2(SHAPE(par), RATE(par), rng);
     }
 
+    double DWeib::score(double x, vector<double const *> const &parameters,
+			unsigned long i) const
+    {
+	double shape = SHAPE(parameters);
+	double rate = RATE(parameters);
+	if (i == 0) {
+	    return 1/shape + log(x) - rate*shape*pow(x, shape - 1);
+	}
+	else if (i == 1) {
+	    return 1/rate - pow(x, shape);
+	}
+	else {
+	    return 0;
+	}
+    }
+
 }}

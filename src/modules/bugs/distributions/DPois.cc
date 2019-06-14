@@ -76,4 +76,10 @@ double DPois::r(vector<double const *> const &par, RNG *rng) const
 	return lambda0 * (log(lambda0) - log(lambda1)) - lambda0 + lambda1;
     }
 
+    double DPois::score(double x, vector<double const *> const &par,
+			unsigned long i) const
+    {
+	return x/LAMBDA(par) - 1;
+    }
+
 }}

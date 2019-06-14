@@ -31,6 +31,9 @@ class DPar : public RScalarDist {
    */
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
   bool isSupportFixed(std::vector<bool> const &fixmask) const;
+  bool hasScore(unsigned long i) const;
+  double score(double x, std::vector<double const *> const &parameters,
+	       unsigned long i) const;
 };
 
 }}

@@ -75,4 +75,18 @@ bool DBern::isDiscreteValued(vector<bool> const &) const
 	}
     }
 
+    double DBern::score(double x, vector<double const *> const &parameters,
+			unsigned long i) const
+    {
+	double s = 0;
+	if (x == 1) {
+	    s = 1/PROB(parameters);
+	}
+	else if (x == 0) {
+	    s = -1/(1 - PROB(parameters));
+	}
+	
+	return s;
+    }
+    
 }}
