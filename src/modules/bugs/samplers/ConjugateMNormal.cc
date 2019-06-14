@@ -34,87 +34,54 @@ using std::count;
 namespace jags {
 namespace bugs {
 
-    int randomsample_full(double *x, double const *b, double const *L,
-			  unsigned long nrow, RNG *rng)
+    /* 
+       Sample partially observed multivariate normal.
+    */
+    static int MNormSample(vector<double> &x,
+			   vector<double> &b, vector<double> &A,
+			   vector<bool> const &observed, RNG *rng)
     {
-	// L is the Cholesky decomposition of precision matrix A
-	// A = L %*% t(L)
-	
-	// Copy b as its value will be overwritten in LAPACK calls below
-	vector<double> bcopy(nrow);
-	copy(b, b+nrow, bcopy.begin());
-
-	int one = 1;
-	int info = 0;
-	int nr = asInteger(nrow);
-
-	//solve A %*% x = b (using the Cholesky factorization L of A)
-	//to get the posterior mean. The solution will be in bcopy
-	//after the call to dpotrs.
-	jags_dpotrs("L", &nr, &one, L, &nr, bcopy.data(), &nr, &info);
-	if (info != 0) return info;
-	
-	//Use the Cholesky factorization L to generate a multivariate
-	//normal random vector with mean 0 and precision A.
-	vector<double> eps(nrow);
-	for (unsigned long i = 0; i < nrow; ++i) {
-	    eps[i] = rng->normal();
-	}
-	jags_dtrsv("L", "T", "N", &nr, L, &nr, eps.data(), &one);
-	
-	// Copy back sampled values
-	for (unsigned int i = 0; i < nrow; ++i) {
-	    x[i] += bcopy[i] + eps[i];
-	}
-	return info;
-    }
-
-    /* Sample partially observed multivariate normal */
-    int randomsample_part(double *x, double const *b, double const *A,
-			  unsigned long nrow,
-			  vector<bool> const &observed, RNG *rng)
-    {
+	unsigned long nrow = x.size();
 	unsigned long nfree = count(observed.begin(), observed.end(), false);
-	unsigned long N = nfree*nfree;
 
-	// Copy Af = A[f,f], bf = b[f] where f represents indices of
-	// free (unobserved) elements
-	vector<double> Af(N), bf(nfree);
-	unsigned long p = 0;
-	for (unsigned long i = 0; i < nrow; ++i) {
-	    if (!observed[i]) {
-		unsigned long q = 0;
-		for (unsigned long j = 0; j < nrow; ++j) {
-		    if (!observed[j]) {
-			Af[p * nfree + q++] = A[i * nrow + j];
+	if (nfree < nrow) {
+	    //Pack the leading parts of matrix A and vector b with
+	    //elements corresponding to the free elements of x
+	    for (unsigned long i = 0, p = 0; i < nrow; ++i) {
+		if (!observed[i]) {
+		    for (unsigned long j = 0, q = 0; j < nrow; ++j) {
+			if (!observed[j]) {
+			    A[p * nrow + q++] = A[i * nrow + j];
+			}
 		    }
+		    b[p++] = b[i];
 		}
-		bf[p++] = b[i];
 	    }
 	}
 
 	int one = 1;
 	int info = 0;
 	int nf = asInteger(nfree);
+	int nr = asInteger(nrow);
 
-	//solve Af %*% x = bf to get posterior mean. The solution will
-	//be in bf after the call to dpotrs.
-	jags_dposv("L", &nf, &one, Af.data(), &nf, bf.data(), &nf, &info);
+	//Solve A %*% x = b to get the posterior mean. The solution
+	//will be in b after the call to dposv.
+	jags_dposv("L", &nf, &one, A.data(), &nr, b.data(), &nr, &info);
 	if (info != 0) return info;
 	
-	//Af now holds the Cholesky factorization of Af. Use
-	//this to generate a multivariate normal random vector with
-	//mean 0 and precision Af.
+	//After dposv, the leading nfree x nfree lower triangle of A
+	//holds the Cholesky factorization. Use it to generate a
+	//multivariate normal random vector with mean 0 and precision A
 	vector<double> eps(nfree);
-	for (unsigned int i = 0; i < nfree; ++i) {
-	    eps[i] = rng->normal();
+	for (unsigned long p = 0; p < nfree; ++p) {
+	    eps[p] = rng->normal();
 	}
-	jags_dtrsv("L", "T", "N", &nf, Af.data(), &nf, eps.data(), &one);
+	jags_dtrsv("L", "T", "N", &nf, A.data(), &nr, eps.data(), &one);
 		  
 	// Copy back sampled values
-	for (unsigned int i = 0, p = 0; i < nrow; ++i) {
+	for (unsigned long i = 0, p = 0; i < nrow; ++i) {
 	    if (!observed[i]) {
-		x[i] += bf[p] + eps[p];
+		x[i] += b[p] + eps[p];
 		++p;
 	    }
 	}
@@ -361,36 +328,12 @@ void ConjugateMNormal::update(unsigned int chain, RNG *rng) const
 	    delete [] betas;
 	}
     }
-
-
-    /* 
-       Solve the equation A %*% x = b to get the posterior mean.
-       We have to take a copy of A as it is overwritten during
-       the call to DPOSV. The result is stored in b
-    */
-    vector<double> L(A);
-
-    int one = 1;
-    int info;
-    int ni = asInteger(nrow);
-    
-    jags_dposv ("L", &ni, &one, L.data(), &ni, b.data(), &ni, &info);
-    if (info != 0) {
-	throwNodeError(snode,
-		       "unable to solve linear equations in ConjugateMNormal");
-    }
-
+   
     vector<double> xnew(nrow);
     copy(xold, xold + nrow, xnew.begin());
 
-    if (anyTrue(*snode->observedMask())) {
-	randomsample_part(xnew.data(), b.data(), A.data(), nrow,
-			  *snode->observedMask(), rng);
-    }
-    else {
-	randomsample_full(xnew.data(), b.data(), L.data(), nrow, rng);
-    }
-
+    // Note that A, b are overwritten here
+    MNormSample(xnew, b, A, *snode->observedMask(), rng);
     _gv->setValue(xnew, chain);
 }
 
