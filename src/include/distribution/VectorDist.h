@@ -52,6 +52,31 @@ class VectorDist : public Distribution
 		   std::vector<double const *> const &parameters,
 		   std::vector<unsigned long> const &lengths) const = 0;
     /**
+     * Draws a random sample from the distribution when some elements
+     * are observed. The random sample is conditional on the observed
+     * elements.
+     *
+     * @param x Array to which the sample values are written
+     *
+     * @param observed Logical vector indicating which elements of x
+     *        are obsered
+     *
+     * @param parameters Vector of parameter values at which to
+     *        evaluate the likelihood. This vector should be of length
+     *        npar().
+     *
+     * @param lengths Vector of lengths of the arrays in the argument
+     *        "parameters".
+     * 
+     * @param rng pseudo-random number generator to use.
+     *
+     * @exception length_error 
+     */
+    virtual void randomSample(double *x,
+			      std::vector<double const *> const &parameters,
+			      std::vector<unsigned long> const &lengths, 
+			      RNG *rng) const = 0;
+    /**
      * Draws a random sample from the distribution. 
      *
      * @param x Array to which the sample values are written
@@ -67,10 +92,12 @@ class VectorDist : public Distribution
      *
      * @exception length_error 
      */
-    virtual void randomSample(double *x,
+    /*
+    virtual void randomSample(double *x, std::vector<bool> const &observed,
 			      std::vector<double const *> const &parameters,
 			      std::vector<unsigned long> const &lengths, 
 			      RNG *rng) const = 0;
+    */
     /**
      * Returns the support of an unbounded distribution
      */

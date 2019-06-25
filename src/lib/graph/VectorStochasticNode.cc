@@ -5,6 +5,7 @@
 #include <distribution/VectorDist.h>
 #include <util/nainf.h>
 #include <util/dim.h>
+#include <util/logical.h>
 
 #include <vector>
 #include <string>
@@ -73,6 +74,19 @@ void VectorStochasticNode::randomSample(RNG *rng, unsigned int chain)
 {
     _dist->randomSample(_data + _length * chain, 
 			_parameters[chain], _lengths, rng);
+    /*
+    vector<bool> const &observed = *this->observedMask();
+    if (anyTrue(observed)) {
+	//Partly observed node
+	_dist->randomSample(_data + _length * chain, observed,
+			    _parameters[chain], _lengths, rng);
+    }
+    else {
+	//Fully unobserved node
+	_dist->randomSample(_data + _length * chain, 
+			    _parameters[chain], _lengths, rng);
+    }
+    */
 }
 
 bool VectorStochasticNode::checkParentValues(unsigned int chain) const

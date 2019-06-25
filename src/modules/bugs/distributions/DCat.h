@@ -24,6 +24,12 @@ public:
 		      std::vector<double const *> const &parameters,
 		      std::vector<unsigned long> const &lengths,
 		      RNG *rng) const;
+    //FIXME: Not really required
+    void randomSample(double *x, std::vector<bool> const &observed,
+		      std::vector<double const *> const &parameters,
+		      std::vector<unsigned long> const &lengths,
+		      RNG *rng) const;
+
     /**
      * Checks that all elements of p are positive
      */

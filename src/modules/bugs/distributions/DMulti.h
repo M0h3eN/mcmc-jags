@@ -26,7 +26,11 @@ public:
 		    std::vector<double const *> const &parameters,
 		    std::vector<unsigned long> const &lengths,
 		    RNG *rng) const;
-  /**
+  void randomSample(double *x, std::vector<bool> const &observed,
+		    std::vector<double const *> const &parameters,
+		    std::vector<unsigned long> const &lengths,
+		    RNG *rng) const;
+   /**
    * Checks that elements of p lie in range (0,1) and 
    * and sum to 1. Checks that N >= 1
    */

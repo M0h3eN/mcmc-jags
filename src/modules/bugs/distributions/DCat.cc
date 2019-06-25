@@ -93,6 +93,16 @@ void DCat::randomSample(double *x,
     *x  = i;
 }
 
+    void DCat::randomSample(double *x, vector<bool> const &observed, 
+			    vector<double const *> const &par,
+			    vector<unsigned long> const &lengths,
+			    RNG *rng) const
+    {
+	if (!observed[0]) {
+	    randomSample(x, par, lengths, rng);
+	}
+    }
+    
 void DCat::support(double *lower, double *upper,
 	           vector<double const *> const &,
 	           vector<unsigned long> const &lengths) const

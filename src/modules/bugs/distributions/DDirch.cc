@@ -116,6 +116,39 @@ void DDirch::randomSample(double *x,
     }
 }
 
+    void DDirch::randomSample(double *x, vector<bool> const &observed,
+			      vector<double const *> const &par,
+			      vector<unsigned long> const &len,
+			      RNG *rng) const
+    {
+	double const *alpha = ALPHA(par);
+	unsigned long length = LENGTH(len);
+
+	//Find sum constraint given observed elements
+	double S = 1.0;
+	for (unsigned long i = 0; i < observed.size(); ++i) {
+	    if (observed[i]) {
+		S -= x[i];
+	    }
+	}
+	if (S < 0) S = 0.0;
+	
+	// Generate independent gamma random variables, then normalize
+	double sumx = 0.0;
+	for (unsigned long i = 0; i < length; i++) {
+	    if (!observed[i]) {
+		x[i] = (alpha[i]==0) ? 0 : rgamma(alpha[i], 1, rng);
+		sumx += x[i];
+	    }
+	}
+	
+	for (unsigned long j = 0; j < length; j++) {
+	    if (!observed[j]) {
+		x[j] *= S/sumx;
+	    }
+	}
+    }
+
 void DDirch::support(double *lower, double *upper,
 		vector<double const *> const &par,
 		vector<unsigned long> const &len) const
