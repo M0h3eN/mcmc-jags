@@ -17,9 +17,9 @@ using std::fabs;
 static vector<double> makePower(unsigned int max_level, double max_temp)
 {
     vector<double> pwr(max_level + 1);
-    double delta = log(max_temp) / max_level;
+    double delta = - log(max_temp) / max_level;
     for (unsigned int t = 0; t <= max_level; ++t) {
-	pwr[t] = exp(-t * delta);
+	pwr[t] = exp(delta * t);
     }
     return pwr;
 }
