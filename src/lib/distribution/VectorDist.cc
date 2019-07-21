@@ -1,6 +1,8 @@
 #include <config.h>
 #include <distribution/VectorDist.h>
 #include <util/nainf.h>
+//
+#include <distribution/DistError.h>
 
 using std::string;
 using std::vector;
@@ -10,7 +12,15 @@ namespace jags {
 VectorDist::VectorDist(string const &name, unsigned int npar)
   : Distribution(name, npar)
 {
+
 }
+    void VectorDist::randomSample(double *x, vector<bool> const &observed,
+				  vector<double const *> const &parameters,
+				  vector<unsigned long> const &lengths, 
+				  RNG *rng) const
+    {
+	throw DistError(this, "Cannot sample from partially observed node");
+    }
 
     double VectorDist::KL(vector<double const *> const &par1,
 			  vector<double const *> const &par2,
@@ -29,9 +39,9 @@ VectorDist::VectorDist(string const &name, unsigned int npar)
 	return div / nrep;
     }
 
-    double VectorDist::KL(std::vector<double const *> const &,
-			  std::vector<double const *> const &,
-			  std::vector<unsigned long> const &) const
+    double VectorDist::KL(vector<double const *> const &,
+			  vector<double const *> const &,
+			  vector<unsigned long> const &) const
     {
 	return JAGS_NA;
     }

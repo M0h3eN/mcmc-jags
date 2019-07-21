@@ -1,5 +1,6 @@
 #include <config.h>
 #include <distribution/ArrayDist.h>
+#include <distribution/DistError.h>
 #include <util/dim.h>
 #include <util/nainf.h>
 
@@ -12,6 +13,14 @@ ArrayDist::ArrayDist(string const &name, unsigned int npar)
   : Distribution(name, npar)
 {
 }
+    void ArrayDist::randomSample(double *x, vector<bool> const &observed,
+				 vector<double const *> const &parameters,
+				 vector<vector<unsigned long>> const &dims, 
+				 RNG *rng) const
+    {
+	throw DistError(this, "Cannot sample from partially observed node");
+    }
+
 
     double ArrayDist::KL(vector<double const *> const &par1,
 			 vector<double const *> const &par2,

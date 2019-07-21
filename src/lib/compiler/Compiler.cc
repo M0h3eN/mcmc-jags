@@ -788,11 +788,14 @@ Node * Compiler::allocateStochastic(ParseTree const *stoch_relation)
 	    this_data = nullptr;
 	    data_length = 0;
 	}
+	/*
+	  //OK in JAGS 5.0.0
 	else if (nmissing != 0) {
 	    delete [] this_data;
 	    CompileError(var, var->name() + printRange(target_range),
 			 "is partly observed and partly missing");
 	}
+	*/
     }
 
     // Check that distribution exists
@@ -1170,7 +1173,7 @@ void Compiler::writeRelations(ParseTree const *relations)
 	    }
 	}
     }
-    _is_resolved.clear(); //Why?
+    //_is_resolved.clear(); //Why?
     _model.symtab().lock();
 
     
@@ -1252,6 +1255,8 @@ void Compiler::writeRelations(ParseTree const *relations)
 	}
 	throw runtime_error(oss.str());
     }
+
+    _is_resolved.clear();
 }
 
 

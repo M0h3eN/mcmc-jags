@@ -72,9 +72,6 @@ double VectorStochasticNode::logDensity(unsigned int chain, PDFType type) const
 
 void VectorStochasticNode::randomSample(RNG *rng, unsigned int chain)
 {
-    _dist->randomSample(_data + _length * chain, 
-			_parameters[chain], _lengths, rng);
-    /*
     vector<bool> const &observed = *this->observedMask();
     if (anyTrue(observed)) {
 	//Partly observed node
@@ -86,7 +83,6 @@ void VectorStochasticNode::randomSample(RNG *rng, unsigned int chain)
 	_dist->randomSample(_data + _length * chain, 
 			    _parameters[chain], _lengths, rng);
     }
-    */
 }
 
 bool VectorStochasticNode::checkParentValues(unsigned int chain) const

@@ -63,14 +63,6 @@ public:
      *
      * @param dims Dimensions of the parameters
      *
-     * @param lbound pointer to array containing the lower boundary of
-     * the distribution. This should be of size length or may be NULL if
-     * there is no lower boundary.
-     *
-     * @param ubound pointer to array containing the upper boundary of
-     * the distribution. This should be of size length or may be NULL if
-     * there is no upper boundary.
-     *
      * @param rng pseudo-random number generator to use.
      *
      * @exception length_error 
@@ -80,6 +72,29 @@ public:
 		     std::vector<double const *> const &parameters,
 		     std::vector<std::vector<unsigned long> > const  &dims,
 		     RNG *rng) 	const = 0;
+    /**
+     * Draws a random sample from the distribution conditional on some
+     * elements being observed.
+     *
+     * @param x Array to which the sample values are written
+     *
+     * @param parameters Parameters for the distribution. This vector
+     * should be of length npar().  Each element is a pointer to the
+     * start of an array containing the parameters. The size of the 
+     * array should correspond to the dims parameter. 
+     *
+     * @param dims Dimensions of the parameters
+     *
+     * @param rng pseudo-random number generator to use.
+     *
+     * The default implementation throws an exception. A distribution
+     * that allows sampling from partially observed nodes must
+     * overload the default implemention.
+     */
+    virtual void randomSample(double *x, std::vector<bool> const &observed,
+			      std::vector<double const *> const &parameters,
+			      std::vector<std::vector<unsigned long>> const &dims, 
+			      RNG *rng) const;
     /**
      * Checks that dimensions of the parameters are correct.
      */
