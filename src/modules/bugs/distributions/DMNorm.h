@@ -27,6 +27,10 @@ public:
 		    std::vector<double const *> const &parameters,
 		    std::vector<std::vector<unsigned long> > const &dims,
 		    RNG *rng) const;
+  void randomSample(double *x, std::vector<bool> const &observed,
+		    std::vector<double const *> const &parameters,
+		    std::vector<std::vector<unsigned long> > const &dims,
+		    RNG *rng) const;
   /**
    * Checks that mu is a vector, T is a square matrix and the sizes of
    * mu and T conform.

@@ -7,6 +7,7 @@
 
 #include <lapack.h>
 #include <matrix.h>
+#include <rng/RNG.h>
 
 #include <cmath>
 #include <vector>
@@ -14,11 +15,67 @@
 
 #include <JRmath.h>
 
+#include "blas.h"
+#include "lapack.h"
+
 using std::vector;
 
 namespace jags {
 namespace bugs {
 
+    /* FIXME: copy paste from ConjugateNormal sampler */
+    /* Changing x from STL vector to array */
+    static int MNormSample(double *x, unsigned long nrow,
+			   vector<double> &b, vector<double> &A,
+			   vector<bool> const &observed, RNG *rng)
+    {
+	unsigned long nfree = count(observed.begin(), observed.end(), false);
+
+	if (nfree < nrow) {
+	    //Pack the leading parts of matrix A and vector b with
+	    //elements corresponding to the free elements of x
+	    for (unsigned long i = 0, p = 0; i < nrow; ++i) {
+		if (!observed[i]) {
+		    for (unsigned long j = 0, q = 0; j < nrow; ++j) {
+			if (!observed[j]) {
+			    A[p * nrow + q++] = A[i * nrow + j];
+			}
+		    }
+		    b[p++] = b[i];
+		}
+	    }
+	}
+
+	int one = 1;
+	int info = 0;
+	int nf = asInteger(nfree);
+	int nr = asInteger(nrow);
+
+	//Solve A %*% x = b to get the posterior mean. The solution
+	//will be in b after the call to dposv.
+	jags_dposv("L", &nf, &one, A.data(), &nr, b.data(), &nr, &info);
+	if (info != 0) return info;
+	
+	//After dposv, the leading nfree x nfree lower triangle of A
+	//holds the Cholesky factorization. Use it to generate a
+	//multivariate normal random vector with mean 0 and precision A
+	vector<double> eps(nfree);
+	for (unsigned long p = 0; p < nfree; ++p) {
+	    eps[p] = rng->normal();
+	}
+	jags_dtrsv("L", "T", "N", &nf, A.data(), &nr, eps.data(), &one);
+		  
+	// Copy back sampled values
+	for (unsigned long i = 0, p = 0; i < nrow; ++i) {
+	    if (!observed[i]) {
+		x[i] += b[p] + eps[p];
+		++p;
+	    }
+	}
+	return info;
+    }
+
+    
 DMNorm::DMNorm()
   : ArrayDist("dmnorm", 2) 
 {}
@@ -67,6 +124,36 @@ void DMNorm::randomSample(double *x,
     randomsample(x, mu, T, true, m, rng);
 }
 
+    void DMNorm::randomSample(double *x, vector<bool> const &observed,
+			      vector<double const *> const &parameters,
+			      vector<vector<unsigned long>> const &dims, 
+			      RNG *rng) const
+    {
+	unsigned long nrow = dims[0][0];
+	unsigned long N = nrow*nrow;
+	
+	double const * mu = parameters[0];
+	double const * T = parameters[1];
+
+	vector<double> A(N);
+	copy(T, T + N, A.begin());
+
+	//Initialize missing elements to 0
+	for (unsigned long i = 0; i < nrow; ++i) {
+	    if (!observed[i]) x[i] = 0;
+	}
+	
+	//FIXME: use BLAS dsymv
+	vector<double> b(nrow, 0);
+	for (unsigned long i = 0; i < nrow; ++i) {
+	    for (unsigned long j = 0; j < nrow; ++j) {
+		b[i] += T[j * nrow + i] * (mu[j] - x[j]);
+	    }
+	}
+	
+	MNormSample(x, nrow, b, A, observed, rng);
+    }
+    
 void DMNorm::randomsample(double *x, double const *mu, double const *T,
 			  bool prec, unsigned long nrow, RNG *rng)
 {
