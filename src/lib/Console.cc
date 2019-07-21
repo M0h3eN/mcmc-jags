@@ -288,8 +288,8 @@ bool Console::compile(map<string, SArray> &data_table, unsigned int nchain,
 	    }
             _out << "Graph information:\n";
 	    _out << "   Fully observed stochastic nodes: " << nobs << "\n";
-	    if (nobs > 0) {
-		_out << "   Partly observed stochastic nodes: " << nobs << "\n";
+	    if (npart > 0) {
+		_out << "   Partly observed stochastic nodes: " << npart << "\n";
 	    }
 	    _out << "   Unobserved stochastic nodes: " << nparam << "\n";
 	    _out << "   Total graph size: " << _model->nodes().size() << endl;
