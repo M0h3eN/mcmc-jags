@@ -13,8 +13,8 @@ using std::list;
 using std::vector;
 using std::string;
 
-#define NLEVEL 200
-#define MAX_TEMP 100
+#define NLEVEL 100
+#define MAX_TEMP 25
 #define NREP 5
 
 namespace jags {
