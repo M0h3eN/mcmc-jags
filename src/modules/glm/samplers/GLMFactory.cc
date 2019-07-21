@@ -217,8 +217,26 @@ namespace glm {
 	: _name(name)
     {}
 
-    bool GLMFactory::checkDescendants(GraphView const *view) const
+    bool GLMFactory::checkDescendants(SingletonGraphView const *view) const
     {
+	/* 
+	   Quick heuristics for situations where the heavy machinery
+	   of GLM is unlikely to be useful.
+	*/
+	if (view->stochasticChildren().size() == 1) {
+	    //Seen in the fantail motif created by data-augmentation
+	    //methods (e.g. when user defines their own Albert & Chib
+	    //approximation to the probit regression model).  This can
+	    //substantially slow down the compiler.
+	    return false;
+	}
+	if (view->deterministicChildren().empty()) {
+	    // No possibility to be in a linear model with other nodes
+	    // The linear relationship between view->node() and the
+	    // stochastic children is trivial.
+	    return false;
+	}
+	
 	// Check stochastic children
 	vector<StochasticNode *> const &stoch_nodes = 
 	    view->stochasticChildren();
