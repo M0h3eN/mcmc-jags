@@ -248,12 +248,11 @@ namespace jags {
 		}
 		if (node->isObserved(_offsets[k])) {
 		    throw NodeError(node,
-				    "Cannot overwrite value of observed node");
+				    "Cannot overwrite observed value");
 		}
 		setnodes.insert(node);		
 	    }
 	}
-  
 
 	for (set<Node*>::const_iterator p = setnodes.begin();
 	     p != setnodes.end(); ++p) 
@@ -261,8 +260,14 @@ namespace jags {
 	    //Step through each node
 	    Node *node = *p;
 
+	    /* Start with a copy of the current node value. We need to
+	       do this when initializing partly observed nodes as we have
+	       a mixture of already set data values and newly set initial
+	       values */
 	    vector<double> node_value(node->length());
-
+	    double const *v = node->value(chain);
+	    copy(v, v + node->length(), node_value.begin());
+	    
 	    //Get vector of values for this node
 	    for (RangeIterator q(_range); !q.atEnd(); q.nextLeft()) {
 		unsigned long k = _true_range.leftOffset(q);
@@ -271,21 +276,15 @@ namespace jags {
 			throw logic_error("Invalid offset in NodeArray::setValue");
 		    }
 		    else {
+			//Only overwrite values if RHS is not missing
 			unsigned long j = _range.leftOffset(q);
-			node_value[_offsets[k]] = x[j];
+			if (x[j] != JAGS_NA) {
+			    node_value[_offsets[k]] = x[j];
+			}
 		    }
 		}
 	    }
-	    // If there are any missing values, they must all be missing
-	    bool missing = node_value[0] == JAGS_NA;
-	    for (unsigned int j = 1; j < node->length(); ++j) {
-		if ((node_value[j] == JAGS_NA) != missing) {
-		    throw NodeError(node,"Values supplied for node are partially missing");
-		}
-	    }
-	    if (!missing) {
-		node->setValue(&node_value[0], node->length(), chain);
-	    }
+	    node->setValue(&node_value[0], node->length(), chain);
 	}
     }
 
