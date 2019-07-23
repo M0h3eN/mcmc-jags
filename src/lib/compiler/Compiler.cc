@@ -929,8 +929,16 @@ void Compiler::allocate(ParseTree const *rel)
 
     ParseTree const * const var = rel->parameters()[0];
     SimpleRange target_range = VariableSubsetRange(var);
+
+    /* 
+       Before the node is constructed, We have to ensure that we can
+       insert into an array. Deterministic nodes are cached and are
+       reusable, but stochastic nodes are not and should only be
+       created once for each relation.
+    */
     
     if (isNULL(target_range) && !emptyRange(var)) {
+	_n_unresolved++; //At least one relation is unresolved
 	//There is a range expression but it could not be evaluated
 	if (_compiler_mode == PERMISSIVE) {
 	    return;
@@ -939,23 +947,14 @@ void Compiler::allocate(ParseTree const *rel)
 	    CompileError(var, "Unable to calculate subset expression for array",
 			 var->name());
 	}
+	//FIXME: other modes?
     }
-    
-    /* 
-       Before the node is constructed, We have to ensure that we can
-       insert into an array. Deterministic nodes are cached and are
-       reusable, but stochastic nodes are not and should only be
-       created once for each relation.
+
+    /*
+      It is safe to allocate a node
     */
-
-    SimpleRange range = VariableSubsetRange(var);
-    if (isNULL(range) && !emptyRange(var)) {
-	_n_unresolved++; //At least one relation is unresolved
-	return;
-    }
-
     Node *node = nullptr;
-
+    
     if (rel->treeClass() == P_STOCHREL) {
 	node = allocateStochastic(rel);
     }
@@ -976,13 +975,13 @@ void Compiler::allocate(ParseTree const *rel)
 	    bool lock = false;
 	    if (emptyRange(var)) {
 		//No range given on LHS. New node fills the whole array
-		range = SimpleRange(dim);
+		target_range = SimpleRange(dim);
 		lock = true;
 	    }
 	    else {
 		//Range given on LHS. Set initial dimension of array
 		//to be equal to the upper limit of the target range.
-		dim = range.upper();
+		dim = target_range.upper();
 	    }
 	    for (unsigned int i = 0; i < dim.size(); ++i) {
 		if (dim[i] == 0) {
@@ -992,18 +991,18 @@ void Compiler::allocate(ParseTree const *rel)
 	    }
 	    symtab.addVariable(var->name(), dim);
 	    array = symtab.getVariable(var->name()); //FIXME: addVariable should return the array
-	    array->insert(node, range);
+	    array->insert(node, target_range);
 	    if (lock) {
 		array->lock();
 	    }
 	}
 	else {
 	    // Check if a node is already inserted into this range
-	    if (array->getSubset(range, _model)) { //FIXME: why is _model an argument here?
+	    if (array->getSubset(target_range, _model)) { //FIXME: why is _model an argument here?
 		CompileError(var, "Attempt to redefine node",
-			     var->name() + printRange(range));
+			     var->name() + printRange(target_range));
 	    }
-	    array->insert(node, range);
+	    array->insert(node, target_range);
 	}
 	_n_resolved++;
 	_is_resolved.insert(relindex);
@@ -1014,8 +1013,7 @@ void Compiler::allocate(ParseTree const *rel)
 	   subsets that are defined on the left hand side of a
 	   relation
 	*/
-	SimpleRange range = VariableSubsetRange(var);
-	_umap.erase(pair<string, Range>(var->name(), range));
+	_umap.erase(pair<string, Range>(var->name(), target_range));
 	
 	/*
 	  In addition, the parameter might be a *subset* of a node
@@ -1024,7 +1022,7 @@ void Compiler::allocate(ParseTree const *rel)
 	map<pair<string, Range>, set<unsigned long> >::iterator p = _umap.begin();
 	while (p != _umap.end()) {
 	    pair<string, Range> const &up = p->first;
-	    if (up.first == var->name() && range.contains(up.second)) {
+	    if (up.first == var->name() && target_range.contains(up.second)) {
 		_umap.erase(p++);
 	    }
 	    else {
@@ -1033,8 +1031,42 @@ void Compiler::allocate(ParseTree const *rel)
 	}
     }
     else {
+	//Failed to resolve relation...
 	_n_unresolved++;
+
+	//... but we may still use information on the LHS of the relation
+
+	/* NB Without this code, the following relations cannot be resolved
+	      tau[1] ~ dgamma(R,1)
+              R[1] <- 1
+              sigma[1] <- 1/sqrt(tau)
+	*/
+
+	if (!emptyRange(var) && !isNULL(target_range)) {
+	    //Range is given on LHS and it can be evaluated
+	    NodeArray *array = symtab.getVariable(var->name());
+	    if (array) {
+		if (array->range().contains(target_range)) {
+		    //Check target range is not already occupied
+		    if (array->getSubset(target_range, _model)) {
+			CompileError(var, "Attempt to redefine node",
+				     var->name() + printRange(target_range));
+		    }
+		}
+		else {
+		    //Grow array to accommodate target range
+		    array->insert(nullptr, target_range);
+		}
+	    }
+	    else {
+		//Create new NodeArray big enough to contain target range
+		vector<unsigned long> dim = target_range.upper();
+		symtab.addVariable(var->name(), dim);
+	    }
+	}
+
     }
+    
 }
     
 void Compiler::setConstantMask(ParseTree const *rel)
@@ -1173,10 +1205,8 @@ void Compiler::writeRelations(ParseTree const *relations)
 	    }
 	}
     }
-    //_is_resolved.clear(); //Why?
     _model.symtab().lock();
 
-    
     if (_n_resolved == 0 && _n_unresolved > 0) {
 	_compiler_mode = ENFORCING; //See getArraySubset
 	traverseTree(relations, &Compiler::allocate);
