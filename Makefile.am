@@ -27,3 +27,9 @@ docs: FORCE
 	-@(cd doc && $(MAKE) $@)
 
 FORCE:
+
+# Work around libltdl bug: make distclean leaves behind .deps/lt__strl.Plo
+# causing make distcheck to fail.
+distclean-local:
+	rm -f libltdl/$(DEPDIR)/lt__strl.*
+	rm -f libltdl/$(DEPDIR)/lt__dirent.*
