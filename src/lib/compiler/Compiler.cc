@@ -1084,7 +1084,9 @@ void Compiler::setConstantMask(ParseTree const *rel)
     SimpleRange range = VariableSubsetRange(var);
     SimpleRange const &var_range = q->second.range();
     if (!var_range.contains(range)) {
-        throw logic_error("Invalid range in Compiler::setConstantMask.");
+	CompileError(rel, string("Subset ") + name + print(range) +
+		     " inconsistent with data dimensions " +
+		     name + print(var_range));
     }
     vector<bool> &mask = p->second;
     for (RangeIterator i(range); !i.atEnd(); i.nextLeft()) {

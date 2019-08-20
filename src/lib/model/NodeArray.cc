@@ -66,6 +66,9 @@ namespace jags {
 
     void NodeArray::grow(Range const &target_range) {
 
+	if (_range.ndim(false) != target_range.ndim(false)) {
+	    throw logic_error("Incorrect dimensions in NodeArray::grow");
+	}
 	vector<unsigned long> upper = _range.upper();
 	vector<unsigned long> true_upper = _true_range.upper();
 	
@@ -118,6 +121,11 @@ namespace jags {
 				printRange(target_range) + 
 				". Range has repeat indices");
 	}
+	if (target_range.ndim(false) != _range.ndim(false)) {
+	    throw runtime_error(string("Cannot insert node into ") + name() +
+				printRange(target_range) +
+				". Incorrect number of dimensions");
+	}
 	if (!_range.contains(target_range)) {
 	    if (_locked) {
 		throw runtime_error(string("Cannot insert node into ") + name()
@@ -168,14 +176,21 @@ namespace jags {
     Node *NodeArray::getSubset(Range const &target_range, Model &model)
     {
 	//Check validity of target range
-	if (!isNULL(target_range) && !_range.contains(target_range)) {
-	    if (_locked) {
-		throw runtime_error(string("Cannot get subset ") + name() + 
+	if (!isNULL(target_range)) {
+	    if (_range.ndim(false) != target_range.ndim(false)) {
+		throw runtime_error(string("Cannot get subset ") + name() +
 				    printRange(target_range) +
-				    ". Range out of bounds");
+				    ". Incorrect number of dimensions");
 	    }
-	    else {
-		return nullptr;
+	    if (!_range.contains(target_range)) {
+		if (_locked) {
+		    throw runtime_error(string("Cannot get subset ") + name() + 
+					printRange(target_range) +
+					". Range out of bounds");
+		}
+		else {
+		    return nullptr;
+		}
 	    }
 	}
 	
