@@ -28,6 +28,9 @@ class DLogis : public RScalarDist {
    * Checks that tau > 0
    */
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
+  bool hasScore(unsigned long i) const;
+  double score(double x, std::vector<double const *> const &parameters,
+	       unsigned long i) const;    
 };
 
 }}

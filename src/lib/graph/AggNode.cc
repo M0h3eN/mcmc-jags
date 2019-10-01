@@ -123,7 +123,7 @@ void AggNode::deterministicSample(unsigned int chain)
     }
 }
 
-    bool AggNode::isDifferentiable(Node const *arg) const
+    bool AggNode::hasGradient(Node const *arg) const
     {
 	return true;
     }
@@ -131,15 +131,11 @@ void AggNode::deterministicSample(unsigned int chain)
     void AggNode::gradient(double *grad, Node const *arg,
 			   unsigned int chain) const
     {
-	//FIXME put in some check code here...
-	
-	unsigned long P = _length;
-
 	auto par = parents();
-	for (unsigned int p = 0; p < P; ++p) {
+	for (unsigned long p = 0; p < _length; ++p) {
 	    if (par[p] == arg) {
 		unsigned long q = _offsets[p];
-		grad[p + P * q] += 1;
+		grad[p + _length * q] += 1;
 	    }
 	}
     }

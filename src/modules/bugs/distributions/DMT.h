@@ -42,6 +42,10 @@ public:
 	       std::vector<double const *> const &parameters,
                std::vector<std::vector<unsigned long> > const &dims) const;
   bool isSupportFixed(std::vector<bool> const &fixmask) const;
+  void score(double *s, double const *x,
+	     std::vector<double const *> const &parameters,
+	     std::vector<std::vector<unsigned long>> const &dims, 
+	     unsigned long i) const;
 };
 
 }}

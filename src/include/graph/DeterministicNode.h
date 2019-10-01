@@ -135,6 +135,25 @@ public:
     inline bool isConstant() const { return false; }
     inline bool isDeterministic() const { return true; }
     inline bool isStochastic() const { return false; }
+    /**
+     * Checks whether the gradient can be calculated for the given
+     * parent node.
+     *
+     * @param arg Parent node with respect to which the gradient
+     * is calculated.
+     */
+    virtual bool hasGradient(Node const *arg) const = 0;
+    /**
+     * Calculates the gradient function.
+     *
+     * @param grad Array to hold the result (assumed to be of correct
+     * length). The gradient is added to this array.
+     * 
+     * @param parent Parent node with respect to which the gradient is
+     * calculated.
+     */
+    virtual void gradient(double *grad, Node const *parent, unsigned int chain)
+	const = 0;
 };
 
 } /* namespace jags */

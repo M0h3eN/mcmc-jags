@@ -34,7 +34,7 @@ string Neg::deparse(vector<string> const &par) const
     return string("-") + par[0];
 }
 
-    bool Neg::isDifferentiable(unsigned long i) const
+    bool Neg::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

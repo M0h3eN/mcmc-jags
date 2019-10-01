@@ -9,7 +9,7 @@ namespace bugs {
 /**
  * <pre>
  * x ~ dnorm(mu, tau)
- * f(x | mu, tau) = sqrt(tau) * exp(-1/2 * tau * (x - mu)^2)
+ * f(x | mu, tau) = sqrt(tau) * exp(-tau * (x - mu)^2/2)
  * </pre>
  * @short Normal distribution
  */
@@ -39,8 +39,9 @@ class DNorm : public RScalarDist {
 		      RNG *rng) const;
   double KL(std::vector<double const *> const &par0,
 	    std::vector<double const *> const &par1) const;
+  bool hasScore(unsigned long i) const;
   double score(double x, std::vector<double const *> const &parameters,
-	       unsigned long i) const;
+	       unsigned long i) const;    
 };
 
 }}

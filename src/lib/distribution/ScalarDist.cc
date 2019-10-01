@@ -90,5 +90,11 @@ bool ScalarDist::isSupportFixed(vector<bool> const &) const
     {
 	return JAGS_NA;
     }
+
+    double ScalarDist::score(double x, std::vector<double const *> const &pars,
+			     unsigned long i) const
+    {
+	return 0;
+    }
     
 } //namespace jags

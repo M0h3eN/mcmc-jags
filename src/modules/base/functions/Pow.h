@@ -19,7 +19,7 @@ public:
     bool checkParameterValue(std::vector<double const*> const &args) const;
     bool isPower(std::vector<bool> const &mask, 
 		 std::vector<bool> const &fix) const;
-    bool isDifferentiable(unsigned long i) const;
+    bool hasGradient(unsigned long i) const;
     double gradient(std::vector<double const *> const &args,
 		    unsigned long i) const;
 

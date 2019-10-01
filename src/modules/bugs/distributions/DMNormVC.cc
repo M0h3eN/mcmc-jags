@@ -161,6 +161,8 @@ namespace jags {
 		}
 	    }
 
+	    //FIXME unfinished.
+	    
 	    //Factorize Sigff.
 	    //...
 
@@ -176,11 +178,51 @@ namespace jags {
 	    for (unsigned long i = 0, p = 0; i < nrow; ++i) {
 		if (!observed[i]) x[i] = wf[p++];
 	    }
-			
-		    
-		    
 	}
 
+	void DMNormVC::score(double *s, double const *x,
+			     std::vector<double const *> const &parameters,
+			     std::vector<std::vector<unsigned long>> const &dims, 
+			     unsigned long i) const
+	{
+	    double const * mu = parameters[0];
+	    double const * V  = parameters[1];
+	    unsigned long m = dims[0][0];
+	    unsigned long N = m * m;
+
+	    // Deviation from mean
+	    vector<double> delta(m);
+	    for (unsigned long j = 0; j < m; ++j) {
+		delta[j] = x[j] - mu[j];
+	    }
+
+	    // FIXME: Use BLAS/LAPACK calls here
+	    
+	    // Precision matrix
+	    vector<double> T(N);
+	    inverse_chol (T.data(), V, m);
+
+	    vector<double> eta(m, 0);
+	    for (unsigned long j = 0; j < m; ++j) {
+		for (unsigned long k = 0; k < m; ++k) {
+		    eta[j] += T[k + j * m] * delta[k];
+		}
+	    }
+	    
+	    if (i == 0) {
+		for (unsigned long j = 0; j < m; ++j) {
+		    copy(eta.begin(), eta.end(), s);
+		}
+	    }
+	    else if (i == 1) {
+		for (unsigned long j = 0; j < m; ++j) {
+		    for (unsigned long k = 0; k < m; ++k) {
+			s[j * k * m] = (eta[j] * eta[k] - T[j + k *m])/2;
+		    }
+		}
+	    }
+	}
+	    
 	
     } //namespace bugs
 } //namespace jags

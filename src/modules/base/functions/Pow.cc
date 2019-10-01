@@ -46,7 +46,7 @@ bool Pow::checkParameterValue(vector<double const *> const &args) const
             return fix.empty() || fix[1];
     }
 
-    bool Pow::isDifferentiable(unsigned long i) const
+    bool Pow::hasGradient(unsigned long i) const
     {
 	return i < 2;
     }

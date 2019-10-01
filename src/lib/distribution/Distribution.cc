@@ -62,5 +62,10 @@ bool Distribution::checkParameterDiscrete(vector<bool> const &) const
     {
 	return true;
     }
+
+    bool Distribution::hasScore() const
+    {
+	return false;
+    }
     
 } //namespace jags

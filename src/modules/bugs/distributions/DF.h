@@ -31,6 +31,9 @@ class DF : public RScalarDist {
    * Check that tau > 0 and n1 > 0 and n2 > 0
    */
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
+  bool hasScore(unsigned long i) const;
+  double score(double x, std::vector<double const *> const &par,
+	       unsigned long i) const;
 };
 
 }}

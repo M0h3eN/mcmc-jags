@@ -84,7 +84,7 @@ string Function::deparse(vector<string> const &par) const
 	return true;
     }
 
-    bool Function::isDifferentiable(unsigned long i) const
+    bool Function::hasGradient(unsigned long i) const
     {
 	return false;
     }

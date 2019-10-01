@@ -43,7 +43,12 @@ public:
     bool isPower(std::vector<bool> const &mask,
 		 std::vector<bool> const &isfixed) const;
     /**
-     * FIXME
+     * Calculates the first derivative of the function
+     *
+     * @param args Vector of arguments
+     *
+     * @param i The derivative is calculated with respect to the ith
+     * argument (starting from zero).
      */
     virtual double gradient(std::vector <double const *> const &args,
 			    unsigned long i) const;

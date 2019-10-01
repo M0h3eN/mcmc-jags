@@ -1,6 +1,7 @@
 #include <config.h>
 #include <function/ScalarFunction.h>
 #include <util/dim.h>
+#include <util/nainf.h>
 
 #include <algorithm>
 
@@ -39,7 +40,7 @@ bool ScalarFunction::isPower(vector<bool> const &mask,
     double ScalarFunction::gradient(vector<double const*> const &args,
 				    unsigned long i) const
     {
-	return 0;
+	return JAGS_NA;
     }
 
     

@@ -49,4 +49,28 @@ DLogis::r(vector<double const *> const &par, RNG *rng) const
     return ans;
 }
 
+    bool DLogis::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+    
+    double DLogis::score(double x, vector<double const *> const &par,
+			 unsigned long i) const
+    {
+	double mu = MU(par);
+	double tau = TAU(par);
+	
+	double y = 2 * plogis(x, mu, 1/tau, true, false) - 1;
+
+	if (i == 0) {
+	    return tau * y;
+	}
+	else if (i == 1) {
+	    return 1/tau - (x - mu) * y;
+	}
+	else {
+	    return 0;
+	}
+    }
+
 }}

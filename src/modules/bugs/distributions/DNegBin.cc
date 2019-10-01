@@ -104,6 +104,11 @@ double DNegBin::KL(vector<double const *> const &par0,
 	(1 - p0) * r0 * (log(1 - p0) - log(1 - p1)) / p0;
 }
 
+    bool DNegBin::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+    
     double DNegBin::score(double x, vector<double const *> const &par,
 			  unsigned long i) const
     {
@@ -113,8 +118,11 @@ double DNegBin::KL(vector<double const *> const &par0,
 	if (i == 0) {
 	    return r/p - x/(1-p);
 	}
-	else {
+	else if (i == 1) {
 	    return digamma(x + r) - digamma(r) + log(p);
+	}
+	else {
+	    return 0;
 	}
     }
 

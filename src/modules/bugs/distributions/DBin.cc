@@ -105,12 +105,10 @@ double DBin::KL(vector<double const *> const &par0,
     }
 }
 
-    /*
     bool DBin::hasScore(unsigned long i) const
     {
 	return i == 0;
     }
-    */
     
     double DBin::score(double x, vector<double const *> const &parameters,
 		       unsigned long i) const

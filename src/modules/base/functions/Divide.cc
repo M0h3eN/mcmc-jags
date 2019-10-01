@@ -15,7 +15,7 @@ namespace base {
 	return *args[0] / *args[1];
     }
 
-    bool Divide::isDifferentiable(unsigned long i) const
+    bool Divide::hasGradient(unsigned long i) const
     {
 	return i < 2;
     }

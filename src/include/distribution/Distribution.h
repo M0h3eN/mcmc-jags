@@ -150,6 +150,26 @@ public:
      * This function is used by StochasticNode#fullRank
      */
     virtual bool fullRank() const;
+    /*
+     * Returns true if the (log) density of the distribution is
+     * differentiable with respect to its ith argument. The default
+     * implementation returns false.  Distributions with
+     * differentiable density functions must override this member
+     * function.
+     *
+     * If this function returns true then it guarantees that the
+     * functions ScalarDist#score, VectorDist#score, and
+     * ArrayDist#score will correctly calculate the gradient of the
+     * function.
+     *
+     * False negatives are allowed, i.e. this function may return
+     * false even if the score function exists. This means that the
+     * corresponding score function is not implemented.
+     *
+     * @param i Index of the parameter to take the derivative
+     * (starting from zero).
+     */
+    virtual bool hasScore() const;
 };
 
 /**

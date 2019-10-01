@@ -57,6 +57,12 @@ public:
     double KL(std::vector<double const *> const &par0,
 	      std::vector<double const *> const &par1,
 	      std::vector<unsigned long> const &len) const;
+    bool hasScore(unsigned long i) const;
+    void score(double *score, double const *x,
+	       std::vector<double const *> const &par,
+	       std::vector<unsigned long> const &len,
+	       unsigned long i) const;
+
 };
 
 }}

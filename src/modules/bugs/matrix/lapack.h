@@ -16,7 +16,9 @@ extern "C" {
     void jags_dpotrs (const char *uplo, const int *n, const int *nrhs, const double *a, const int *lda, double *b, const int *ldb, int *info);
     
     void jags_dsyev (const char *jobz, const char *uplo, const int *n, double *a, const int *lda, double *w, double *work, const int *lwork, int *info);
-    
+
+    void jags_dsymv (const char *uplo, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy);
+
     void jags_dsysv (const char *uplo, const int *n, const int *nrhs, double *a, const int *lda, int *ipiv, double *b, const int *ldb, double *work, const int *lwork, int *info);
 
     void jags_dtrtri (const char *uplo, const char *diag, const int *n, double *a, const int *lda, int *info);

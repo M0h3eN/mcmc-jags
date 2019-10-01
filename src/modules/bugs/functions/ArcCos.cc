@@ -30,7 +30,7 @@ namespace bugs {
 	return *args[0] >= -1 && *args[0] <= 1;
     }
 
-    bool ArcCos::isDifferentiable(unsigned long i)
+    bool ArcCos::isDifferentiable(unsigned long i) const
     {
 	return i == 0;
     }

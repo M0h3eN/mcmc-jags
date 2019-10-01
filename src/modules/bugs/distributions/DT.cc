@@ -56,4 +56,35 @@ double DT::r(vector<double const *> const &par, RNG *rng) const
     return rt(DF(par), rng) / sqrt(TAU(par)) + MU(par);
 }
 
+    bool DT::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+    
+    double DT::score(double x, vector<double const *> const &par,
+		     unsigned long i) const
+    {
+	double mu = MU(par);
+	double tau = TAU(par);
+	double df = DF(par);
+
+	double score = 0;
+	double y = (x - mu) * (x - mu) * tau;
+	switch(i) {
+	case 0:
+	    score = (df + 1) * (x - mu) * tau / (df + y);
+	    break;
+	case 1:
+	    score = (1 - y/(df + y))/(2*tau);
+	    break;
+	case 2:
+	    score = (digamma((df+1)/2) - 1/df - digamma(df/2)
+		     - log(1 + y/df) + ((df+1)/df) * (y/(df + y)))/2;
+	    break;
+	default:
+	    break;
+	}
+	return score;
+    }
+
 }}

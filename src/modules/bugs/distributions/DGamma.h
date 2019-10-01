@@ -30,6 +30,9 @@ class DGamma : public RScalarDist {
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
   double KL(std::vector<double const *> const &par0,
 	    std::vector<double const *> const &par1) const;
+  bool hasScore(unsigned long i) const;
+  double score(double x, std::vector<double const *> const &pars,
+	       unsigned long i) const;
 };
 
 }}

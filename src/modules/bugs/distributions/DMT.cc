@@ -1,6 +1,7 @@
 #include <config.h>
 #include <util/dim.h>
 #include <util/nainf.h>
+#include <util/integer.h>
 #include "DMNorm.h"
 #include "DMT.h"
 
@@ -9,10 +10,12 @@
 
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 #include <JRmath.h>
 
 using std::vector;
+using std::copy;
 
 namespace jags {
 namespace bugs {
@@ -114,5 +117,63 @@ bool DMT::isSupportFixed(vector<bool> const &) const
 {
     return true;
 }
+
+    void DMT::score(double *s, double const *x,
+		    vector<double const *> const &parameters,
+		    vector<vector<unsigned long>> const &dims, 
+		    unsigned long i) const
+    {
+	double const * mu = parameters[0];
+	double const * T = parameters[1];
+	double k = parameters[2][0];
+	unsigned long m = dims[0][0];
+	unsigned long N = m * m;
+       
+	vector<double> delta(m);
+	for (unsigned long j = 0; j < m; ++j) {
+	    delta[j] = x[j] - mu[j];
+	}
+
+	// eta = T %*% (x - mu)
+	vector<double> eta(m);
+	jags_dsymv("L", m, 1.0, T, m, delta.data(), 1, 0.0, eta.data(), 1);
+       
+	/* Calculate inner product ip = t(x - mu) %*% T %*% (x - mu) */
+	double ip = 0;
+	for (unsigned long j = 0; j < m; ++j) {
+	    ip += delta[j] * eta[j];
+	}
+
+	double d = m; // Avoid problems with integer division
+       
+	double S = 1 + ip/k;
+	double Z = (k + d)/(k * S);
+	int im = asInteger(m);
+
+	if (i == 0) {
+	    for (unsigned long j = 0; j < m; ++j) {
+		s[j] = Z * eta[j];
+	    }
+	}
+	else if (i == 1) {
+	    int info;
+	    copy(T, T + N, s);
+	    jags_dpotri("L", &im, s, &im, &info);
+	    for (unsigned long j = 0; j < m; ++j) {
+		for (unsigned long k = 0; k <= j; ++k) {
+		    s[j + k*m] -= Z * delta[j] * delta[k];
+		    if (j != k) s[k + j*m] = s[j + k*m];
+		}
+	    }
+	    for (unsigned long j = 0; j < N; ++j) {
+		s[j] /= 2;
+	    }
+	}
+	else if (i == 2) {
+	    //FIXME: check this
+	    *s = (digamma((k+d)/2) - digamma(k) - d/k - (k+d) * log(S) +
+		  Z*ip/k)/2;
+	}
+    }
 
 }}

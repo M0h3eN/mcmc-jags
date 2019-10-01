@@ -61,6 +61,11 @@ double DExp::KL(vector<double const *> const &par0,
     return r - 1 - log(r);
 }
 
+    bool DExp::hasScore(unsigned long i) const
+    {
+	return i == 0;
+    }
+    
     double DExp::score(double x, vector<double const *> const &parameters,
 		       unsigned long i) const
     {

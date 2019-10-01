@@ -415,4 +415,56 @@ double DHyper::KL(vector<double const *> const &para,
     return y;
 }
 
+static double expectation(int n1, int n2, int m1, double psi)
+{
+    //Based on density_normalized. Required by score
+
+    int ll = max(0, m1 - n2);
+    int uu = min(n1, m1);
+
+    // Density at mode has reference value 1
+    int mode = modeCompute(n1, n2, m1, psi);
+    double psum = 1;
+    double mu = mode;
+	
+    // Calculate contribution for values above the mode
+    if (mode < uu) {
+	double r = 1;
+	for (int i = mode + 1; i <= uu; ++i) {
+	    r *= rfunction(n1, n2, m1, psi, i);
+	    mu += i * r;
+	    psum += r;
+	}
+    }
+    // Calculate contribution for values below the node
+    if (mode > ll) {
+	double r = 1;
+	for (int i = mode - 1; i >= ll; --i) {
+	    r /= rfunction(n1, n2, m1, psi, i + 1);
+	    mu += i * r;
+	    psum += r;
+	}
+    }
+
+    // Normalize
+    return mu/psum;
+}
+
+
+bool DHyper::hasScore(unsigned long i) const
+{
+    return i == 3;
+}
+    
+double DHyper::score(double x, vector<double const *> const &parameters,
+		     unsigned long i) const
+{
+    int n1,n2,m1;
+    double psi;
+    getParameters(n1, n2, m1, psi, parameters);
+
+    double mu = expectation(n1, n2, m1, psi);
+    return (x - mu)/psi;
+}
+    
 }}

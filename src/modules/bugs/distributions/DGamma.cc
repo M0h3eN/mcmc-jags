@@ -74,4 +74,26 @@ double DGamma::KL(vector<double const *> const &par0,
 	+ (b0 - b1) * digamma(b0) + lgammafn(b1) - lgammafn(b0);
 }
 
+    bool DGamma::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+
+    double DGamma::score(double x, vector<double const *> const &par,
+			 unsigned long i) const
+    {
+	double b = SHAPE(par);
+	double a = RATE(par);
+
+	if (i == 0) {
+	    return log(a) + log(x) - digamma(b);
+	}
+	else if (i == 1) {
+	    return -x + b/a;
+	}
+	else {
+	    return 0;
+	}
+    }
+
 }}

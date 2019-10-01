@@ -17,7 +17,7 @@ namespace base {
 	return *args[0] - *args[1];
     }
 
-    bool Subtract::isDifferentiable(unsigned long i) const
+    bool Subtract::hasGradient(unsigned long i) const
     {
 	return i < 2;
     }

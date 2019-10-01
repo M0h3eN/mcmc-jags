@@ -45,5 +45,13 @@ VectorDist::VectorDist(string const &name, unsigned int npar)
     {
 	return JAGS_NA;
     }
+
+    void VectorDist::score(double *s, double const *x,
+			   vector<double const *> const &parameters,
+			   vector<unsigned long> const &lengths,
+			   unsigned long i) const
+    {
+    }
+
     
 } //namespace jags

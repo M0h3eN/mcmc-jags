@@ -9,9 +9,17 @@ namespace bugs {
 /**
  * <pre>
  * x ~ dgampois(m, s)
- * f(x|m,s) = ((x+s-1)!/(x!*(s-1)!)) * ( s/(s+m) )^s * (1-( s/(s+m)) )^x
+ * f(x|m,s) = ((x+s-1)!/(x!*(s-1)!)) * ( s/(s+m) )^s * (1- s/(s+m))^x
  * </pre>
- * @short Gamma-Poisson compound distribution (equivalent to Negative Binomial)
+ * 
+ * This is equivalent to the negative binomial distribution dnegbin(p,
+ * s) where p = s/(s+m). The dgampois distribution has mean m and
+ * variance m*(s+m)/s. It can be derived as Gamma mixture of Poisson
+ * random variables where the gamma mixture variable has a mean of m
+ * and a rate of s. As s tends to infinity the dgampois distribution
+ * converges to a Poisson distribution with mean m.
+ *
+ * @short Gamma-Poisson compound distribution
  */
 class DGamPois : public RScalarDist {
  public:
@@ -30,6 +38,10 @@ class DGamPois : public RScalarDist {
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
   double KL(std::vector<double const *> const &par0,
 	    std::vector<double const *> const &par1) const;
+    bool hasScore(unsigned long i) const;
+    double score(double x, std::vector<double const *> const &parameters,
+		 unsigned long i) const;
+    
 };
 
 }}

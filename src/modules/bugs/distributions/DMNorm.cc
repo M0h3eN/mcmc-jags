@@ -240,4 +240,46 @@ bool DMNorm::isSupportFixed(vector<bool> const &) const
     return true;
 }
 
+bool DMNorm::hasScore(unsigned long i) const
+{
+    return true;
+}
+
+void DMNorm::score(double *s, double const *x,
+		     vector<double const *> const &parameters,
+		     vector<vector<unsigned long>> const &dims, 
+		     unsigned long i) const
+{
+
+    double const * mu = parameters[0];
+    double const * T = parameters[1];
+    unsigned long m = dims[0][0];
+
+    vector<double> delta(m);
+    for (unsigned long j = 0; j < m; ++j) {
+	delta[j] = x[j] - mu[j];
+    }
+
+    if (i == 0) {
+	for (unsigned long j = 0; j < m; ++j) {
+	    s[j] = 0;
+	    for (unsigned long k = 0; k < j; ++k) {
+		s[j] += T[j + k * m] * delta[k];
+	    }
+	    for (unsigned long k = j; k < m; ++k) {
+		s[j] += T[k + j * m] * delta[k];
+	    }
+	}
+    }
+    else if (i == 1) {
+	inverse_chol(s, T, m);
+	for (unsigned long j = 0; j < m; ++j) {
+	    for (unsigned long k = 0; k < m; ++k) {
+		s[j + m * k] -= delta[j] * delta[k];
+		s[j + m * k] /= 2;
+	    }
+	}
+    }
+}
+
 }}

@@ -159,12 +159,12 @@ public:
      *
      * False negatives are allowed, i.e. the function may return false
      * even if it is differentiable. This means that the corresponding
-     * gradient function is not correctly implemented.
+     * gradient function is not implemented.
      *
      * @param i Index of the parameter to take the derivative
      * (starting from zero).
      */
-    virtual bool isDifferentiable(unsigned long i) const;
+    virtual bool hasGradient(unsigned long i) const;
 };
 
 /**

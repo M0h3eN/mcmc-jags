@@ -10,6 +10,7 @@
 
 using std::vector;
 using std::string;
+using std::numeric_limits;
 
 #define ALPHA(par) (par[0])
 #define LENGTH(len) (len[0])
@@ -204,5 +205,41 @@ double DDirch::KL(vector<double const *> const &par0,
 
     return y;
 }
+
+    bool DDirch::hasScore(unsigned long i) const
+    {
+	return i == 0;
+    }
+    
+    void DDirch::score(double *score, double const *x,
+		       vector<double const *> const &par,
+		       vector<unsigned long> const &len,
+		       unsigned long i) const
+    {
+	if (i != 0) return;
+	
+	double const *alpha = ALPHA(par);
+	unsigned long length = LENGTH(len);
+    
+	for (unsigned long j = 0; j < length; j++) {
+	    if (alpha[j] > 0) {
+		score[j] += log(x[j]);
+	    }
+	    else if (x[j] > 0) {
+		score[j] = numeric_limits<double>::quiet_NaN();
+	    }
+	}
+
+	double alphasum = 0.0;
+	for (unsigned long j = 0; j < length; j++) {
+	    if (alpha[j] != 0) {
+		score[j] -= digamma(alpha[j]);
+		alphasum += alpha[j];
+	    }
+	}
+	for (unsigned long j = 0; j < length; j++) {
+	     score[j] += digamma(alphasum);
+	}
+    }
 
 }}

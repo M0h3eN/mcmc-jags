@@ -31,6 +31,7 @@ class DBeta : public RScalarDist {
   bool checkParameterValue(std::vector<double const *> const &parameters) const;
   double KL(std::vector<double const *> const &par1, 
 	    std::vector<double const *> const &par2) const;
+  bool hasScore(unsigned long i) const;
   double score(double x, std::vector<double const *> const &parameters,
 	       unsigned long i) const;
 };

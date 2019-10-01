@@ -89,7 +89,17 @@ contains
     REAL(c_double), INTENT(INOUT) :: A( LDA, * )
     CALL DTRTRI( UPLO, DIAG, N, A, LDA, INFO )
   END SUBROUTINE JAGS_DTRTRI
-  
+
+  SUBROUTINE JAGS_DSYMV( UPLO, N, ALPHA, A, LDA, X, INCX, BETA, Y, INCY)&
+       & BIND(C, NAME="jags_dsymv")
+    CHARACTER(c_char), INTENT(IN) :: UPLO
+    INTEGER(c_int), VALUE, INTENT(IN) :: N, LDA, INCX, INCY
+    REAL(c_double), VALUE, INTENT(IN) :: ALPHA, BETA
+    REAL(c_double), INTENT(IN) :: X(*), A( LDA, *)
+    REAL(c_double), INTENT(INOUT) :: Y( * )
+    CALL DSYMV( UPLO, N, ALPHA, A, LDA, X, INCX, BETA, Y, INCY)
+  END SUBROUTINE JAGS_DSYMV
+
 endmodule jags_lapack
    
 

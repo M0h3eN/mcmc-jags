@@ -115,4 +115,27 @@ double DGamPois::KL(vector<double const *> const &par0,
 	(1 - p0) * s0 * (log(1 - p0) - log(1 - p1)) / p0;
 }
 
+    bool DGamPois::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+
+    double DGamPois::score(double x, vector<double const *> const &par,
+			   unsigned long i) const
+    {
+	double m = MEAN(par);
+	double s = SHAPE(par);
+	double prob = s / (s + m);
+	
+	if (i == 0) {
+	    return prob * (x - m) / m;
+	}
+	else if (i == 1) {
+	    return digamma(x + s) - digamma(s) + log(prob) - 1 - prob - x/(s+m);
+	}
+	else {
+	    return 0;
+	}
+    }
+   
 }}

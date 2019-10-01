@@ -77,6 +77,10 @@ double DChisqr::r(vector<double const *> const &par, RNG *rng) const
 	return (b0 - b1) * digamma(b0) + lgammafn(b1) - lgammafn(b0);
     }
 
+    bool DChisqr::hasScore(unsigned long i) const
+    {
+	return i == 0;
+    }
     
     double DChisqr::score(double x, vector<double const *> const &parameters,
 			  unsigned long i) const

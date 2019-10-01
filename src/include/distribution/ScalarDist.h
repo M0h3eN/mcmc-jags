@@ -74,6 +74,11 @@ class ScalarDist : public Distribution
 			    double const *lbound, double const *ubound)
       const = 0;
   /**
+   * Calculates the score function
+   */
+  virtual double score(double x, std::vector<double const *> const &pars,
+		       unsigned long i) const;
+  /**
    * Draws a random sample 
    */
   virtual double randomSample(std::vector<double const *> const &parameters, 
@@ -118,13 +123,6 @@ class ScalarDist : public Distribution
    */
   virtual double KL(std::vector<double const *> const &,
 		    std::vector<double const *> const &) const;
-  /**
-   * FIXME
-   * Add this virtual method after we have an implementation for all 
-   * sub-classes
-  virtual double score(double x, std::vector <double const *> const &args,
-		       unsigned long i) const = 0;
-  */
 };
 
 } /* namespace jags */

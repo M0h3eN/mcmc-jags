@@ -79,6 +79,11 @@ double DBeta::KL(vector<double const *> const &par1,
 	+ (a2 + b2 - a1 - b1) * digamma(a1 + b1);
 }
 
+    bool DBeta::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+    
     double DBeta::score(double x, vector<double const *> const &parameters,
 			unsigned long i) const
     {
@@ -89,7 +94,7 @@ double DBeta::KL(vector<double const *> const &par1,
 	    return log(x) - digamma(a) + digamma(a + b);
 	}
 	else if (i == 1) {
-	    return log(1- x) - digamma(b) + digamma(a + b);
+	    return log(1-x) - digamma(b) + digamma(a + b);
 	}
 	else {
 	    return 0;

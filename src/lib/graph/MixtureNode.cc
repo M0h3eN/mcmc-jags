@@ -268,11 +268,14 @@ bool isMixture(Node const *node)
   return dynamic_cast<MixtureNode const*>(node);
 }
 
-bool MixtureNode::isDifferentiable(Node const *arg) const
+bool MixtureNode::hasGradient(Node const *arg) const
 {
+    //A Mixture nodes is not differentiable with respect to the indices.
     auto par = parents();
-    for (unsigned long i = _Nindex; i < par.size(); ++i) {
-	if (par[i]==arg) return false;
+    for (unsigned long i = 0; i < _Nindex; ++i) {
+	if (arg == par[i]) {
+	    return false;
+	}
     }
     return true;
 }
@@ -280,9 +283,10 @@ bool MixtureNode::isDifferentiable(Node const *arg) const
 void MixtureNode::gradient(double *grad, Node const *arg,
 			   unsigned int chain) const
 {
+    //Gradient is trivially 1 with respect to the active node only
     if (arg == _active_parents[chain]) {
 	for (unsigned int i = 0; i < _length; ++i) {
-	    grad += 1;
+	    grad[i] += 1;
 	}
     }
 }

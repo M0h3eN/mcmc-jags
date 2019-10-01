@@ -44,9 +44,12 @@ public:
     bool isClosed(std::set<Node const *> const &ancestors, 
 		  ClosedFuncClass fc, bool fixed) const;
     /**
+     * Checks if the gradient can be calculated.
      *
+     * Returns true if Function#hasGradient returns true for every
+     * index matching the given parent node.
      */
-    bool isDifferentiable(Node const *arg) const;
+    bool hasGradient(Node const *arg) const;
     std::string deparse(std::vector<std::string> const &) const;
 };
 

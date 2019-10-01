@@ -20,7 +20,7 @@ namespace base {
 	return out;
     }
 
-    bool Add::isDifferentiable(unsigned long) const
+    bool Add::hasGradient(unsigned long) const
     {
 	return true;
     }

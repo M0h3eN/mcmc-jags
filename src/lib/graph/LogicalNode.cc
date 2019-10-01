@@ -143,12 +143,12 @@ bool LogicalNode::isClosed(set<Node const *> const &ancestors,
 	return _discrete;
     }
 
-    bool LogicalNode::isDifferentiable(Node const *arg) const
+    bool LogicalNode::hasGradient(Node const *arg) const
     {
 	auto par = parents();
 	for (unsigned int i = 0; i < par.size(); ++i) {
 	    if (par[i] == arg) {
-		if (!_func->isDifferentiable(i)) return false;
+		if (!_func->hasGradient(i)) return false;
 	    }
 	}
 	return true;

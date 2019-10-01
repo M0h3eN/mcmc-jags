@@ -26,7 +26,7 @@ public:
 		  std::vector<bool> const &fixmask) const;
     bool isScale(std::vector<bool> const &mask,
 		 std::vector<bool> const &fixmask) const;
-    bool isDifferentiable(unsigned long i) const;
+    bool hasGradient(unsigned long i) const;
     double gradient(std::vector<double const *> const &args,
 		    unsigned long i) const;
 

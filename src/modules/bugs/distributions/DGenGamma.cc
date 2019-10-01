@@ -97,4 +97,33 @@ double DGenGamma::KL(vector<double const *> const &par0,
 	+ lgammafn(r1) - lgammafn(r0);
 }
 
+    bool DGenGamma::hasScore(unsigned long i) const
+    {
+	return true;
+    }
+
+    double DGenGamma::score(double x, vector<double const *> const &par,
+			    unsigned long i) const
+    {
+	double r = SHAPE(par);
+	double mu = URATE(par);
+	double beta = POW(par);
+
+	double y = beta * log(mu*x);
+
+	if (i == 0) {
+	    return y - digamma(y);
+	}
+	else if (i == 1) {
+	    return beta * (r - exp(y)) / mu;
+	}
+	else if (i == 2) {
+	    return (1 + y * (r - exp(y))) / beta;
+	}
+	else {
+	    return 0;
+	}
+
+    }
+
 }}

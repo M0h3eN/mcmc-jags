@@ -73,6 +73,11 @@ public:
 			   std::vector<bool> const &observed,
 			   unsigned long nobs,
 			   RNG *rng);
+  bool hasScore(unsigned long i) const;
+  void score(double *s, double const *x,
+	     std::vector<double const *> const &parameters,
+	     std::vector<std::vector<unsigned long>> const &dims, 
+	     unsigned long i) const;
 };
 
 }}

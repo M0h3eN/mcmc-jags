@@ -52,6 +52,11 @@ public:
 	    std::vector<double const *> const &par2,
 	    std::vector<unsigned long> const &lengths) const;
   std::string alias() const;
+  bool hasScore(unsigned long i) const;
+  void score(double *s, double const *x,
+	     std::vector<double const *> const &parameters,
+	     std::vector<unsigned long> const &lengths,
+	     unsigned long i) const;
 };
 
 }}
