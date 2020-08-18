@@ -7,6 +7,8 @@
 #include <graph/Node.h>
 #include <sarray/RangeIterator.h>
 
+#include <stdexcept>
+
 using std::set;
 using std::string;
 using std::vector;

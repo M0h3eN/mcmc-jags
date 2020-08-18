@@ -20,6 +20,7 @@
 #include <sarray/RangeIterator.h>
 
 #include <set>
+#include <stdexcept>
 
 using std::set;
 using std::string;
