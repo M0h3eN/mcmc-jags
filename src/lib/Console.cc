@@ -707,8 +707,7 @@ bool Console::loadModule(string const &name)
 vector<string> Console::listModules()
 {
     vector<string> ans;
-    list<Module*>::const_iterator p;
-    for (p = Module::loadedModules().begin(); 
+    for (auto p = Module::loadedModules().begin(); 
 	 p != Module::loadedModules().end(); ++p)
     {
 	ans.push_back((*p)->name());
@@ -718,8 +717,7 @@ vector<string> Console::listModules()
 
 bool Console::unloadModule(string const &name)
 {
-    list<Module*>::iterator p;
-    for (p = Module::loadedModules().begin(); 
+    for (auto p = Module::loadedModules().begin(); 
 	 p !=  Module::loadedModules().end(); ++p)
     {
 	if ((*p)->name() == name) {
@@ -852,8 +850,7 @@ void Console::setRNGSeed(unsigned int seed)
 {
     if (seed == 0) return;
 
-    list<pair<RNGFactory*, bool> >::const_iterator p;
-    for (p = Model::rngFactories().begin(); p != Model::rngFactories().end(); 
+    for (auto p = Model::rngFactories().begin(); p != Model::rngFactories().end(); 
 	 ++p) 
     {
 	p->first->setSeed(seed);
