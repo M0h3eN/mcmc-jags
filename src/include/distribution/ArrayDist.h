@@ -52,6 +52,28 @@ public:
 		   std::vector<std::vector<unsigned long> > const &dims)
 	const = 0;
     /**
+     * Calculates the score function.
+     *
+     * @param s Array to hold the results (assumed to be of correct
+     * length). The score function is added to this array.
+     *
+     * @param x Value at which to evaluate the score function (assumed
+     * to be of the correct length).
+     *
+     * @param parameters Vector of parameter values.
+     * 
+     * @param dims Vector of parameter dimensions.
+     *
+     * @param i Index of the parameter for which the score function is
+     * calculated. This function should only be called if
+     * Distribution#hasScore returns true for the same value of i.
+     * Otherwise the effect is undefined.
+     */
+    virtual void score(double *s, double const *x,
+		       std::vector<double const *> const &parameters,
+		       std::vector<std::vector<unsigned long>> const &dims,
+		       unsigned long i) const;
+    /**
      * Draws a random sample from the distribution. 
      *
      * @param x Array to which the sample values are written

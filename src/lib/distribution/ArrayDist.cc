@@ -13,6 +13,14 @@ ArrayDist::ArrayDist(string const &name, unsigned int npar)
   : Distribution(name, npar)
 {
 }
+    void ArrayDist::score(double *s, double const *x,
+			  vector<double const *> const &parameters,
+			  vector<vector<unsigned long>> const &dims,
+			  unsigned long i) const
+    {
+	throw DistError(this, "Undefined score function");
+    }
+    
     void ArrayDist::randomSample(double *x, vector<bool> const &observed,
 				 vector<double const *> const &parameters,
 				 vector<vector<unsigned long>> const &dims, 
