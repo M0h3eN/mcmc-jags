@@ -9,6 +9,9 @@
 #include <function/VectorLogDensity.h>
 #include <function/ArrayLogDensity.h>
 #include <distribution/RScalarDist.h>
+#include <model/MonitorFactory.h>
+#include <rng/RNGFactory.h>
+#include <sampler/SamplerFactory.h>
 
 #include <algorithm>
 
@@ -28,8 +31,6 @@ Module::Module(string const &name)
 
 Module::~Module()
 {
-    //FIXME: Could be causing windows segfault??
-    unload();
     list<Module*>::iterator p = find(modules().begin(), modules().end(), this);
     if (p != modules().end()) {
 	modules().erase(p);
@@ -209,16 +210,16 @@ void Module::load()
 	return;
 
     for (unsigned int i = 0; i < _monitor_factories.size(); ++i) {
-	pair<MonitorFactory*,bool> p(_monitor_factories[i], true);
-	Model::monitorFactories().push_front(p);
+	_monitor_factories[i]->setActive(true);
+	Model::monitorFactories().push_front(_monitor_factories[i]);
     }
     for (unsigned int i = 0; i < _rng_factories.size(); ++i) {
-	pair<RNGFactory*, bool> p(_rng_factories[i], true);
-	Model::rngFactories().push_front(p);
+	_rng_factories[i]->setActive(true);
+	Model::rngFactories().push_front(_rng_factories[i]);
     }
     for (unsigned int i = 0; i < _sampler_factories.size(); ++i) {
-	pair<SamplerFactory*, bool> p(_sampler_factories[i], true);
-	Model::samplerFactories().push_front(p);
+	_sampler_factories[i]->setActive(true);
+	Model::samplerFactories().push_front(_sampler_factories[i]);
     }
     for (unsigned int i = 0; i < _dp_list.size(); ++i) {
 	Compiler::distTab().insert(_dp_list[i]);
@@ -254,25 +255,19 @@ void Module::unload()
 	Compiler::distTab().erase(_dp_list[i]);
     }
 
-    list<pair<RNGFactory *, bool> > &rngf = Model::rngFactories();
+    list<RNGFactory *> &rngf = Model::rngFactories();
     for (unsigned int i = 0; i < _rng_factories.size(); ++i) {
-	RNGFactory *f = _rng_factories[i];
-	rngf.remove(pair<RNGFactory *, bool>(f, true));
-	rngf.remove(pair<RNGFactory *, bool>(f, false));
+	rngf.remove(_rng_factories[i]);
     }
 
-    list<pair<SamplerFactory *, bool> > &sf = Model::samplerFactories();
+    list<SamplerFactory *> &sf = Model::samplerFactories();
     for (unsigned int i = 0; i < _sampler_factories.size(); ++i) {
-	SamplerFactory *f = _sampler_factories[i];
-	sf.remove(pair<SamplerFactory *, bool>(f, true));
-	sf.remove(pair<SamplerFactory *, bool>(f, false));
+	sf.remove(_sampler_factories[i]);
     }
 
-    list<pair<MonitorFactory *, bool> > &mf = Model::monitorFactories();
+    list<MonitorFactory *> &mf = Model::monitorFactories();
     for (unsigned int i = 0; i < _monitor_factories.size(); ++i) {
-	MonitorFactory *f = _monitor_factories[i];
-	mf.remove(pair<MonitorFactory *, bool>(f, true));
-	mf.remove(pair<MonitorFactory *, bool>(f, false));
+	mf.remove(_monitor_factories[i]);
     }
 
 }

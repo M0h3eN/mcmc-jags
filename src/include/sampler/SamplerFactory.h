@@ -5,6 +5,8 @@
 #include <list>
 #include <string>
 
+#include <util/Factory.h>
+
 namespace jags {
 
 class Sampler;
@@ -14,7 +16,7 @@ class Graph;
 /**
  * @short Factory for Sampler objects
  */
-class SamplerFactory
+class SamplerFactory : public Factory
 {
 public:
     virtual ~SamplerFactory();
@@ -27,11 +29,6 @@ public:
     virtual std::vector<Sampler*> 
 	makeSamplers(std::list<StochasticNode*> const &nodes, 
 		     Graph const &graph) const = 0;
-    /**
-      * Returns the name of the sampler factory
-      */
-    virtual std::string name() const = 0;
-
 };
 
 } /* namespace jags */

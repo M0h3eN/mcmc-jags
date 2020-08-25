@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <util/Factory.h>
+
 namespace jags {
 
 class Monitor;
@@ -15,7 +17,8 @@ class Range;
 /**
  * @short Factory for Monitor objects
  */
-class MonitorFactory {
+class MonitorFactory : public Factory
+{
 public:
     virtual ~MonitorFactory();
     /**
@@ -43,10 +46,6 @@ public:
     virtual Monitor *getMonitor(std::string const &name, Range const &range,
 				BUGSModel *model, std::string const &type,
 				std::string &msg) = 0;
-    /**
-     * Returns the name of the monitor factory
-     */
-    virtual std::string name() const = 0;
 };
 
 } /* namespace jags */

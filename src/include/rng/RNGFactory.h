@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <util/Factory.h>
+
 namespace jags {
 
 struct RNG;
@@ -11,14 +13,9 @@ struct RNG;
 /**
  * @short Factory for RNG objects
  */
-class RNGFactory
+class RNGFactory : public Factory
 {
-    
   public:
-    /**
-     * Destructor. An RNGFactory retains ownership of the RNG objects
-     * it generates, and should delete them when the destructor is called.
-     */
     virtual ~RNGFactory();
     /**
      * Sets the random seed of the RNG factory so that a reproducible
@@ -44,10 +41,6 @@ class RNGFactory
      * way will generate independent streams.
      */
     virtual RNG * makeRNG(std::string const &name) = 0;
-    /**
-     * Returns the name of the RNG factory
-     */
-    virtual std::string name() const = 0;
 };
 
 } /* namespace jags */

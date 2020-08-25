@@ -25,7 +25,6 @@
 #include <map>
 
 using std::map;
-using std::pair;
 using std::binary_function;
 using std::sort;
 using std::vector;
@@ -129,10 +128,9 @@ void Model::chooseRNGs()
     }
 
     vector<RNG*> new_rngs;
-    list<pair<RNGFactory*, bool> >::const_iterator p;
-    for (p = rngFactories().begin(); p != rngFactories().end(); ++p) {
-	if (p->second) {
-	    vector<RNG*> rngs = p->first->makeRNGs(n);
+    for (auto p = rngFactories().begin(); p != rngFactories().end(); ++p) {
+	if ((*p)->isActive()) {
+	    vector<RNG*> rngs = (*p)->makeRNGs(n);
 	    if (rngs.size() > n) {
 		throw logic_error("Too many rngs produced by RNG factory");
 	    }
@@ -282,13 +280,13 @@ void Model::chooseSamplers()
     }
 
     // Traverse the list of samplers, selecting nodes that can be sampled
-    list<pair<SamplerFactory *, bool> > const &sf = samplerFactories();
-    for(list<pair<SamplerFactory *, bool> >::const_iterator q = sf.begin();
+    list<SamplerFactory *> const &sf = samplerFactories();
+    for(list<SamplerFactory *>::const_iterator q = sf.begin();
 	q != sf.end(); ++q) 
     {
-	if (!q->second) continue;
+	if (!(*q)->isActive()) continue;
 
-	vector<Sampler*> svec = q->first->makeSamplers(slist, sample_graph);
+	vector<Sampler*> svec = (*q)->makeSamplers(slist, sample_graph);
 	while (!svec.empty()) {
 	    for (unsigned int i = 0; i < svec.size(); ++i) {
 
@@ -305,7 +303,7 @@ void Model::chooseSamplers()
 		}
 		_samplers.push_back(svec[i]);
 	    }
-	    svec = q->first->makeSamplers(slist, sample_graph);
+	    svec = (*q)->makeSamplers(slist, sample_graph);
 	}
     }
   
@@ -524,24 +522,21 @@ void Model::removeMonitor(Monitor *monitor)
    lookup tables used by the compiler.
 */
 
-list<pair<SamplerFactory *, bool> > &Model::samplerFactories()
+list<SamplerFactory *> &Model::samplerFactories()
 {
-    static list<pair<SamplerFactory *, bool> > *_samplerfac =
-	new list<pair<SamplerFactory *, bool> >();
+    static auto * _samplerfac =	new list<SamplerFactory *>;
     return *_samplerfac;
 }
 
-list<pair<RNGFactory *, bool> > &Model::rngFactories()
+list<RNGFactory *> &Model::rngFactories()
 {
-    static list<pair<RNGFactory *, bool> > *_rngfac =
-	new list<pair<RNGFactory *, bool> >();
+    static auto * _rngfac = new list<RNGFactory *>;
     return *_rngfac;
 }
 
-list<pair<MonitorFactory *, bool> > &Model::monitorFactories()
+list<MonitorFactory *> &Model::monitorFactories()
 {
-    static list<pair<MonitorFactory *, bool> > *_monitorfac =
-	new list<pair<MonitorFactory*,bool> >();
+    static auto * _monitorfac =	new list<MonitorFactory*>;
     return *_monitorfac;
 }
 
@@ -560,10 +555,9 @@ bool Model::setRNG(string const &name, unsigned int chain)
   if (chain >= _nchain)
      throw logic_error("Invalid chain number in Model::setRNG");
 
-  list<pair<RNGFactory*, bool> >::const_iterator p;
-  for (p = rngFactories().begin(); p != rngFactories().end(); ++p) {
-      if (p->second) {
-	  RNG *rng = p->first->makeRNG(name);
+  for (auto p = rngFactories().begin(); p != rngFactories().end(); ++p) {
+      if ((*p)->isActive()) {
+	  RNG *rng = (*p)->makeRNG(name);
 	  if (rng) {
 	      /* NO! RNGs are owned by the factory, not the model
 	      if (_rng[chain])

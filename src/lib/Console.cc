@@ -74,8 +74,6 @@ using std::FILE;
 	return false;							\
     }
 
-/* Helper functions for dumpState */
-
 namespace jags {
 
 Console::Console(ostream &out, ostream &err)
@@ -728,42 +726,13 @@ bool Console::unloadModule(string const &name)
     return false;
 }
 
-static bool setSamplerActive(string const &name, bool flag)
+template<typename T>
+bool setactive(string const &name, bool flag, list<T*> const &faclist)
 {
     bool ans = false;
-    list<pair<SamplerFactory*, bool> > &faclist = Model::samplerFactories();
-    list<pair<SamplerFactory*, bool> >::iterator p;
-    for (p = faclist.begin(); p != faclist.end(); ++p) {
-	if (p->first->name() == name) {
-	    p->second = flag;
-	    ans = true;
-	}
-    }
-    return ans;
-}
-
-static bool setMonitorActive(string const &name, bool flag)
-{
-    bool ans = false;
-    list<pair<MonitorFactory*, bool> > &faclist = Model::monitorFactories();
-    list<pair<MonitorFactory*, bool> >::iterator p;
-    for (p = faclist.begin(); p != faclist.end(); ++p) {
-	if (p->first->name() == name) {
-	    p->second = flag;
-	    ans = true;
-	}
-    }
-    return ans;
-}
-
-static bool setRNGActive(string const &name, bool flag)
-{
-    bool ans = false;
-    list<pair<RNGFactory*, bool> > &faclist = Model::rngFactories();
-    list<pair<RNGFactory*, bool> >::iterator p;
-    for (p = faclist.begin(); p != faclist.end(); ++p) {
-	if (p->first->name() == name) {
-	    p->second = flag;
+    for (auto p = faclist.begin(); p != faclist.end(); ++p) {
+	if ((*p)->name() == name) {
+	    (*p)->setActive(flag);
 	    ans = true;
 	}
     }
@@ -775,66 +744,40 @@ bool Console::setFactoryActive(string const &name, FactoryType type, bool flag)
     bool ok = false;
     switch(type) {
     case SAMPLER_FACTORY:
-	ok = setSamplerActive(name, flag);
+	ok = setactive<SamplerFactory>(name, flag, Model::samplerFactories());
 	break;
     case MONITOR_FACTORY:
-	ok = setMonitorActive(name, flag);
+	ok = setactive<MonitorFactory>(name, flag, Model::monitorFactories());
 	break;
     case RNG_FACTORY:
-	ok = setRNGActive(name, flag);
+	ok = setactive<RNGFactory>(name, flag, Model::rngFactories());
 	break;
     }
     return ok;
 }
 
-static vector<pair<string, bool> > listSamplerFactories()
+template<class T>
+vector<pair<string, bool>> listfac(list<T*> const &flist)
 {
-    vector<pair<string, bool> > ans;
-    list<pair<SamplerFactory*, bool> > const &flist = Model::samplerFactories();
-    for (list<pair<SamplerFactory*, bool> >::const_iterator p = flist.begin();
-	 p != flist.end(); ++p) 
-    {
-	ans.push_back(pair<string,bool>(p->first->name(), p->second));
+    vector<pair<string, bool>> ans;
+    for (auto p = flist.begin(); p != flist.end(); ++p) {
+	ans.push_back(pair<string, bool>((*p)->name(), (*p)->isActive()));
     }
     return ans;
 }
 
-static vector<pair<string, bool> > listMonitorFactories()
+vector<pair<string, bool>>  Console::listFactories(FactoryType type)
 {
-    vector<pair<string, bool> > ans;
-    list<pair<MonitorFactory*, bool> > const &flist = Model::monitorFactories();
-    for (list<pair<MonitorFactory*, bool> >::const_iterator p = flist.begin();
-	 p != flist.end(); ++p) 
-    {
-	ans.push_back(pair<string,bool>(p->first->name(), p->second));
-    }
-    return ans;
-}
-
-static vector<pair<string, bool> > listRNGFactories()
-{
-    vector<pair<string, bool> > ans;
-    list<pair<RNGFactory*, bool> > const &flist = Model::rngFactories();
-    for (list<pair<RNGFactory*, bool> >::const_iterator p = flist.begin();
-	 p != flist.end(); ++p) 
-    {
-	ans.push_back(pair<string,bool>(p->first->name(), p->second));
-    }
-    return ans;
-}
-
-vector<pair<string, bool> >  Console::listFactories(FactoryType type)
-{
-    vector<pair<string, bool> > ans;
+    vector<pair<string, bool>> ans;
     switch(type) {
     case SAMPLER_FACTORY:
-	ans = listSamplerFactories();
+	ans = listfac<SamplerFactory>(Model::samplerFactories());
 	break;
     case MONITOR_FACTORY:
-	ans = listMonitorFactories();
+	ans = listfac<MonitorFactory>(Model::monitorFactories());
 	break;
     case RNG_FACTORY:
-	ans = listRNGFactories();
+	ans = listfac<RNGFactory>(Model::rngFactories());
 	break;
     }
     return ans;
@@ -853,7 +796,7 @@ void Console::setRNGSeed(unsigned int seed)
     for (auto p = Model::rngFactories().begin(); p != Model::rngFactories().end(); 
 	 ++p) 
     {
-	p->first->setSeed(seed);
+	(*p)->setSeed(seed);
     }
     rngSeed() = seed;
 }
