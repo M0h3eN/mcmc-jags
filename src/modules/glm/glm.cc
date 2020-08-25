@@ -19,7 +19,7 @@
 
 using std::vector;
 
-cholmod_common *glm_wk = 0; /* Workspace for CHOLMOD */
+cholmod_common *glm_wk = nullptr; /* Workspace for CHOLMOD */
 
 namespace jags {
 namespace glm {

@@ -22,10 +22,10 @@ namespace dic {
 					  string &msg)
     {
 	if (type != "mean")
-	    return 0;
+	    return nullptr;
 
 	if (name != "pD" && name != "popt")
-	    return 0;
+	    return nullptr;
 
 	if (!isNULL(range)) {
 	    msg = string("Cannot monitor a subset of ") + name;
@@ -34,7 +34,7 @@ namespace dic {
 	if (model->nchain() < 2) {
 	    msg = string("At least two parallel chains needed to monitor ")
 		+ name;
-	    return 0;
+	    return nullptr;
 	}
 
 	vector<StochasticNode const *> observed_nodes;
@@ -46,13 +46,13 @@ namespace dic {
 		}
 		else {
 		    msg = "Support of observed nodes is not fixed";
-		    return 0;
+		    return nullptr;
 		}
 	    }
 	}
 	if (observed_nodes.empty()) {
 	    msg = "There are no observed stochastic nodes";
-	    return 0;
+	    return nullptr;
 	}
 
 	unsigned int nchain = model->nchain();
@@ -61,7 +61,7 @@ namespace dic {
 	    rngs.push_back(model->rng(i));
 	}
 
-	Monitor *m = 0;
+	Monitor *m = nullptr;
 	if (name =="pD") {
 	    m = new PDMonitor(observed_nodes, rngs, 10);
 	}

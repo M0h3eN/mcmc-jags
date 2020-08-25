@@ -135,7 +135,7 @@ static bool aggregate(SingletonGraphView const *candidate,
 
     static bool isLink(DeterministicNode const *dnode)
     {
-	return dynamic_cast<LinkNode const*>(dnode) != 0;
+	return dynamic_cast<LinkNode const*>(dnode) != nullptr;
     }
     
     vector<bool>
@@ -278,23 +278,23 @@ namespace glm {
 
 	string dname = snode->distribution()->name();
 	if (dname != "dnorm" && dname != "dmnorm")
-	    return 0; //Must have normal prior
+	    return nullptr; //Must have normal prior
 
 	if (isObserved(snode))
-	    return 0; //Must be fully unobserved
+	    return nullptr; //Must be fully unobserved
 	
 	if (gibbs && snode->length() != 1) {
-	    return 0;
+	    return nullptr;
 	}
 	if (!gibbs && isBounded(snode)) {
-	    return 0;
+	    return nullptr;
 	}
 	
 
 	SingletonGraphView *view = new SingletonGraphView(snode, graph);
 	if (!checkDescendants(view)) {
 	    delete view;
-	    return 0;
+	    return nullptr;
 	}
 	else {
 	    return view;
@@ -322,14 +322,14 @@ namespace glm {
 	    }
 	}
 	if (candidates.empty()) {
-	    return 0;
+	    return nullptr;
 	}
 
 	// Now try to aggregate nodes into a joint linear model
 	unsigned int Nc = candidates.size();
 	vector<bool> keep(Nc, false);
 	vector<bool> resolved(Nc, false);
-	GraphView *view = 0;
+	GraphView *view = nullptr;
 	    
 	keep[0] = true;
 	
@@ -383,12 +383,12 @@ namespace glm {
 	    }
 	    else {
 		delete candidates[j];
-		candidates[j] = 0;
+		candidates[j] = nullptr;
 	    }
 	}
 
 	if (sub_views.empty()) {
-	    return 0;
+	    return nullptr;
 	}
 
 	view = new GraphView(sample_nodes, graph);
@@ -429,11 +429,11 @@ namespace glm {
 	    skip_nodes.insert(view->nodes()[0]);
 	    delete view;
 	    delete sub_views.back();
-	    return 0;
+	    return nullptr;
 	}
 	
 	unsigned int Nch = nchain(view);
-	vector<GLMMethod*> methods(Nch, 0);
+	vector<GLMMethod*> methods(Nch, nullptr);
 	
 	vector<SingletonGraphView const*> const_sub_views(sub_views.size());
 	copy(sub_views.begin(), sub_views.end(), const_sub_views.begin());

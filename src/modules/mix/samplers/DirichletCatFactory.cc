@@ -60,7 +60,7 @@ namespace jags {
 					  Graph const &graph) const
 	 {
 	     GraphView *gv = new GraphView(snodes, graph);
-	     Sampler * sampler = 0;
+	     Sampler * sampler = nullptr;
 	     unsigned int nchain = snodes[0]->nchain();
 
 	     if (DirichletCat::canSample(gv)) {

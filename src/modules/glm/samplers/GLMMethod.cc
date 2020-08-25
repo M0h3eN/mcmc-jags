@@ -121,7 +121,7 @@ namespace glm {
 			 unsigned int chain)
 	: _view(view), _chain(chain), _sub_views(sub_views),
 	  _outcomes(outcomes),
-	  _x(0), _factor(0), _fixed(sub_views.size(), false), 
+	  _x(nullptr), _factor(nullptr), _fixed(sub_views.size(), false), 
 	  _length_max(0), _nz_prior(0)
     {
 	view->checkFinite(chain); //Check validity of initial values
@@ -244,8 +244,8 @@ namespace glm {
 
 	cholmod_sparse *t_x = cholmod_transpose(_x, 0, glm_wk);
 	cholmod_sort(t_x, glm_wk);
-	cholmod_sparse *Alik = cholmod_aat(t_x, 0, 0, 0, glm_wk);
-	cholmod_sparse *A = cholmod_add(Aprior, Alik, 0, 0, 0, 0, glm_wk);
+	cholmod_sparse *Alik = cholmod_aat(t_x, nullptr, 0, 0, glm_wk);
+	cholmod_sparse *A = cholmod_add(Aprior, Alik, nullptr, nullptr, 0, 0, glm_wk);
 	
 	//Free working matrices
 	cholmod_free_sparse(&t_x, glm_wk);
@@ -270,7 +270,7 @@ namespace glm {
 	unsigned int nrow = _view->length();
 	b = new double[nrow];
 
-	cholmod_sparse *Aprior = 0;
+	cholmod_sparse *Aprior = nullptr;
 	#pragma omp critical
 	Aprior = cholmod_allocate_sparse(nrow, nrow, _nz_prior, 1, 1, 0,
 					 CHOLMOD_REAL, glm_wk); 
@@ -324,7 +324,7 @@ namespace glm {
 	   matrix. Try this with the lsat example to see what speed-up
 	   it gives.
 	*/
-	cholmod_sparse *t_x = 0;
+	cholmod_sparse *t_x = nullptr;
 	#pragma omp critical
 	{
 	    t_x = cholmod_transpose(_x, 1, glm_wk);

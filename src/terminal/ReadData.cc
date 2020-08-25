@@ -78,7 +78,7 @@ bool readRData(vector<ParseTree*> const *array_list,
 	  unsigned long length = vec->parameters().size();
     
 	  /* Get the number of dimensions of the array */
-	  ParseTree const *pdim = 0;
+	  ParseTree const *pdim = nullptr;
 	  unsigned long ndim = 1;
 	  if ((*p)->parameters().size() == 2) {
 	      // Array has dimension attribute

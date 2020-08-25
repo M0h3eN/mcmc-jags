@@ -28,7 +28,7 @@ namespace jags {
 						Graph const &graph) const
 	{
 	    unsigned int nchain = snode->nchain();
-	    vector<MutableSampleMethod*> methods(nchain, 0);
+	    vector<MutableSampleMethod*> methods(nchain, nullptr);
     
 	    SingletonGraphView *gv = new SingletonGraphView(snode, graph);
 	

@@ -21,16 +21,16 @@ namespace dic {
 					string &msg)
     {
 	if (name != "pD") 
-	    return 0;
+	    return nullptr;
 	if (type != "trace")
-	    return 0;
+	    return nullptr;
 	if (model->nchain() < 2) {
 	    msg = "at least two chains are required for a pD trace monitor";
-	    return 0;
+	    return nullptr;
 	}
 	if (!isNULL(range)) {
 	    msg = "cannot monitor a subset of pD";
-	    return 0;
+	    return nullptr;
 	}
 
 	vector<StochasticNode const *> observed_nodes;
@@ -41,12 +41,12 @@ namespace dic {
 	    }
 	    if (!isSupportFixed(snodes[i])) {
 		msg = "pD is infinite because at least one observed node does not have fixed support";
-		return 0;
+		return nullptr;
 	    }
 	}
 	if (observed_nodes.empty()) {
 	    msg = "there are no observed nodes";
-	    return 0;
+	    return nullptr;
 	}
 
 	unsigned int nchain = model->nchain();

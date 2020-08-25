@@ -76,7 +76,7 @@ namespace dic {
 	{
 		// Prevent memory leak with the hack:
 		delete _totalpopt;
-		_totalpopt = 0;
+		_totalpopt = nullptr;
 	}
 	
 

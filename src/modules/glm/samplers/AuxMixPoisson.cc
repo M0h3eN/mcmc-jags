@@ -15,7 +15,7 @@ namespace jags {
 namespace glm {
 
     AuxMixPoisson::AuxMixPoisson(StochasticNode const *snode, unsigned int chain)
-	: Outcome(snode, chain), _y(snode->value(chain)[0]), _mix1(0), _mix2(0), _tau1(0), _tau2(0)
+	: Outcome(snode, chain), _y(snode->value(chain)[0]), _mix1(nullptr), _mix2(nullptr), _tau1(0), _tau2(0)
     {
 	_mix1 = new LGMix(1);
 	_mix2 = new LGMix(_y);

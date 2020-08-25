@@ -35,7 +35,7 @@ namespace glm {
         for (vector<StochasticNode *>::const_iterator p = view->stochasticChildren().begin();
              p != view->stochasticChildren().end(); ++p)
         {
-            Outcome *outcome = 0;
+            Outcome *outcome = nullptr;
             if (NormalLinear::canRepresent(*p)) {
                 outcome = new NormalLinear(*p, chain);
             }

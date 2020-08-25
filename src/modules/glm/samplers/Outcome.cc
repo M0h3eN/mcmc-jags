@@ -76,13 +76,13 @@ namespace glm {
     double const *Outcome::vprecision() const
     {
 	//FIXME: Bit of a hack 
-	return 0;
+	return nullptr;
     }
 
     double const *Outcome::vvalue() const
     {
 	//FIXME: Bit of a hack 
-	return 0;
+	return nullptr;
     }
 
 }}

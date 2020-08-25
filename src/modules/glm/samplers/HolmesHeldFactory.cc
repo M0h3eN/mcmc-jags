@@ -41,7 +41,7 @@ namespace glm {
 	for (p = view->stochasticChildren().begin();
 	     p != view->stochasticChildren().end(); ++p)
 	{
-	    Outcome *outcome = 0;
+	    Outcome *outcome = nullptr;
 	    if (BinaryProbit::canRepresent(*p)) {
 		outcome = new BinaryProbit(*p, chain);
 	    }

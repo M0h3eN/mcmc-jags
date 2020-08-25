@@ -80,7 +80,7 @@ namespace glm {
     {
 	//FIXME: Big overlap with BinaryProbit::canRepresent
 
-	Node const *N = 0;
+	Node const *N = nullptr;
 
 	switch(getFamily(snode)) {
 	case GLM_BERNOULLI:

@@ -37,7 +37,7 @@ namespace glm {
     AuxMixBinomial::AuxMixBinomial(StochasticNode const *snode,
 				   unsigned int chain)
 	: Outcome(snode, chain), _nb(getDenominator(snode, chain)), 
-	  _y(snode->value(chain)[0]), _y_star(0), _mix(0)
+	  _y(snode->value(chain)[0]), _y_star(0), _mix(nullptr)
     {
 	_mix = new LGMix(_nb);
     }

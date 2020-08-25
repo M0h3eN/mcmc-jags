@@ -17,10 +17,10 @@ namespace jags {
 						string &msg)
 	{
 	    if (type != "mean")
-		return 0;
+		return nullptr;
 	
 	    if (name != "WAIC")
-		return 0;
+		return nullptr;
 
 	    if (!isNULL(range))
 		msg = string("Cannot monitor a subset of ") + name;
@@ -33,7 +33,7 @@ namespace jags {
 		if (isObserved(*p)) {
 		    if (isParameter(*p)) {
 			msg = "There are partly observed stochastic nodes";
-			return 0;
+			return nullptr;
 		    }
 		    else {
 			observed_nodes.push_back(*p);
@@ -42,7 +42,7 @@ namespace jags {
 	    }
 	    if (observed_nodes.empty()) {
 		msg = "There are no observed stochastic nodes";
-		return 0;
+		return nullptr;
 	    }
 
 	    Monitor *m = new WAICMonitor(observed_nodes);

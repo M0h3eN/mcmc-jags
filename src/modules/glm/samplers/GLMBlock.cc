@@ -46,8 +46,8 @@ namespace glm {
 	    (*p)->update(rng);
 	}
 
-	double *b = 0;
-	cholmod_sparse *A = 0;
+	double *b = nullptr;
+	cholmod_sparse *A = nullptr;
 	calCoef(b, A);
 
 	unsigned int nrow = _view->length();
@@ -82,7 +82,7 @@ namespace glm {
 	// Use the LDL' decomposition to generate a new sample
 	// with mean mu such that A %*% mu = b and precision A. 
 	
-	cholmod_dense *w = 0;
+	cholmod_dense *w = nullptr;
 	#pragma omp critical
 	w = cholmod_allocate_dense(nrow, 1, nrow, CHOLMOD_REAL, glm_wk);
 	
@@ -93,7 +93,7 @@ namespace glm {
 	    wx[i] = b[perm[i]];
 	}
 
-	cholmod_dense *u1 = 0;
+	cholmod_dense *u1 = nullptr;
         #pragma omp critical
 	{
 	    u1 = cholmod_solve(CHOLMOD_L, _factor, w, glm_wk);
@@ -120,7 +120,7 @@ namespace glm {
 	    }
 	}
     
-        cholmod_dense *u2 = 0;
+        cholmod_dense *u2 = nullptr;
         #pragma omp critical
 	{
             u2 = cholmod_solve(CHOLMOD_DLt, _factor, u1, glm_wk);

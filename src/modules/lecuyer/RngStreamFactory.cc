@@ -98,7 +98,7 @@ namespace lecuyer {
 
     RngStreamFactory::RngStreamFactory()
     {
-        unsigned int seed = static_cast<unsigned int>(time(NULL));
+        unsigned int seed = static_cast<unsigned int>(time(nullptr));
 	setSeed(seed);
     }
     
@@ -168,7 +168,7 @@ namespace lecuyer {
 	    return rng;
 	}
 	else {
-	    return 0;
+	    return nullptr;
 	}
 	
     }

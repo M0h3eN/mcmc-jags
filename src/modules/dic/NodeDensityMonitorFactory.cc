@@ -38,7 +38,7 @@ namespace dic {
 		
 		// Should never be true but just in case:
 		if (name == "_observations_" ) {
-			return 0;
+			return nullptr;
 		}
 		
 		/* Work out the precise type of monitor */
@@ -49,7 +49,7 @@ namespace dic {
 		// Resolve the provided type:
 		bool matched = getMonitorDensityTypes(type, monitor_type, density_type);
 		if (!matched) {
-			return 0;
+			return nullptr;
 		}
 		
 		/* Retrieve the node array  */
@@ -57,7 +57,7 @@ namespace dic {
 		NodeArray *array = model->symtab().getVariable(name);
 		if (!array) {
 		    msg = string("Variable ") + name + " not found";
-		    return 0;
+		    return nullptr;
 		}
 		NodeArraySubset nodearray = NodeArraySubset(array, range);
 		
@@ -70,7 +70,7 @@ namespace dic {
 
 			if (model->nchain() < 2) {
 			    msg = "at least two chains are required for a pD or popt monitor";
-			    return 0;
+			    return nullptr;
 			}
 			
 			/* 
@@ -101,7 +101,7 @@ namespace dic {
 
 		/* Create the correct subtype of monitor */
 
-		Monitor *m = 0;
+		Monitor *m = nullptr;
 		
 		if (monitor_type == TRACE) {
 			m = new DensityTrace(nodearray.allnodes(), nodearray.dim(), density_type, type);

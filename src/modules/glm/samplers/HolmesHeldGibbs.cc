@@ -38,8 +38,8 @@ namespace jags {
 		(*p)->update(rng);
 	    }
 	
-	    double *b = 0;
-	    cholmod_sparse *A = 0;
+	    double *b = nullptr;
+	    cholmod_sparse *A = nullptr;
 	    calCoef(b, A);
 
 	    if (A->stype != 0) {
@@ -68,7 +68,7 @@ namespace jags {
 	    }
 
 	    //Transpose design matrix
-	    cholmod_sparse *t_x = 0;
+	    cholmod_sparse *t_x = nullptr;
 	    #pragma omp critical
 	    t_x = cholmod_transpose(_x, 1, glm_wk);
 	

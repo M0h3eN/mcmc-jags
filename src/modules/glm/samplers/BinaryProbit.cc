@@ -49,7 +49,7 @@ namespace glm {
 
     bool BinaryProbit::canRepresent(StochasticNode const *snode)
     {
-        Node const *N = 0;
+        Node const *N = nullptr;
 
 	switch(getFamily(snode)) {
 	case GLM_BERNOULLI:

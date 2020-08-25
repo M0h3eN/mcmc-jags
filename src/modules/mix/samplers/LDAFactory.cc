@@ -45,10 +45,10 @@ namespace jags {
 	  Dirichlet node TopicPrior has categorical stochastic
 	  children.  There are no intermediate deterministic children.
 	*/
-	if (!gv.deterministicChildren().empty()) return 0;
+	if (!gv.deterministicChildren().empty()) return nullptr;
 	vector<StochasticNode *> const &schild = gv.stochasticChildren();
 	for (unsigned int i = 0; i < schild.size(); ++i) {
-	    if (!isCat(schild[i])) return 0;
+	    if (!isCat(schild[i])) return nullptr;
 	}
 
 	/*
@@ -59,32 +59,32 @@ namespace jags {
 	  All the mixture nodes have a common MixTab.
 	*/
 	  
-	MixTab const *mtab = 0; 
+	MixTab const *mtab = nullptr; 
 	for (unsigned int i = 0; i < schild.size(); ++i) {
 
 	    SingletonGraphView gvi(schild[i], graph);
 
 	    vector<StochasticNode *> const &si = gvi.stochasticChildren();
-	    if (si.size() != 1) return 0;
-	    if (!isCat(si[0])) return 0;
+	    if (si.size() != 1) return nullptr;
+	    if (!isCat(si[0])) return nullptr;
 	    
 	    vector<DeterministicNode *> const &di = gvi.deterministicChildren();
-	    if (di.size() != 1) return 0;
+	    if (di.size() != 1) return nullptr;
 	    MixtureNode const *m = asMixture(di[0]);
-	    if (m == 0) return 0;
+	    if (m == nullptr) return nullptr;
 	    
 	    //Check that schild[i] is the index of the mixture node
-	    if (m->index_size() != 1) return 0;
-	    if (m->parents()[0] != schild[i]) return 0;
+	    if (m->index_size() != 1) return nullptr;
+	    if (m->parents()[0] != schild[i]) return nullptr;
 	    for (unsigned int j = 1; j < m->parents().size(); ++j) {
-		if (m->parents()[j] == schild[i]) return 0;
+		if (m->parents()[j] == schild[i]) return nullptr;
 	    }
 
 	    if (i == 0) {
 		mtab = m->mixTab();
 	    }
 	    else {
-		if (m->mixTab() != mtab) return 0; 
+		if (m->mixTab() != mtab) return nullptr; 
 	    }
 	}
 	return mtab;
@@ -99,21 +99,21 @@ namespace jags {
 	*/
 	vector<StochasticNode *> const &schild = gv.stochasticChildren();
 	for (unsigned int i = 0; i < schild.size(); ++i) {
-	    if (!isCat(schild[i])) return 0;
+	    if (!isCat(schild[i])) return nullptr;
 	}
 	
-	MixTab const *mtab = 0;
+	MixTab const *mtab = nullptr;
 	vector<DeterministicNode *> const &dchild = gv.deterministicChildren();
 	for (unsigned int j = 0; j < dchild.size(); ++j) {
 	    
 	    MixtureNode const *m = asMixture(dchild[j]);
-	    if (m == 0) return 0;
+	    if (m == nullptr) return nullptr;
 	    
 	    if (j == 0) {
 		mtab = m->mixTab();
 	    }
 	    else if (mtab != m->mixTab()) {
-		return 0;
+		return nullptr;
 	    }
 	}
 	
@@ -128,7 +128,7 @@ namespace jags {
 				list<StochasticNode*> const &free_nodes,
 				Graph const &graph) const
 	{
-	    if (topicPriors.empty() || wordPriors.empty()) return 0;
+	    if (topicPriors.empty() || wordPriors.empty()) return nullptr;
 
 	    unsigned int nDoc = topicPriors.size();
 	    vector<vector<StochasticNode*> > topics(nDoc), words(nDoc);
@@ -140,7 +140,7 @@ namespace jags {
 		    if (find(free_nodes.begin(), free_nodes.end(), topics[d][i])
 			== free_nodes.end()) 
 		    {
-			return 0;
+			return nullptr;
 		    }
 		    SingletonGraphView gvi(topics[d][i], graph);
 		    words[d].push_back(gvi.stochasticChildren()[0]);
@@ -159,7 +159,7 @@ namespace jags {
 		}
 		return new MutableSampler(view, methods, "mix::LDA");
 	    }
-	    else return 0;
+	    else return nullptr;
 	}
 
 	string LDAFactory::name() const

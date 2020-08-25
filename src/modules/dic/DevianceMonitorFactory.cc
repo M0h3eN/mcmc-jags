@@ -22,12 +22,12 @@ namespace dic {
     {
 
 	if (type != "mean" && type != "trace")
-	    return 0;
+	    return nullptr;
 	if (name != "deviance")
-	    return 0;
+	    return nullptr;
 	if (!isNULL(range)) {
 	    msg = "cannot monitor a subset of deviance";
-	    return 0;
+	    return nullptr;
 	}
 	
 	vector<StochasticNode *> const &snodes = model->stochasticNodes();
@@ -39,10 +39,10 @@ namespace dic {
 	}
 	if (observed_snodes.empty()) {
 	    msg = "There are no observed stochastic nodes";
-	    return 0;
+	    return nullptr;
 	}
 
-	Monitor *m = 0;
+	Monitor *m = nullptr;
 	if (type == "mean") {
 	    m = new DevianceMean(observed_snodes);
 	    m->setName(name);

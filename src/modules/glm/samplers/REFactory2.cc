@@ -79,7 +79,7 @@ namespace jags {
 	    set<StochasticNode*> &used_nodes,
 	    GLMSampler const *glmsampler, Graph const &graph) const
 	{
-	    SingletonGraphView *tau = 0;
+	    SingletonGraphView *tau = nullptr;
 	    for (list<StochasticNode*>::const_iterator p = free_nodes.begin();
 		 p != free_nodes.end(); ++p)
 	    {
@@ -91,7 +91,7 @@ namespace jags {
 			break;
 		    }
 		    else {
-			delete tau; tau = 0;
+			delete tau; tau = nullptr;
 		    }
 		}
 	    }
@@ -114,7 +114,7 @@ namespace jags {
 		used_nodes.insert(tau->node());
 		return new MutableSampler(tau, methods, _name);
 	    }
-	    return 0;
+	    return nullptr;
 	}
 	
     } // namespace glm

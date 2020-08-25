@@ -50,10 +50,10 @@ namespace dic {
 			 && !(name == "pD" && type == "mean")
 			 && !(name == "popt" && type == "mean")
 			)
-		    return 0;
+		    return nullptr;
 		if (!isNULL(range)) {
 		    msg = "cannot monitor a subset of all the observed stochastic nodes - use the specific node names and subsets instead";
-		    return 0;
+		    return nullptr;
 		}
 		
 		/* Work out the precise type of monitor */
@@ -90,7 +90,7 @@ namespace dic {
 			matched = getMonitorDensityTypes(type, monitor_type, density_type);
 		}
 		if (!matched) {
-			return 0;
+			return nullptr;
 		}
 	
 
@@ -100,7 +100,7 @@ namespace dic {
 		
 		if (observed_snodes.empty()) {
 		    msg = "There are no observed stochastic nodes";
-		    return 0;
+		    return nullptr;
 		}
 		
 
@@ -112,7 +112,7 @@ namespace dic {
 
 			if (model->nchain() < 2) {
 			    msg = "at least two chains are required for a pD or popt monitor";
-			    return 0;
+			    return nullptr;
 			}
 			
 			for (unsigned int i = 0; i < model->nchain(); ++i) {
@@ -122,7 +122,7 @@ namespace dic {
 
 		/* Create the correct subtype of monitor */
 
-		Monitor *m = 0;
+		Monitor *m = nullptr;
 		
 		// There is only ever a single dimension of variables to worry about:
 		vector<unsigned long> dim;

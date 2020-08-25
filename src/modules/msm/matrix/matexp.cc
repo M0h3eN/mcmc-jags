@@ -169,7 +169,7 @@ MatrixExpPade(double *ExpAt, double const *A, int n, double t)
     */
 
     // Scale the matrix by a power of 2 
-    double l1 = F77_DLANGE("1", &n, &n, At, &n, 0); //L-1 norm
+    double l1 = F77_DLANGE("1", &n, &n, At, &n, nullptr); //L-1 norm
     double linf = F77_DLANGE("i", &n, &n, At, &n, Temp); //L-Infinity norm
     /* 
        sqrt(l1 * linf) is an upper bound on the L2 norm of the matrix At

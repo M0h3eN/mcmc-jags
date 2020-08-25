@@ -64,8 +64,8 @@ namespace jags {
 	    //   current value of the sampled nodes, as the origin
 
 	
-	    double *b = 0;
-	    cholmod_sparse *A = 0;
+	    double *b = nullptr;
+	    cholmod_sparse *A = nullptr;
 	    calCoef(b, A);
 	
 	    // Get LDL' decomposition of posterior precision

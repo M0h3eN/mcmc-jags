@@ -261,10 +261,10 @@ namespace jags {
 	    //nodes with a common mixTab.
 	    vector<DeterministicNode*> const &wp_dchild = 
 		wp_gv.deterministicChildren();
-	    MixTab const *mtab = 0;
+	    MixTab const *mtab = nullptr;
 	    for (unsigned int i = 0; i < wp_dchild.size(); ++i) {
 		MixtureNode const *m = asMixture(wp_dchild[i]);
-		if (m == 0) return false;
+		if (m == nullptr) return false;
 		if (i == 0) {
 		    mtab = m->mixTab();
 		}
