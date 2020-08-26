@@ -10,6 +10,7 @@
 #include <sampler/Linear.h>
 #include <sampler/SingletonGraphView.h>
 #include <module/ModuleError.h>
+#include <util/nainf.h>
 
 #include <set>
 #include <vector>
@@ -32,17 +33,21 @@ static double
 getScale(StochasticNode const *snode, ConjugateDist d, unsigned int chain)
 {
     //Get scale parameter of snode
+    double scale = JAGS_NAN;
     switch(d) {
     case GAMMA: case NORM: case DEXP: case WEIB: case LNORM:
-	return *snode->parents()[1]->value(chain);
+	scale = *snode->parents()[1]->value(chain);
+	break;
     case EXP: case POIS:
-	return *snode->parents()[0]->value(chain);
+	scale = *snode->parents()[0]->value(chain);
+	break;
     case BERN: case BETA: case BIN: case CAT: case CHISQ: case DIRCH:
     case LOGIS: case MNORM: case MULTI: case NEGBIN: case PAR: case T:
     case UNIF: case WISH: case OTHERDIST:
 	throwNodeError(snode,
 		       "Can't get scale parameter: invalid distribution");
-    } 
+    }
+    return scale;
 }
 
 

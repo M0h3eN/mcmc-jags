@@ -41,16 +41,21 @@ static Node const * getParent(StochasticNode const *snode)
 {
     //Choose appropriate parent for stochastic child
 
+    Node const *par = nullptr;
     switch(getDist(snode)) {
     case GAMMA: case NORM: case DEXP: case WEIB: case LNORM:
-	return snode->parents()[1];
+	par = snode->parents()[1];
+	break;
     case EXP: case POIS:
-	return snode->parents()[0];
+	par = snode->parents()[0];
+	break;
     case BERN: case BETA: case BIN: case CAT: case CHISQ: case DIRCH:
     case LOGIS: case MNORM: case MULTI: case NEGBIN: case PAR: case T:
     case UNIF: case WISH: case OTHERDIST:
         throwLogicError("Invalid distribution in TruncatedGamma sampler");
-    } 
+    }
+    return par; //-Wall
+	
 }
 
 static double calExponent(SingletonGraphView const *gv, unsigned long i, 

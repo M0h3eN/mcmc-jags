@@ -113,7 +113,7 @@ bool DPar::isSupportFixed(vector<bool> const &fixmask) const
     double DPar::score(double x, vector<double const *> const &parameters,
 		       unsigned long i) const
     {
-	1/ALPHA(parameters) + log(C(parameters)) - log(x);
+	return 1/ALPHA(parameters) + log(C(parameters)) - log(x);
     }
 
 }}
