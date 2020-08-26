@@ -11,7 +11,7 @@ namespace jags {
     class ImmutableSampleMethod
     {
       public:
-	virtual ~ImmutableSampleMethod();
+	virtual ~ImmutableSampleMethod() = default;
 	/**
 	 * Draws another sample from the target distribution
 	 */

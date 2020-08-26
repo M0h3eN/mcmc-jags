@@ -16,7 +16,7 @@ struct RNG;
 class RNGFactory : public Factory
 {
   public:
-    virtual ~RNGFactory();
+    virtual ~RNGFactory() = default;
     /**
      * Sets the random seed of the RNG factory so that a reproducible
      * sequence of RNGs can be produced.

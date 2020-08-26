@@ -11,7 +11,7 @@ struct RNG;
 class MutableSampleMethod
 {
 public:
-    virtual ~MutableSampleMethod();
+    virtual ~MutableSampleMethod() = default;
     /**
      * Draws another sample from the target distribution
      */

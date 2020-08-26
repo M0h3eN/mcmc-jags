@@ -6,10 +6,6 @@ namespace jags {
     {
     }
 
-    Factory::~Factory()
-    {
-    }
-
     void Factory::setActive(bool active)
     {
 	_active = active;

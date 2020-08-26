@@ -15,7 +15,7 @@ namespace jags {
 	 * Constructs a new Factory in an active state.
 	 */
 	Factory();
-	virtual ~Factory();
+	virtual ~Factory() = default;
 	/**
 	 * Sets the factory to an active or inactive state. Inactive
 	 * factories are ignored by the compiler.
