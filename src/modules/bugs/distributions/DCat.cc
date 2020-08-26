@@ -153,7 +153,7 @@ unsigned long DCat::length(vector<unsigned long> const &) const
 
     bool DCat::hasScore(unsigned long i) const
     {
-	true;
+	return true;
     }
     
     void DCat::score(double *s, double const *x,
