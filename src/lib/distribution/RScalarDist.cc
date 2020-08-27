@@ -4,8 +4,6 @@
 #include <util/nainf.h>
 #include <util/dim.h>
 
-#include "c99_math.h"
-
 #include <cmath>
 #include <algorithm>
 
@@ -16,8 +14,8 @@ using std::min;
 using std::max;
 
 //debuggin
-#include <stdexcept>
-using std::logic_error;
+//#include <stdexcept>
+//using std::logic_error;
 
 namespace jags {
 
@@ -135,7 +133,7 @@ RScalarDist::randomSample(vector<double const *> const &parameters,
 	else {
 	    double logpu = p(*upper, parameters, false, true);
 	    double delta = logpu - logpl;
-	    logp += jags_log1p(rng->uniform() * jags_expm1(delta));
+	    logp += log1p(rng->uniform() * expm1(delta));
 	}
 	return q(logp, parameters, false, true);
     }
@@ -151,7 +149,7 @@ RScalarDist::randomSample(vector<double const *> const &parameters,
 	    if (_discrete) ll -= 1;
 	    double logpl = p(ll, parameters, true, true);
 	    double delta = logpl - logpu;
-	    logp += jags_log1p(rng->uniform() * jags_expm1(delta));
+	    logp += log1p(rng->uniform() * expm1(delta));
 	}
 	return q(logp, parameters, true, true);
     }
