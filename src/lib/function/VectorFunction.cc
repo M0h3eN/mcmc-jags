@@ -28,9 +28,9 @@ VectorFunction::checkParameterLength(vector<unsigned long> const &arglen) const
 }
 
     void
-    VectorFunction::gradient(double *grad, vector<double const *> const &args,
-			     vector<unsigned long> const &dims,
-			     unsigned long i) const
+    VectorFunction::gradient(double *, vector<double const *> const &,
+			     vector<unsigned long> const &,
+			     unsigned long) const
     {
     }
 

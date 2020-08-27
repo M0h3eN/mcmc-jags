@@ -20,9 +20,9 @@ ArrayFunction::checkParameterValue(vector<double const *> const &,
 }
 
     void
-    ArrayFunction::gradient(double *grad, vector<double const *> const &args,
-			    vector<vector<unsigned long> > const &dims,
-			    unsigned long i) const
+    ArrayFunction::gradient(double *, vector<double const *> const &,
+			    vector<vector<unsigned long> > const &,
+			    unsigned long) const
     {
     }
 
