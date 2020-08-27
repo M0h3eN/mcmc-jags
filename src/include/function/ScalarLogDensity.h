@@ -19,7 +19,7 @@ namespace jags {
 	    const override;
 	double evaluate(std::vector <double const *> const &args)
 	    const override;
-	bool isDifferentiable(unsigned long i) const override;
+	bool isDifferentiable(unsigned long i) const;
     };
 
 }
