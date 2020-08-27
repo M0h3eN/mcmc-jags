@@ -47,7 +47,7 @@ class ScalarDist : public Distribution
    * Support DIST_UNBOUNDED, DIST_POSITIVE and DIST_PROPORTION. If
    * the Support is DIST_SPECIAL, this must be overloaded.
    */
-  bool isSupportFixed(std::vector<bool> const &fixmask) const;
+  bool isSupportFixed(std::vector<bool> const &fixmask) const override;
   /**
    * Lower limit of distribution, given parameters.  If the
    * distribution has no lower limit, this should return JAGS_NEGINF.

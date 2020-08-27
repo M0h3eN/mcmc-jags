@@ -25,7 +25,7 @@ namespace jags {
     bool 
     PFunction::checkParameterValue(vector<double const *> const &args) const
     {
-	if (dist()->discrete()) {
+	if (dist()->isDiscreteValued()) {
 	    double x = *args[0];
 	    if (x != static_cast<int>(x))
 		return false; //FIXME: use checkInteger

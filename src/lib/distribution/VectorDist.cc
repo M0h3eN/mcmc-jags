@@ -14,10 +14,10 @@ VectorDist::VectorDist(string const &name, unsigned int npar)
 {
 
 }
-    void VectorDist::randomSample(double *x, vector<bool> const &observed,
-				  vector<double const *> const &parameters,
-				  vector<unsigned long> const &lengths, 
-				  RNG *rng) const
+    void VectorDist::randomSample(double *, vector<bool> const &,
+				  vector<double const *> const &,
+				  vector<unsigned long> const &, 
+				  RNG *) const
     {
 	throw DistError(this, "Cannot sample from partially observed node");
     }
@@ -46,10 +46,10 @@ VectorDist::VectorDist(string const &name, unsigned int npar)
 	return JAGS_NA;
     }
 
-    void VectorDist::score(double *s, double const *x,
-			   vector<double const *> const &parameters,
-			   vector<unsigned long> const &lengths,
-			   unsigned long i) const
+    void VectorDist::score(double *, double const *,
+			   vector<double const *> const &,
+			   vector<unsigned long> const &,
+			   unsigned long) const
     {
     }
 

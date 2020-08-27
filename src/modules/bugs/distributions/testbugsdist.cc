@@ -340,7 +340,7 @@ static void scalar_trunclik_discrete(RScalarDist const *dist,
     // Test normalization of truncated likelihood for discrete variables
     // by enumeration
     
-    CPPUNIT_ASSERT(dist->discrete());
+    CPPUNIT_ASSERT(dist->isDiscreteValued());
 
     double delta = lower ? -1 : 1;
     double const *ll = 0;
@@ -376,7 +376,7 @@ static void scalar_trunclik_cont(RScalarDist const *dist,
     // Test normalization of truncated likelihood for continuous
     // variables by approximate integration using the trapezoid method
     
-    CPPUNIT_ASSERT(!dist->discrete());
+    CPPUNIT_ASSERT(!dist->isDiscreteValued());
     CPPUNIT_ASSERT(jags_finite(bound));
     
     //Ensure that the density is finite at the other boundary (ob)
@@ -432,7 +432,7 @@ void BugsDistTest::rscalar_trunclik(RScalarDist const *dist,
     double ll = dist->q(0.1, par, true, false);
     double uu = dist->q(0.9, par, true, false);
 
-    if (dist->discrete()) {
+    if (dist->isDiscreteValued()) {
 	scalar_trunclik_discrete(dist, par, ll, true);
 	scalar_trunclik_discrete(dist, par, ll, false);
 	scalar_trunclik_discrete(dist, par, uu, true);

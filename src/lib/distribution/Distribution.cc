@@ -26,8 +26,6 @@ string Distribution::alias() const
     return "";
 }
 
-
-
 unsigned long Distribution::npar () const
 {
   return _npar;

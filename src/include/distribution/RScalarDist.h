@@ -40,10 +40,10 @@ public:
 		bool discrete=false);
     double logDensity(double x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      double const *lower, double const *upper) const;
+		      double const *lower, double const *upper) const override;
     double randomSample(std::vector<double const *> const &parameters,
 			double const *lower, double const *upper,
-			RNG *rng) const;
+			RNG *rng) const override;
     /**
      * Density function, ignoring bounds
      * @param x value at which to evaluate the density
@@ -81,17 +81,15 @@ public:
     /**
      * All RScalarDist distributions can be bounded
      */
-    bool canBound() const;
+    bool canBound() const override;
     /**
-     * RScalarDist distributions are defined to have support on the integers
-     * or on the real line by the constructor
+     * RScalarDist distributions are defined to have support on the
+     * integers or on the real line by the constructor. The result of
+     * isDiscreteValued does not depend on the argument mask. Hence
+     * this function may be called with a default empty mask.
      */
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
-    /**
-     * Alternative function for determining whether the distribution is
-     * discrete-valued.
-     */
-    bool discrete() const;
+    bool isDiscreteValued(std::vector<bool> const &mask=std::vector<bool>())
+	const override;
 };
 
     /**

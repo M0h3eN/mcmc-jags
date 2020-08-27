@@ -169,7 +169,7 @@ static void scalar_trunclik_cont(RScalarDist const *dist,
     // Test normalization of truncated likelihood for continuous
     // variables by approximate integration using the trapezoid method
     
-    CPPUNIT_ASSERT(!dist->discrete());
+    CPPUNIT_ASSERT(!dist->isDiscreteValued());
     CPPUNIT_ASSERT(jags_finite(bound));
     
     //Ensure that the density is finite at the other boundary (ob)

@@ -74,23 +74,16 @@ class VectorDist : public Distribution
 		       std::vector<unsigned long> const &lengths,
 		       unsigned long i) const;
     /**
-     * Draws a random sample from the distribution when some elements
-     * are observed. The random sample is conditional on the observed
-     * elements.
+     * Draws a random sample from the distribution 
      *
      * @param x Array to which the sample values are written
      *
-     * @param observed Logical vector indicating which elements of x
-     *        are obsered
-     *
-     * @param parameters Vector of parameter values.
+     * @param parameters Vector of parameter values
      *
      * @param lengths Vector of lengths of the arrays in the argument
-     *        "parameters".
+     * "parameters".
      * 
      * @param rng pseudo-random number generator to use.
-     *
-     * @exception length_error 
      */
     virtual void randomSample(double *x,
 			      std::vector<double const *> const &parameters,
@@ -123,13 +116,6 @@ class VectorDist : public Distribution
     virtual void support(double *lower, double *upper,
 			 std::vector<double const *> const &params, 
 			 std::vector<unsigned long> const &lengths) const = 0;
-    /**
-     * Indicates whether the support of the distribution is fixed.
-     *
-     * @param fixmask Boolean vector of length npar() indicating which
-     * parameters have fixed values.
-     */
-    virtual bool isSupportFixed(std::vector<bool> const &fixmask) const = 0;
     /**
      * Checks that lengths of the parameters are correct.
      */

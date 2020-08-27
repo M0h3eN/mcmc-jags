@@ -172,11 +172,6 @@ bool RScalarDist::isDiscreteValued(vector<bool> const &) const
     return _discrete;
 }
 
-bool RScalarDist::discrete() const
-{
-    return _discrete;
-}
-
 double xlog0(double x, bool give_log) {
 	if (x < 0) return JAGS_POSINF;
 	else if (x > 0) return give_log ? JAGS_NEGINF : 0;
