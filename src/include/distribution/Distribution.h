@@ -51,13 +51,14 @@ class Distribution
 public:
     /**
      * Constructor.
+     *
      * @param name name of the distribution as used in the BUGS language
      * @param npar number of parameters, excluding upper and lower bounds
      */
     Distribution(std::string const &name, unsigned long npar);
     virtual ~Distribution();
     /**
-     * @returns the BUGS language name of the distribution
+     * Returns the BUGS language name of the distribution
      */
     std::string const &name() const;
     /**
@@ -152,7 +153,7 @@ public:
     virtual bool fullRank() const;
     /*
      * Returns true if the (log) density of the distribution is
-     * differentiable with respect to its ith argument. The default
+     * differentiable with respect to its ith parameter. The default
      * implementation returns false.  Distributions with
      * differentiable density functions must override this member
      * function.
@@ -169,7 +170,7 @@ public:
      * @param i Index of the parameter to take the derivative
      * (starting from zero).
      */
-    virtual bool hasScore() const;
+    virtual bool hasScore(unsigned long i) const;
 };
 
 /**
