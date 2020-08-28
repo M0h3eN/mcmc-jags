@@ -14,24 +14,25 @@ namespace jags {
     double DFunction::evaluate(vector<double const *> const &args) const
     {
 	double x = *args[0];
-	vector<double const *> param(args.size() - 1);
-	for (unsigned long i = 1; i < args.size(); ++i) {
-	    param[i-1] = args[i];
-	}
+	vector<double const *> param(args.begin() + 1, args.end());
 	
 	return dist()->d(x, PDF_FULL, param, false);
     }
 
     bool 
-    DFunction::checkParameterValue(vector<double const *> const &args) const
+    DFunction::checkParameterDiscrete(vector<bool> const &mask) const
     {
-	if (dist()->isDiscreteValued()) {
-	    double x = *args[0];
-	    if (x != static_cast<int>(x))
-		return false;
+	if (dist()->isDiscreteValued() && !mask[0]) {
+	    return false;
 	}
 	
-	return checkArgs(args);
+	return checkDistParDiscrete(mask);
+    }
+    
+    bool 
+    DFunction::checkParameterValue(vector<double const *> const &args) const
+    {
+	return checkDistParValue(args);
     }
 
 }

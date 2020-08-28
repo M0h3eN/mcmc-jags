@@ -12,10 +12,15 @@ namespace jags {
     {
     public:
 	PFunction(RScalarDist const *dist);
+	bool checkParameterDiscrete(std::vector<bool> const &args)
+	    const override;
 	bool checkParameterValue(std::vector<double const *> const &args)
 	    const override;
 	double evaluate(std::vector <double const *> const &args)
 	    const override;
+	bool hasGradient(unsigned long i) const override;
+	double gradient(std::vector<double const *> const &args,
+			unsigned long i) const override;
     };
 
 }

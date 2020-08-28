@@ -12,6 +12,8 @@ namespace jags {
     {
     public:
 	QFunction(RScalarDist const *dist);
+	bool checkParameterDiscrete(std::vector<bool> const &mask)
+	    const override;
 	bool checkParameterValue(std::vector<double const *> const &args)
 	    const override;
 	double evaluate(std::vector <double const *> const &args)

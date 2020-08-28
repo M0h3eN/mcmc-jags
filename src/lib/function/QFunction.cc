@@ -14,17 +14,21 @@ namespace jags {
     double QFunction::evaluate(vector<double const *> const &args) const
     {
 	double x = *args[0];
-	vector<double const *> param(args.size() - 1);
-	for (unsigned long i = 1; i < args.size(); ++i) {
-	    param[i-1] = args[i];
-	}
+	vector<double const *> param(args.begin() + 1, args.end());
 	
 	return dist()->q(x, param, true, false);
     }
 
     bool QFunction::checkParameterValue(vector<double const*> const &args) const
     {
-	return checkArgs(args);
+	if (*args[0] < 0 || *args[0] > 1) return false;
+
+	return checkDistParValue(args);
     }
 
+    bool QFunction::checkParameterDiscrete(vector<bool> const &mask) const
+    {
+	return checkDistParDiscrete(mask);
+    }
+    
 }

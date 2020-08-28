@@ -15,11 +15,15 @@ namespace jags {
 	ScalarDist const *_dist;
     public:
 	ScalarLogDensity(ScalarDist const *dist);
+	bool checkParameterDiscrete(std::vector<bool> const &args)
+	    const override;
 	bool checkParameterValue(std::vector<double const *> const &args)
 	    const override;
 	double evaluate(std::vector <double const *> const &args)
 	    const override;
-	bool isDifferentiable(unsigned long i) const;
+	bool hasGradient(unsigned long i) const override;
+	double gradient(std::vector<double const *> const &args,
+			unsigned long i) const override;
     };
 
 }

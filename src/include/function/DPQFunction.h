@@ -30,12 +30,22 @@ namespace jags {
          */
 	RScalarDist const *dist() const;
 	/**
+	 * Checks the value of the arguments passed to the associated
+	 * RScalarDist.
+	 *
 	 * If an RScalarDist has m parameters, then a DPQFunction
 	 * derived from it will have (m+1) arguments. To check the
 	 * validity of the arguments, we strip off the first one and
-	 * then pass the rest to ScalarDist#checkParameterValue
+	 * then pass the rest to ScalarDist#checkParameterValue.  A
+	 * DPQFunction will also need to check the first argument in
+	 * order to implement ScalarFunction#checkParameterValue.
          */
-	bool checkArgs(std::vector<double const *> const &args) const;
+	bool checkDistParValue(std::vector<double const *> const &args) const;
+	/**
+	 * Checks if the arguments passed to the associated
+	 * RScalarDist are discrete.
+         */
+	bool checkDistParDiscrete(std::vector<bool> const &mask) const;
     };
 
 }

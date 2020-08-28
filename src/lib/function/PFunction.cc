@@ -14,24 +14,39 @@ namespace jags {
     double PFunction::evaluate(vector<double const *> const &args) const
     {
 	double x = *args[0];
-	vector<double const *> param(args.size() - 1);
-	for (unsigned long i = 1; i < args.size(); ++i) {
-	    param[i-1] = args[i];
-	}
-	
+	vector<double const *> param(args.begin() + 1, args.end());
+
 	return dist()->p(x, param, true, false);
     }
 
+    bool PFunction::checkParameterDiscrete(vector<bool> const &mask) const
+    {
+	if (dist()->isDiscreteValued() && !mask[0]) {
+	    return false;
+	}
+	
+	return checkDistParDiscrete(mask);
+    }
+    
     bool 
     PFunction::checkParameterValue(vector<double const *> const &args) const
     {
-	if (dist()->isDiscreteValued()) {
-	    double x = *args[0];
-	    if (x != static_cast<int>(x))
-		return false; //FIXME: use checkInteger
-	}
-
-	return checkArgs(args);
+	return checkDistParValue(args);
     }
 
+    bool PFunction::hasGradient(unsigned long i) const
+    {
+	return i == 0 && !dist()->isDiscreteValued();
+    }
+
+    double PFunction::gradient(vector<double const *> const &args,
+			       unsigned long i) const
+    {
+	if (i != 0) return 0;
+	
+	double x = *args[0];
+	vector<double const *> param(args.begin() + 1, args.end());
+	
+	return dist()->d(x, PDF_FULL, param, false);
+    }
 }
