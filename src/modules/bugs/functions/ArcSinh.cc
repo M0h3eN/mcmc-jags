@@ -35,7 +35,7 @@ namespace bugs {
 	return log(x + sqrt(1 + x*x));
     }
 
-    bool ArcSinh::isDifferentiable(unsigned long i) const
+    bool ArcSinh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

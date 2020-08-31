@@ -26,9 +26,9 @@ namespace jags {
 	    double _tau;
 	  public:
 	    PolyaGamma(StochasticNode const *snode, unsigned int chain);
-	    double value() const;
-	    double precision() const;
-	    void update(RNG *rng);
+	    double value() const override;
+	    double precision() const override;
+	    void update(RNG *rng) override;
 	    static bool canRepresent(StochasticNode const *snode);
 	};
 

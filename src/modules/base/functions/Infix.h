@@ -16,7 +16,7 @@ class Infix : public ScalarFunction
 {
 public:
     Infix(std::string const &name, unsigned int npar=2);
-    std::string deparse(std::vector<std::string> const &par) const;
+    std::string deparse(std::vector<std::string> const &par) const override;
 };
 
 }}

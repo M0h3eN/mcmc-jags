@@ -20,24 +20,25 @@ namespace jags {
 	    Combine ();
 	    void evaluate(double *value, 
 			  std::vector <double const *> const &args,
-			  std::vector <unsigned long> const &lengths) const;
-	    bool isDifferentiable(unsigned long i) const;
+			  std::vector <unsigned long> const &lengths)
+		const override;
+	    bool hasGradient(unsigned long i) const override;
 	    void gradient(double *grad,
 			  std::vector <double const *> const &args,
 			  std::vector <unsigned long> const &lengths,
-			  unsigned long i) const;
-	    unsigned long 
-		length(std::vector<unsigned long> const &parlengths,
-		       std::vector<double const *> const &parvalues) const;
-	    bool isDiscreteValued(std::vector<bool> const &mask) const;
+			  unsigned long i) const override;
+	    unsigned long length(std::vector<unsigned long> const &parlengths,
+				 std::vector<double const *> const &parvalues)
+		const override;
+	    bool isDiscreteValued(std::vector<bool> const &mask) const override;
 	    bool isAdditive(std::vector<bool> const &mask,
-			    std::vector<bool> const &isfixed) const;
+			    std::vector<bool> const &isfixed) const override;
 	    bool isScale(std::vector<bool> const &mask,
-			 std::vector<bool> const &isfixed) const;
+			 std::vector<bool> const &isfixed) const override;
 	    bool isLinear(std::vector<bool> const &mask,
-			  std::vector<bool> const &isfixed) const;
+			  std::vector<bool> const &isfixed) const override;
 	    bool checkParameterLength(std::vector<unsigned long> const &args)
-		const;
+		const override;
 	};
 
     }

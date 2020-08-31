@@ -52,7 +52,7 @@ namespace glm {
 		 std::vector<SingletonGraphView const *> const &sub_eps,
 		 std::vector<Outcome *> const &outcomes,
 		 unsigned int chain);
-	~REMethod();
+	~REMethod() override;
 	/**
 	 * Updates the random effects
 	 *
@@ -61,7 +61,7 @@ namespace glm {
 	void updateEps(RNG *rng);
 	virtual void updateSigma(RNG *rng) = 0;
 	virtual void updateTau(RNG *rng) = 0;
-	void update(RNG *rng);
+	void update(RNG *rng) override;
 	void calDesignSigma();
 	/** 
 	 * The likelihood for the standard deviation parameters sigma

@@ -57,15 +57,15 @@ namespace jags {
 		      std::vector<SingletonGraphView*> sub_eps,
 		      std::vector<REMethod*> const &methods,
 		      std::string const &name);
-	    ~RESampler();
-	    void update(unsigned int chain, RNG *rng);
-	    bool isAdaptive() const;
-	    void adaptOff();
-	    bool checkAdaptation() const;
+	    ~RESampler() override;
+	    void update(unsigned int chain, RNG *rng) override;
+	    bool isAdaptive() const override;
+	    void adaptOff() override;
+	    bool checkAdaptation() const override;
 	    /**
 	     * Returns the name of the sampler, as given to the constructor
 	     */
-	    std::string name() const;
+	    std::string name() const override;
 	};
 
     } // namespace glm

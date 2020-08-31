@@ -17,15 +17,15 @@ namespace base {
     {
     public:
 	Multiply ();
-	double evaluate(std::vector<double const *> const &args) const;
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
+	double evaluate(std::vector<double const *> const &args) const override;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
 	bool isScale(std::vector<bool> const &mask,
-		     std::vector<bool> const &fixmask) const;
+		     std::vector<bool> const &fixmask) const override;
 	bool isPower(std::vector<bool> const &mask, 
-		     std::vector<bool> const &fix) const;
-	bool hasGradient(unsigned long i) const;
+		     std::vector<bool> const &fix) const override;
+	bool hasGradient(unsigned long i) const override;
 	double gradient(std::vector<double const *> const &args,
-			unsigned long i) const;
+			unsigned long i) const override;
 
     };
     

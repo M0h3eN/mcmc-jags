@@ -15,22 +15,25 @@ public:
 
     double logDensity(double const *x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      std::vector<unsigned long> const &lengths) const;
+		      std::vector<unsigned long> const &lengths) const override;
     void randomSample(double *x,
 		      std::vector<double const *> const &parameters,
 		      std::vector<unsigned long> const &lengths,
-		      RNG *rng) const;
-    bool isSupportFixed(std::vector<bool> const &fixmask) const;
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
-    bool fullRank() const;
+		      RNG *rng) const override;
+    bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+    bool isDiscreteValued(std::vector<bool> const &mask) const override;
+    bool fullRank() const override;
     bool checkParameterValue(std::vector<double const *> const &params,
-			     std::vector<unsigned long> const &lengths) const;
-    bool checkParameterLength(std::vector<unsigned long> const &lengths) const;
-    bool checkParameterDiscrete(std::vector<bool> const &mask) const;
+			     std::vector<unsigned long> const &lengths)
+	const override;
+    bool checkParameterLength(std::vector<unsigned long> const &lengths)
+	const override;
+    bool checkParameterDiscrete(std::vector<bool> const &mask) const override;
     void support(double *lower, double *upper, 
 		 std::vector<double const *> const &parameters,
-		 std::vector<unsigned long> const &lengths) const;
-    unsigned long length(std::vector <unsigned long> const &lengths) const;
+		 std::vector<unsigned long> const &lengths) const override;
+    unsigned long length(std::vector <unsigned long> const &lengths)
+	const override;
 };
 
 }}

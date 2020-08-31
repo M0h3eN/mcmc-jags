@@ -23,7 +23,7 @@ namespace bugs {
 	return *args[0] > -1;
     }
 
-    bool LogFact::isDifferentiable(unsigned long i) const
+    bool LogFact::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

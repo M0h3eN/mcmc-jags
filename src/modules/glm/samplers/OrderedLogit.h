@@ -34,10 +34,10 @@ namespace glm {
 	double _sigma2;
       public:
 	OrderedLogit(StochasticNode const *snode, unsigned int chain);
-	double value() const;
-	double precision() const;
-	void update(RNG *rng);
-	void update(double mean, double var, RNG *rng);
+	double value() const override;
+	double precision() const override;
+	void update(RNG *rng) override;
+	void update(double mean, double var, RNG *rng) override;
 	static bool canRepresent(StochasticNode const *snode);
     };
 

@@ -35,19 +35,19 @@ namespace jags {
 	    DNT();
 	    double d(double x, PDFType type,
 		     std::vector<double const *> const &parameters, 
-		     bool log) const;
+		     bool log) const override;
 	    double p(double x, std::vector<double const *> const &parameters,
-		     bool lower, bool log) const;
+		     bool lower, bool log) const override;
 	    double q(double x, std::vector<double const *> const &parameters,
-		     bool lower, bool log) const;
+		     bool lower, bool log) const override;
 	    double r(std::vector<double const *> const &parameters,
-		     RNG *rng) const;
+		     RNG *rng) const override;
 	    /**
 	     * Check that tau > 0 and k > 0 also that the non-centrality
 	     * parameter delta = mu * sqrt(tau) is no larger than 37.62
 	     */
 	    bool checkParameterValue(std::vector<double const *> const &
-				     parameters) const;
+				     parameters) const override;
 	};
     }
 }

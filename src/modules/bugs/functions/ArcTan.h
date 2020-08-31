@@ -17,11 +17,11 @@ namespace bugs {
     {
     public:
 	ArcTan ();
-	std::string alias() const;
-	double evaluate(std::vector<double const *> const &args) const;
-	bool isDifferentiable(unsigned long i) const;
+	std::string alias() const override;
+	double evaluate(std::vector<double const *> const &args) const override;
+	bool hasGradient(unsigned long i) const override;
 	double gradient(std::vector<double const *> const &args,
-			unsigned long i) const;
+			unsigned long i) const override;
     };
 
 }}

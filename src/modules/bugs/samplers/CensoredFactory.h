@@ -15,9 +15,10 @@ namespace jags {
 	class CensoredFactory : public SingletonFactory
 	{
 	public:
-	    bool canSample(StochasticNode *, Graph const &) const;
-	    Sampler *makeSampler(StochasticNode *, Graph const &) const;
-	    std::string name() const;
+	    bool canSample(StochasticNode *, Graph const &) const override;
+	    Sampler *makeSampler(StochasticNode *, Graph const &)
+		const override;
+	    std::string name() const override;
 	};
 
     }

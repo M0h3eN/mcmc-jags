@@ -18,9 +18,9 @@ class NotEqual:public Infix
 {
 public:
     NotEqual ();
-    double evaluate(std::vector<double const *> const &args) const;
+    double evaluate(std::vector<double const *> const &args) const override;
     /** Returns true */
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
+    bool isDiscreteValued(std::vector<bool> const &mask) const override;
 };
 
 }}

@@ -40,7 +40,7 @@ string Neg::deparse(vector<string> const &par) const
     }
     
     double Neg::gradient(vector<double const*> const &args,
-			 unsigned long i) const
+			 unsigned long) const
     {
 	return -args[0][0];
     }

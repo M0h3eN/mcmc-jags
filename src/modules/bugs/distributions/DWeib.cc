@@ -59,7 +59,7 @@ namespace bugs {
 
     bool DWeib::hasScore(unsigned long i) const
     {
-	return true;
+	return i == 0;
     }
     
     double DWeib::score(double x, vector<double const *> const &parameters,

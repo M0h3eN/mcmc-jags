@@ -45,7 +45,8 @@ namespace glm {
 	 * multivariate truncated normal distribution. Each element of
 	 * z[] is updated in turn by Gibbs sampling.
 	 */
-	void updateAuxiliary(cholmod_dense *b, cholmod_factor *N, RNG *rng);
+	void updateAuxiliary(cholmod_dense *b, cholmod_factor *N, RNG *rng)
+	    override;
     };
     
 }}

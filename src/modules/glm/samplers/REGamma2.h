@@ -15,11 +15,11 @@ namespace jags {
 	  public:
 	    REGamma2(SingletonGraphView const *tau,
 		     GLMMethod const *glmmethod);
-	    void updateTau(RNG *rng);
-	    void updateSigma(RNG *rng);
-	    bool isAdaptive() const;
-	    void adaptOff();
-	    bool checkAdaptation() const;
+	    void updateTau(RNG *rng) override;
+	    void updateSigma(RNG *rng) override;
+	    bool isAdaptive() const override;
+	    void adaptOff() override;
+	    bool checkAdaptation() const override;
 	};
 
     }

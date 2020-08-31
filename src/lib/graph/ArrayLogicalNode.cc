@@ -89,6 +89,9 @@ bool ArrayLogicalNode::checkParentValues(unsigned int chain) const
     return _func->checkParameterValue(_parameters[chain], _dims);
 }
 
+
+
+    
     /*
 DeterministicNode *
 ArrayLogicalNode::clone(vector<Node const*> const &parents) const

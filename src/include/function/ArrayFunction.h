@@ -65,7 +65,6 @@ public:
     virtual std::vector<unsigned long> 
 	dim(std::vector <std::vector<unsigned long> > const &dims,
 	    std::vector <double const *> const &values) const = 0;
-
     virtual void gradient(double *grad, std::vector<double const *> const &args,
 			  std::vector<std::vector<unsigned long> > const &dims,
 			  unsigned long i) const;

@@ -35,24 +35,24 @@ namespace glm {
 	 * @param chain Index number of the chain (starting from zero).
 	 */
 	AuxMixPoisson(StochasticNode const *snode, unsigned int chain);
-	~AuxMixPoisson();
+	~AuxMixPoisson() override;
 	/**
 	 * Samples the auxiliary variables from their posterior
 	 * distribution given the outcome and then calculates a new
 	 * normal approximation
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
 	/**
 	 * Returns a weighted mean of the residuals from the current
 	 * normal approximation. The residuals are weighted by their
 	 * precisions. This provides a single value to AMMethod, even
 	 * when there are two auxiliary variables.
 	 */
-	double value() const;
+	double value() const override;
 	/**
 	 * Returns the sum of the precisions of the two auxiliary variables
 	 */
-	double precision() const;
+	double precision() const override;
 	/**
 	 * AuxMixPoisson represents Poisson outcomes with a log link
 	 */

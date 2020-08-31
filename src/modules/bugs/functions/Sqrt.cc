@@ -28,7 +28,7 @@ namespace bugs {
         return true;
     }
 
-    bool Sqrt::isDifferentiable(unsigned long i) const
+    bool Sqrt::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

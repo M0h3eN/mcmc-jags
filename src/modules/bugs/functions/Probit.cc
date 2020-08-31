@@ -24,7 +24,7 @@ namespace bugs {
 	return (p >= 0 && p <= 1);
     }
 
-    bool Probit::isDifferentiable(unsigned long i) const
+    bool Probit::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

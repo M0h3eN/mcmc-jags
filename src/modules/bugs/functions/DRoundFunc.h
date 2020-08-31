@@ -13,7 +13,8 @@ namespace bugs {
     {
     public:
 	DRoundFunc ();
-	double evaluate (std::vector <double const *> const &args) const;
+	double evaluate (std::vector<double const *> const &args)
+	    const override;
     };
 
 }}

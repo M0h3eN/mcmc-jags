@@ -26,17 +26,18 @@ namespace jags {
 			std::vector <unsigned long> const &lengths) const = 0;
 	/**
 	 * Implements VectorFunction#evaluate in terms of 
-	 * ScalarVectorFunction#eval.
+	 * ScalarVectorFunction#scalarEval.
 	 */
 	void evaluate(double *value, 
 		      std::vector <double const *> const &args,
-		      std::vector <unsigned long> const &lengths) const;
+		      std::vector <unsigned long> const &lengths)
+	    const override;
 	/**
 	 * Implements VectorFunction#length, returning the value 1
 	 */
-	unsigned long 
-	    length(std::vector <unsigned long> const &arglengths,
-		   std::vector <double const *> const &argvalues) const;
+	unsigned long length(std::vector <unsigned long> const &arglengths,
+			     std::vector <double const *> const &argvalues)
+	    const override;
     };
 
 } /* namespace jags */

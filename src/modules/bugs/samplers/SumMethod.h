@@ -33,17 +33,17 @@ namespace jags {
 	    bool _adapt;
 	  public:
 	    SumMethod(GraphView const *gv, unsigned int chain);
-	    ~SumMethod();
-	    void update(RNG *);
+	    ~SumMethod() override;
+	    void update(RNG *) override;
 	    void setValue(double x);
 	    double value() const;
 	    void getLimits(double *lower, double *upper) const;
 	    std::string name() const;
 	    double logDensity() const;
 	    void updateStep(RNG *rng);
-	    bool isAdaptive() const;
-	    void adaptOff();
-	    bool checkAdaptation() const;
+	    bool isAdaptive() const override;
+	    void adaptOff() override;
+	    bool checkAdaptation() const override;
 	    static StochasticNode *
 		isCandidate(StochasticNode *snode, Graph const &graph);
 	    static bool canSample(std::vector<StochasticNode *> const &nodes, 

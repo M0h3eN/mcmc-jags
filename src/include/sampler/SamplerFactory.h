@@ -19,7 +19,7 @@ class Graph;
 class SamplerFactory : public Factory
 {
 public:
-    virtual ~SamplerFactory() = default;
+    ~SamplerFactory() override = default;
     /**
      * Finds nodes in the list of stochastic nodes that can be sampled
      * within the given graph, and returns a vector of newly allocated

@@ -48,12 +48,12 @@ namespace glm {
 	 * 
 	 * Deletes the sub-views and the methods passed to the constructor.
 	 */
-	~GLMSampler();
-	void update(unsigned int chain, RNG *rng);
-	bool isAdaptive() const;
-	void adaptOff();
-	bool checkAdaptation() const;
-	std::string name() const;
+	~GLMSampler() override;
+	void update(unsigned int chain, RNG *rng) override;
+	bool isAdaptive() const override;
+	void adaptOff() override;
+	bool checkAdaptation() const override;
+	std::string name() const override;
 	/*
 	  Gives access to the vector of GLMMethod objects used by the
 	  sampler.

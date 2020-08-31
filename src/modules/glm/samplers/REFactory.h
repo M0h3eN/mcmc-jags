@@ -27,13 +27,13 @@ namespace jags {
 	    bool checkEps(GraphView const *eps) const;
 	    //public:
 	    REFactory(std::string const &name);
-	    ~REFactory();
+	    ~REFactory() override;
 	    std::vector<Sampler*> 
 		makeSamplers(std::list<StochasticNode*> const &nodes, 
-			     Graph const &graph) const;
+			     Graph const &graph) const override;
 	    Sampler *makeSampler(std::list<StochasticNode*> const &free_nodes, 
 				 Graph const &graph) const;
-	    std::string name() const;
+	    std::string name() const override;
 	    
 	    virtual bool canSample(StochasticNode *snode) const = 0;
 	    virtual REMethod *

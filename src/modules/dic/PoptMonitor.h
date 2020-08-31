@@ -16,7 +16,8 @@ namespace dic {
     public:
 	PoptMonitor(std::vector<StochasticNode const *> const &snodes,
 		    std::vector<RNG*> const &rngs, unsigned int nrep);
-	double weight(StochasticNode const *snode, unsigned int ch) const;
+	double weight(StochasticNode const *snode, unsigned int ch)
+	    const override;
     };
 
 }}

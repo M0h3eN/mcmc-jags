@@ -28,8 +28,8 @@ namespace dic {
 		  std::vector<RNG *> const &rngs,
 		  unsigned int nrep);
 
-	void update();
-	~PenaltyPOPTTotal();
+	void update() override;
+	~PenaltyPOPTTotal() override;
     };
 
 }}

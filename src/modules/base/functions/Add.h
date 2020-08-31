@@ -18,17 +18,17 @@ class Add : public Infix
 {
 public:
     Add ();
-    double evaluate(std::vector<double const *>const &args) const;
-    bool isDiscreteValued(std::vector<bool> const &flags) const;
+    double evaluate(std::vector<double const *>const &args) const override;
+    bool isDiscreteValued(std::vector<bool> const &flags) const override;
     bool isAdditive(std::vector<bool> const &mask,
-		    std::vector<bool> const &fixmask) const;
+		    std::vector<bool> const &fixmask) const override;
     bool isLinear(std::vector<bool> const &mask,
-		  std::vector<bool> const &fixmask) const;
+		  std::vector<bool> const &fixmask) const override;
     bool isScale(std::vector<bool> const &mask,
-		 std::vector<bool> const &fixmask) const;
-    bool hasGradient(unsigned long i) const;
+		 std::vector<bool> const &fixmask) const override;
+    bool hasGradient(unsigned long i) const override;
     double gradient(std::vector<double const *> const &args,
-		    unsigned long i) const;
+		    unsigned long i) const override;
 
 };
 

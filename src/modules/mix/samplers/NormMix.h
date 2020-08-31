@@ -46,13 +46,14 @@ namespace mix {
 	 */
 	NormMix(GraphView const *gv, unsigned int chain,
 		unsigned int max_level, double max_temp, unsigned int nrep);
-	~NormMix();
-	void getValue(std::vector<double> &value) const;
-	void setValue(std::vector<double> const &value);
-	double logPrior() const;
-	double logLikelihood() const;
-	double logJacobian(std::vector<double> const &value) const;
-	void step(std::vector<double> &value, double step, RNG *rng) const;
+	~NormMix() override;
+	void getValue(std::vector<double> &value) const override;
+	void setValue(std::vector<double> const &value) override;
+	double logPrior() const override;
+	double logLikelihood() const override;
+	double logJacobian(std::vector<double> const &value) const override;
+	void step(std::vector<double> &value, double step, RNG *rng)
+	    const override;
 	static bool canSample(std::vector<StochasticNode *> const &snodes);
     };
 

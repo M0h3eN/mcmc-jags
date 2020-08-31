@@ -18,22 +18,25 @@ class DPar : public RScalarDist {
   DPar();
 
   double d(double x, PDFType type,
-	   std::vector<double const *> const &parameters, bool give_log) const;
+	   std::vector<double const *> const &parameters, bool give_log)
+      const override;
   double p(double q, std::vector<double const *> const &parameters, bool lower,
-	   bool give_log) const;
+	   bool give_log) const override;
   double q(double p, std::vector<double const *> const &parameters, bool lower,
-	   bool log_p) const;
-  double r(std::vector<double const *> const &parameters, RNG *rng) const;
-  double l(std::vector<double const*> const &parameters) const;
-  double u(std::vector<double const*> const &parameters) const;
+	   bool log_p) const override;
+  double r(std::vector<double const *> const &parameters, RNG *rng)
+      const override;
+  double l(std::vector<double const*> const &parameters) const override;
+  double u(std::vector<double const*> const &parameters) const override;
   /** 
    * Checks that alpha > 0, c > 0
    */
-  bool checkParameterValue(std::vector<double const *> const &parameters) const;
-  bool isSupportFixed(std::vector<bool> const &fixmask) const;
-  bool hasScore(unsigned long i) const;
+  bool checkParameterValue(std::vector<double const *> const &parameters)
+      const override;
+  bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+  bool hasScore(unsigned long i) const override;
   double score(double x, std::vector<double const *> const &parameters,
-	       unsigned long i) const;
+	       unsigned long i) const override;
 };
 
 }}

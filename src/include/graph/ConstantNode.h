@@ -40,50 +40,50 @@ public:
      * Constant nodes have both stochastic depth and deterministic
      * depth zero.
      */
-    std::array<int, 2> const &depth() const;
+    std::array<int, 2> const &depth() const override;
     /**
      * Indicates whether a ConstantNode is discrete-valued
      */
-    bool isDiscreteValued() const;
+    bool isDiscreteValued() const override;
     /**
      * This function does nothing. The value of the constant node is
      * not changed and the state of the RNG remains the same.
      */
-    void randomSample(RNG*, unsigned int);
+    void randomSample(RNG*, unsigned int) override;
     /**
      * Constant nodes have no parents. This function always returns true.
      */
-    bool checkParentValues(unsigned int) const;
+    bool checkParentValues(unsigned int) const override;
     /**
      * A constant node is named after its value
      */
-    std::string deparse(std::vector<std::string> const &parents) const;
+    std::string deparse(std::vector<std::string> const &parents) const override;
     /**
      * A constant node is always fixed.
      */
-    bool isFixed() const;
+    bool isFixed() const override;
     /**
      * A ConstantNode is a random variable if the parameter "observed"
      * passed to the constructor is true.
      */
-    bool isRandomVariable() const;
+    bool isRandomVariable() const override;
     /**
      * A ConstantNode is observed if and only if it is a random
      * variable.
      */
-    bool isObserved(unsigned long offset) const;
+    bool isObserved(unsigned long offset) const override;
     
-    void unlinkParents();
+    void unlinkParents() override;
 	
-    double logDensity(unsigned int chain, PDFType type) const;
+    double logDensity(unsigned int chain, PDFType type) const override;
     double KL(unsigned int chain1, unsigned int chain2, RNG *rng,
-	      unsigned int nrep) const;
+	      unsigned int nrep) const override;
     /**
      * Used by dumpNodeNames to gather a specific subset of node types:
      */
-    inline bool isConstant() const { return true; }
-    inline bool isDeterministic() const { return false; }
-    inline bool isStochastic() const { return false; }
+    inline bool isConstant() const override { return true; }
+    inline bool isDeterministic() const override { return false; }
+    inline bool isStochastic() const override { return false; }
 };
 
 } /* namespace jags */

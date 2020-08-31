@@ -24,7 +24,7 @@ namespace jags {
 	  public:
 	    ScaledGamma(SingletonGraphView const *gv, unsigned int chain);
 	    static bool canSample(StochasticNode *snode, Graph const &graph);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	};
 	
     }

@@ -17,14 +17,14 @@ namespace glm {
 	 * Returns true if the outcome can be represented as a mixture
 	 * of normals.
 	 */
-	bool checkOutcome(StochasticNode const *snode) const;
+	bool checkOutcome(StochasticNode const *snode) const override;
 	/**
 	 * Returns a newly allocated object of class GLMMethod.
 	 */
 	GLMMethod *
 	    newMethod(GraphView const *view,
 		      std::vector<SingletonGraphView const *> const &sub_views, 
-		      unsigned int chain, bool gibbs) const;
+		      unsigned int chain, bool gibbs) const override;
     };
 
 }}

@@ -101,10 +101,10 @@ public:
    *
    * @param chain Index number of chain to read.
    *
-   * @param type which values are to be read. DATA_VALUES gets values
-   * previously set with the setData function. PARAMETER_VALUES gets
-   * the unobserved values of stochastic nodes. ALL_VALUES reads all
-   * values from all nodes inserted into the array.
+   * @param type which values are to be read. DATA_VALUES gets
+   * observed random variables; PARAMETER_VALUES gets unobserved
+   * random variables; ALL_VALUES reads all values from all nodes
+   * inserted into the array.
    */
   void getValue(SArray &value, unsigned int chain, ValueType type) const;
   /**

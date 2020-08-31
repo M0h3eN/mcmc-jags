@@ -27,7 +27,7 @@ namespace glm {
     class GLMModule : public Module {
     public:
 	GLMModule();
-	~GLMModule();
+	~GLMModule() override;
     };
     
     GLMModule::GLMModule() 

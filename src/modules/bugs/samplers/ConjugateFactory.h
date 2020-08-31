@@ -21,12 +21,13 @@ public:
      * and, if it has an associated conjugate sampler, the appropriate
      * canSample member function is dispatched
      */
-    bool canSample(StochasticNode *snode, Graph const &graph) const;
+    bool canSample(StochasticNode *snode, Graph const &graph) const override;
     /**
      * Creates a ConjugateSampler for a stochastic node. 
      */
-    Sampler *makeSampler(StochasticNode *snode, Graph const &graph) const;
-    std::string name() const;
+    Sampler *makeSampler(StochasticNode *snode, Graph const &graph)
+	const override;
+    std::string name() const override;
 };
 
 }}

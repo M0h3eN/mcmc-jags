@@ -52,11 +52,11 @@ public:
      */
     MixtureNode(std::vector<Node const *> const &index,
 		unsigned int nchain, MixMap const &mixmap);
-    ~MixtureNode();
+    ~MixtureNode() override;
     /**
      * Copies the value of the active parent
      */
-    void deterministicSample(unsigned int chain);
+    void deterministicSample(unsigned int chain) override;
     /**
      * Returns a pointer to the currently active parent (i.e. the one
      * determined by the current index values) in the given chain.
@@ -74,13 +74,13 @@ public:
      * A MixtureNode is discrete valued if all of its possible
      * parents are discrete
      */
-    bool isDiscreteValued() const;
+    bool isDiscreteValued() const override;
     /**
      * A MixtureNode preserves all closed classes if none of its index
      * nodes are descendants of X. It is never fixed
      */
     bool isClosed(std::set<Node const *> const &ancestors, 
-		  ClosedFuncClass fc, bool fixed) const;
+		  ClosedFuncClass fc, bool fixed) const override;
     /**
      * This function always returns true. It ignores possible errors
      * in the index nodes.  This is because the deterministicSample
@@ -89,7 +89,7 @@ public:
      * calculations in the checkParentValues function would therefore
      * be redundant.
      */
-    bool checkParentValues(unsigned int chain) const;
+    bool checkParentValues(unsigned int chain) const override;
     /**
      * Creates a name for the mixture node of the form.
      *
@@ -100,10 +100,11 @@ public:
      * Exceptionally, the name of a mixture node is not a reconstruction
      * of its BUGS-language definition.
      */
-    std::string deparse(std::vector<std::string> const &parents) const;
+    std::string deparse(std::vector<std::string> const &parents) const override;
     //DeterministicNode *clone(std::vector<Node const *> const &parents) const;
-    bool hasGradient(Node const *arg) const;
-    void gradient(double *grad, Node const *arg, unsigned int chain) const;    
+    bool hasGradient(Node const *arg) const override;
+    void gradient(double *grad, Node const *arg, unsigned int chain)
+	const override;    
 };
 
 bool isMixture(Node const *);

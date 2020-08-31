@@ -15,7 +15,7 @@ namespace dic {
     class DICModule: public Module {
     public:
 	DICModule();
-	~DICModule();
+	~DICModule() override;
     };
     
     DICModule::DICModule() 

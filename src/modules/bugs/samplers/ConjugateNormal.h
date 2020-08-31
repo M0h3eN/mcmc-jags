@@ -22,8 +22,8 @@ class ConjugateNormal : public ConjugateMethod {
     unsigned long _length_betas;
 public:
     ConjugateNormal(SingletonGraphView const *gv);
-    ~ConjugateNormal();
-    void update(unsigned int chain, RNG *rng) const;
+    ~ConjugateNormal() override;
+    void update(unsigned int chain, RNG *rng) const override;
     static bool canSample(StochasticNode *snode, Graph const &graph);
 };
 

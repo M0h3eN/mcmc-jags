@@ -20,7 +20,7 @@ namespace bugs {
 	return sin(*args[0]);
     }
 
-    bool Sin::isDifferentiable(unsigned long i) const
+    bool Sin::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

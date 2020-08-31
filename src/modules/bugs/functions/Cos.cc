@@ -19,7 +19,7 @@ namespace bugs {
 	return cos(*args[0]);
     }
 
-    bool Cos::isDifferentiable(unsigned long i) const
+    bool Cos::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

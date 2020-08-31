@@ -22,11 +22,12 @@ namespace bugs {
 	LogDet ();
 	void evaluate(double *x, std::vector<double const *> const &args,
 		      std::vector<std::vector<unsigned long> > const &dims) 
-	    const;
-	bool checkParameterDim(std::vector<std::vector<unsigned long> > const &dims) const;
+	    const override;
+	bool checkParameterDim(std::vector<std::vector<unsigned long>>
+			       const &dims) const override;
 	std::vector<unsigned long>
 	    dim(std::vector<std::vector<unsigned long> > const &dims,
-		std::vector<double const *> const &values) const;
+		std::vector<double const *> const &values) const override;
     };
 
 }}

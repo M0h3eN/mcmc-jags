@@ -19,12 +19,12 @@ namespace jags {
 	    unsigned int _niter;
 	  public:
 	    RW1(SingletonGraphView const *gv, unsigned int chain);
-	    ~RW1();
-	    void rescale(double p);
-	    void update(RNG *rng);
-	    bool checkAdaptation() const;
-	    void getValue(std::vector<double> &value) const;
-	    void setValue(std::vector<double> const &value);
+	    ~RW1() override;
+	    void rescale(double p) override;
+	    void update(RNG *rng) override;
+	    bool checkAdaptation() const override;
+	    void getValue(std::vector<double> &value) const override;
+	    void setValue(std::vector<double> const &value) override;
 	};
     }
 }

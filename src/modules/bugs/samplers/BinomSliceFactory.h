@@ -14,10 +14,11 @@ namespace jags {
 	class BinomSliceFactory : public SingletonFactory
 	{
 	  public:
-	    bool canSample(StochasticNode *snode, Graph const &graph) const;
+	    bool canSample(StochasticNode *snode, Graph const &graph)
+		const override;
 	    Sampler *makeSampler(StochasticNode *snode,
-				 Graph const &graph) const;
-	    std::string name() const;
+				 Graph const &graph) const override;
+	    std::string name() const override;
 	};
 
     }

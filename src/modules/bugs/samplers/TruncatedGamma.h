@@ -13,9 +13,9 @@ class TruncatedGamma : public ConjugateMethod {
     const double _exponent;
 public:
     TruncatedGamma(SingletonGraphView const *gv);
-    ~TruncatedGamma();
+    ~TruncatedGamma() override;
     static bool canSample(StochasticNode *snode, Graph const &graph);
-    void update(unsigned int chain, RNG *rng) const;
+    void update(unsigned int chain, RNG *rng) const override;
 };
 
 }}

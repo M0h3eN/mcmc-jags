@@ -32,7 +32,7 @@ namespace bugs {
 	return *args[0] >= 1;
     }
 
-    bool ArcCosh::isDifferentiable(unsigned long i) const
+    bool ArcCosh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

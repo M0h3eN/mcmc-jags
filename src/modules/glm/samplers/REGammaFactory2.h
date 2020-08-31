@@ -15,10 +15,10 @@ namespace jags {
 	{
 	  public:
 	    REGammaFactory2();
-	    ~REGammaFactory2();
-	    bool canSample(StochasticNode *snode) const;
+	    ~REGammaFactory2() override;
+	    bool canSample(StochasticNode *snode) const override;
 	    REMethod2 *	newMethod(SingletonGraphView const *tau,
-				  GLMMethod const *randef) const;
+				  GLMMethod const *randef) const override;
 	};
 	
     }

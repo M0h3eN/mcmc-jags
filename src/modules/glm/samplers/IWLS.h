@@ -37,7 +37,7 @@ namespace glm {
 	 * distribution derived by a single IWLS step, then carries out
 	 * a Metropolis-Hastings acceptance step.
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
     };
 
 }}

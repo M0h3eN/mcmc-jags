@@ -52,7 +52,7 @@ namespace glm {
 	 * parameters have a truncated normal prior, the model is
 	 * still amenable to Gibbs sampling.
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
     };
 
 }}

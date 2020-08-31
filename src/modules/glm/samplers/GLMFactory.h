@@ -32,7 +32,7 @@ namespace glm {
 	bool checkDescendants(SingletonGraphView const *view) const;
     public:
 	GLMFactory(std::string const &name);
-	virtual ~GLMFactory();
+	~GLMFactory() override;
 	/**
 	 * Creates a newly-allocated Sampler for the set of candidate nodes,
 	 * or a NULL pointer. Sub-classes of GLMFactory only have to
@@ -47,7 +47,7 @@ namespace glm {
 	 */
 	std::vector<Sampler*> 
 	    makeSamplers(std::list<StochasticNode*> const &free_nodes,
-			 Graph const &graph) const;
+			 Graph const &graph) const override;
 	/**
 	 * Checks that an outcome variable in a GLM has the correct
 	 * family and link function.
@@ -80,7 +80,7 @@ namespace glm {
 	 * Returns the string provided as the parameter "name" in the
 	 * constructor.
 	 */
-	std::string name() const;
+	std::string name() const override;
 	/**
 	 * Returns true if the factory can only work with outcome
 	 * variables that are observed. The default implementation

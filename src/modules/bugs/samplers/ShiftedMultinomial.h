@@ -14,7 +14,7 @@ namespace bugs {
     public:
 	ShiftedMultinomial(SingletonGraphView const *gv);
 	static bool canSample(StochasticNode *snode, Graph const &graph);
-	void update(unsigned int chain, RNG *rng) const;
+	void update(unsigned int chain, RNG *rng) const override;
     };
 
 }}

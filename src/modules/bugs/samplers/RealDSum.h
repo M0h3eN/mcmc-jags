@@ -19,7 +19,7 @@ class RealDSum : public RWDSum
 public:
     RealDSum(GraphView const *gv, unsigned int chain);
     void step(std::vector<double> &value, unsigned long nrow, 
-	      unsigned long ncol, double s, RNG *rng) const;
+	      unsigned long ncol, double s, RNG *rng) const override;
 };
 
 }}

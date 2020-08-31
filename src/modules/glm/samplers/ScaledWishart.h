@@ -20,7 +20,7 @@ namespace jags {
 	    std::vector<double> _a;
 	  public:
 	    ScaledWishart(SingletonGraphView const *gv, unsigned int chain);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	    static bool canSample(StochasticNode *snode, Graph const &graph);
 	};
 

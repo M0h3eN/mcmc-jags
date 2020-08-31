@@ -15,13 +15,13 @@ namespace jags {
 	{
 	  public:
 	    REGammaFactory();
-	    ~REGammaFactory();
-	    bool canSample(StochasticNode *snode) const;
+	    ~REGammaFactory() override;
+	    bool canSample(StochasticNode *snode) const override;
 	    REMethod * newMethod(SingletonGraphView const *tau,
 				 GraphView const *eps,
 				 std::vector<SingletonGraphView const *> const & veps,
 				 std::vector<Outcome*> const &outcomes,
-				 unsigned int chain) const;
+				 unsigned int chain) const override;
 	};
 	
     }

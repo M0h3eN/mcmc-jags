@@ -22,26 +22,27 @@ public:
 
   double logDensity(double const *x, PDFType type,
 		    std::vector<double const *> const &parameters,
-		    std::vector<std::vector<unsigned long> > const &dims) const;
+		    std::vector<std::vector<unsigned long> > const &dims)
+      const override;
   void randomSample(double *x,
 		    std::vector<double const *> const &parameters,
 		    std::vector<std::vector<unsigned long> > const &dims,
-		    RNG *rng) const;
+		    RNG *rng) const override;
   void randomSample(double *x, std::vector<bool> const &observed,
 		    std::vector<double const *> const &parameters,
 		    std::vector<std::vector<unsigned long> > const &dims,
-		    RNG *rng) const;
+		    RNG *rng) const override;
   /**
    * Checks that mu is a vector, T is a square matrix and the sizes of
    * mu and T conform.
    */
   bool checkParameterDim(std::vector<std::vector<unsigned long> > const &dims) 
-      const;
+      const override;
   bool checkParameterValue(std::vector<double const *> const &parameters,
                            std::vector<std::vector<unsigned long> > const &dims)
-      const;
+      const override;
   std::vector<unsigned long> 
-      dim(std::vector<std::vector<unsigned long> > const &dims) const;
+      dim(std::vector<std::vector<unsigned long> > const &dims) const override;
   /**
    * Convenience random sampler function 
    *
@@ -65,13 +66,14 @@ public:
 			   bool prec, unsigned long nrow, RNG *rng);
   void support(double *lower, double *upper,
 	       std::vector<double const *> const &parameters,
-               std::vector<std::vector<unsigned long> > const &dims) const;
-  bool isSupportFixed(std::vector<bool> const &fixmask) const;
-  bool hasScore(unsigned long i) const;
+               std::vector<std::vector<unsigned long> > const &dims)
+      const override;
+  bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+  bool hasScore(unsigned long i) const override;
   void score(double *s, double const *x,
 	     std::vector<double const *> const &parameters,
 	     std::vector<std::vector<unsigned long>> const &dims, 
-	     unsigned long i) const;
+	     unsigned long i) const override;
     
 };
 

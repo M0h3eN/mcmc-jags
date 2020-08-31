@@ -20,7 +20,7 @@ class Range;
 class MonitorFactory : public Factory
 {
 public:
-    virtual ~MonitorFactory() = default;
+    ~MonitorFactory() override = default;
     /**
      * Creates a monitor of the given type by name and range. If a
      * monitor cannot be created, then a null pointer is returned.

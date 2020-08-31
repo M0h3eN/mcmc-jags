@@ -41,7 +41,7 @@ bool Slicer::updateStep(RNG *rng)
     }
 
     // Generate auxiliary variable
-    double z = g0 - rng->exponential();;
+    double z = g0 - rng->exponential();
 
     // Generate random interval of width "_width" about current value
     double xold = value();

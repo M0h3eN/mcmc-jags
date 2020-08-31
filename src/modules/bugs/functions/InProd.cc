@@ -24,7 +24,7 @@ namespace bugs {
         return jags_ddot(&N, args[0], &one, args[1], &one);
     }
 
-    bool InProd::isDifferentiable(unsigned long i) const
+    bool InProd::hasGradient(unsigned long i) const
     {
 	return i < 2;
     }

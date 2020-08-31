@@ -15,7 +15,7 @@ namespace jags {
 	    unsigned long _size;
 	  public:
 	    FiniteMethod(SingletonGraphView const *gv);
-	    void update(unsigned int chain, RNG *rng) const;
+	    void update(unsigned int chain, RNG *rng) const override;
 	    static bool canSample(StochasticNode const *snode);
 	};
 	

@@ -18,8 +18,8 @@ namespace bugs {
     {
     public:
 	Abs ();
-	double evaluate(std::vector<double const *> const &args) const;
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
+	double evaluate(std::vector<double const *> const &args) const override;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
     };
 
 }}

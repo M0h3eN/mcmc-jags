@@ -18,20 +18,20 @@ class DRound : public ScalarDist {
 public:
     DRound();
     bool checkParameterValue(std::vector<double const *> const &parameters) 
-	const;
-    bool checkParameterDiscrete(std::vector<bool> const &mask) const;
+	const override;
+    bool checkParameterDiscrete(std::vector<bool> const &mask) const override;
     double logDensity(double const x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      double const *lower, double const *upper) const;
+		      double const *lower, double const *upper) const override;
     double randomSample(std::vector<double const *> const &parameters,
 			double const *lower, double const *upper, 
-			RNG *rng) const;
-    double l(std::vector<double const *> const &parameters) const;
-    double u(std::vector<double const *> const &parameters) const;
-    bool isSupportFixed(std::vector<bool> const &fixmask) const;
-    bool fullRank() const;
+			RNG *rng) const override;
+    double l(std::vector<double const *> const &parameters) const override;
+    double u(std::vector<double const *> const &parameters) const override;
+    bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+    bool fullRank() const override;
     double KL(std::vector<double const *> const &par0,
-	      std::vector<double const *> const &par1) const;
+	      std::vector<double const *> const &par1) const override;
 };
 
 }}

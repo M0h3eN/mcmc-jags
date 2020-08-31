@@ -18,22 +18,23 @@ public:
     DBern();
     double logDensity(double x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      double const *lbound, double const *ubound) const;
+		      double const *lbound, double const *ubound)
+	const override;
     double randomSample(std::vector<double const *> const &parameters, 
 			double const *lbound, double const *ubound,
-			RNG *rng) const;
+			RNG *rng) const override;
     /** Checks that p lies in the open interval (0,1) */
     bool checkParameterValue(std::vector<double const *> const &parameters) 
-	const;
+	const override;
     /** Bernoulli distribution cannot be bounded */
-    bool canBound() const;
+    bool canBound() const override;
     /** Bernoulli distribution is discrete valued */
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
+    bool isDiscreteValued(std::vector<bool> const &mask) const override;
     double KL(std::vector<double const *> const &par1, 
-	      std::vector<double const *> const &par2) const;
-    bool hasScore(unsigned long i) const;
+	      std::vector<double const *> const &par2) const override;
+    bool hasScore(unsigned long i) const override;
     double score(double x, std::vector<double const *> const &parameters,
-		 unsigned long i) const;
+		 unsigned long i) const override;
 		 
 };
 

@@ -13,10 +13,10 @@ class DSumFactory : public SamplerFactory
 {
 public:
     std::vector<Sampler*> makeSamplers(std::list<StochasticNode*> const &nodes, 
-				       Graph const &graph) const;
+				       Graph const &graph) const override;
     Sampler * makeSampler(std::list<StochasticNode*> const &nodes, 
 			  Graph const &graph) const;
-    std::string name() const;
+    std::string name() const override;
 };
 
 }}

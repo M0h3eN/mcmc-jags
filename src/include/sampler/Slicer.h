@@ -82,17 +82,17 @@ public:
     /**
      * Turns off adaptive mode.  
      */
-    void adaptOff();
+    void adaptOff() override;
     /**
      * The current adaptation test is very basic, and will return true
      * if a minimum number of iterations (50) have taken place.
      */
-    bool checkAdaptation() const;
+    bool checkAdaptation() const override;
     /**
      * The slicer method is adaptive.  The step size adapts to the
      * mean distance between consecutive updates
      */
-    bool isAdaptive() const;
+    bool isAdaptive() const override;
     /**
      * Returns the log probability density function of the target
      * distribution.

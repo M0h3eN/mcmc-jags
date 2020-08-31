@@ -15,9 +15,10 @@ namespace bugs {
     public:
 	Min ();
 	double scalarEval (std::vector <double const *> const &args,
-			   std::vector<unsigned long> const &lengths) const;
+			   std::vector<unsigned long> const &lengths)
+	    const override;
 	/** Returns true if all arguments are true */
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
     };
 
 }}

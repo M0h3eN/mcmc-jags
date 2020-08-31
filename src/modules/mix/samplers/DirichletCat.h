@@ -26,7 +26,7 @@ namespace jags {
 	    void updateParMap();
 	  public:
 	    DirichletCat(GraphView const *gv, unsigned int chain);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	    static bool canSample(GraphView const *gv);
 	    /**
 	     * Returns the active parameter for the stochastic child

@@ -22,13 +22,13 @@ namespace glm {
 	 * families, but in the BUGS language, these are not
 	 * parameterized in terms of their mean and precision.
 	 */
-	bool checkOutcome(StochasticNode const *snode) const;
+	bool checkOutcome(StochasticNode const *snode) const override;
 	/**
 	 * Returns a newly allocated object of class IWLS
 	 */
 	GLMMethod *newMethod(GraphView const *view, 
 			     std::vector<SingletonGraphView const *> const &sub_views,
-			     unsigned int chain, bool gibbs) const;
+			     unsigned int chain, bool gibbs) const override;
 	/**
 	 * Returns false if any parents of the candidate node are
 	 * unobserved.  The IWLS method relies on an asymptotic
@@ -45,7 +45,7 @@ namespace glm {
 	 * reparameterize a random effect as a fixed effect with a
 	 * varying coefficient.
 	 */
-	bool fixedDesign() const;
+	bool fixedDesign() const override;
     };
 
 }}

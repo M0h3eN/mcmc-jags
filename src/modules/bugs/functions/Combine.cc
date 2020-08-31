@@ -28,7 +28,7 @@ namespace jags {
 	    }
 	}
 
-	bool Combine::isDifferentiable(unsigned long i) const
+	bool Combine::hasGradient(unsigned long i) const
 	{
 	    return true;
 	}

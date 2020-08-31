@@ -21,7 +21,7 @@ namespace bugs {
 class ConjugateBeta : public ConjugateMethod {
 public:
     ConjugateBeta(SingletonGraphView const *gv);
-    void update(unsigned int chain, RNG *rng) const;
+    void update(unsigned int chain, RNG *rng) const override;
     static bool canSample(StochasticNode *snode, Graph const &graph);
 };
 

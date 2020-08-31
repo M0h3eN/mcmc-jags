@@ -98,7 +98,7 @@ ArrayStochasticNode::clone(vector<Node const *> const &parameters,
 }
     */
     
-void ArrayStochasticNode::sp(double *lower, double *upper, unsigned long length,
+void ArrayStochasticNode::sp(double *lower, double *upper,
 			     unsigned int chain) const
 {
     _dist->support(lower, upper, _parameters[chain], _dims);

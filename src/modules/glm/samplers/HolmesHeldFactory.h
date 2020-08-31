@@ -19,7 +19,7 @@ namespace glm {
 	 * the link function is logit or probit.  Linear models with
 	 * identity link are also permitted.
 	 */
-	bool checkOutcome(StochasticNode const *snode) const;
+	bool checkOutcome(StochasticNode const *snode) const override;
 	/**
 	 * Returns a newly allocated object of class
 	 * HolmesHeld/HolmesHeldGibbs, unless we have a pure linear
@@ -31,7 +31,7 @@ namespace glm {
 	GLMMethod *
 	    newMethod(GraphView const *view,
 		      std::vector<SingletonGraphView const *> const &sub_views,
-		      unsigned int chain, bool gibbs) const;
+		      unsigned int chain, bool gibbs) const override;
     };
 
 }}

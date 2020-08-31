@@ -19,7 +19,7 @@ namespace bugs {
 	return sinh(*args[0]);
     }
 
-    bool Sinh::isDifferentiable(unsigned long i) const
+    bool Sinh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

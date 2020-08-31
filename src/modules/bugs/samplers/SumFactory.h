@@ -14,8 +14,8 @@ namespace jags {
 	  public:
 	    std::vector<Sampler*>
 		makeSamplers(std::list<StochasticNode*> const &nodes, 
-			     Graph const &graph) const;
-	    std::string name() const;
+			     Graph const &graph) const override;
+	    std::string name() const override;
 	};
 	
     }

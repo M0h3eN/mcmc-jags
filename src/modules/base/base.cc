@@ -36,7 +36,7 @@ namespace base {
 
     public:
 	BaseModule();
-	~BaseModule();
+	~BaseModule() override;
     };
 
     BaseModule::BaseModule() 

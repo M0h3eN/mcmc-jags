@@ -23,7 +23,7 @@ namespace bugs {
 	return value;
     }
 
-    bool Prod::isDifferentiable(unsigned long i) const
+    bool Prod::hasGradient(unsigned long i) const
     {
 	return true;
     }

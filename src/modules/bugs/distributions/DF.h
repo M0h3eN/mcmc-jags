@@ -21,19 +21,21 @@ class DF : public RScalarDist {
 
   double d(double x, PDFType type,
 	   std::vector<double const *> const &parameters, 
-	   bool log) const;
+	   bool log) const override;
   double p(double x, std::vector<double const *> const &parameters, bool lower,
-	   bool log) const;
+	   bool log) const override;
   double q(double x, std::vector<double const *> const &parameters, bool lower,
-	   bool log) const;
-  double r(std::vector<double const *> const &parameters, RNG *rng) const;
+	   bool log) const override;
+  double r(std::vector<double const *> const &parameters, RNG *rng)
+      const override;
   /**
    * Check that tau > 0 and n1 > 0 and n2 > 0
    */
-  bool checkParameterValue(std::vector<double const *> const &parameters) const;
-  bool hasScore(unsigned long i) const;
+  bool checkParameterValue(std::vector<double const *> const &parameters)
+      const override;
+  bool hasScore(unsigned long i) const override;
   double score(double x, std::vector<double const *> const &par,
-	       unsigned long i) const;
+	       unsigned long i) const override;
 };
 
 }}

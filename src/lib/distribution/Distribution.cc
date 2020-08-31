@@ -61,7 +61,7 @@ bool Distribution::checkParameterDiscrete(vector<bool> const &) const
 	return true;
     }
 
-    bool Distribution::hasScore(unsigned long i) const
+    bool Distribution::hasScore(unsigned long) const
     {
 	return false;
     }

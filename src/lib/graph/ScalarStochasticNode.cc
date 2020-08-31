@@ -86,7 +86,7 @@ bool ScalarStochasticNode::checkParentValues(unsigned int chain) const
     }
 }
 
-void ScalarStochasticNode::sp(double *lower, double *upper, unsigned long,
+void ScalarStochasticNode::sp(double *lower, double *upper,
 			      unsigned int chain) const
 {
     *lower = _dist->l(_parameters[chain]);

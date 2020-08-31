@@ -15,7 +15,7 @@ namespace mix {
     class MIXModule : public Module {
     public:
 	MIXModule();
-	~MIXModule();
+	~MIXModule() override;
     };
 
     MIXModule::MIXModule() 

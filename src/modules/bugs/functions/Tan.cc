@@ -20,7 +20,7 @@ namespace bugs {
 	return tan(*args[0]);
     }
 
-    bool Tan::isDifferentiable(unsigned long i) const
+    bool Tan::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

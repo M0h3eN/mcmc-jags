@@ -15,9 +15,9 @@ class Not : public ScalarFunction
 {
 public:
     Not ();
-    double evaluate(std::vector<double const *> const &args) const;
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
-    std::string deparse(std::vector<std::string> const &par) const;
+    double evaluate(std::vector<double const *> const &args) const override;
+    bool isDiscreteValued(std::vector<bool> const &mask) const override;
+    std::string deparse(std::vector<std::string> const &par) const override;
 };
 
 }}

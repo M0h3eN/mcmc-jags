@@ -29,13 +29,14 @@ public:
     /**
      * Calculates the value of the node based on the parameters. 
      */
-    void deterministicSample(unsigned int chain);
+    void deterministicSample(unsigned int chain) override;
     /**
      * @see VectorFunction#checkParameterValue.
      */
-    bool checkParentValues(unsigned int chain) const;
+    bool checkParentValues(unsigned int chain) const override;
     //DeterministicNode *clone(std::vector<Node const *> const &parents) const;
-    void gradient(double *grad, Node const *arg, unsigned int chain) const;
+    void gradient(double *grad, Node const *arg, unsigned int chain)
+	const override;
 };
 
 } /* namespace jags */

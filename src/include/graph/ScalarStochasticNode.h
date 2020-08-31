@@ -12,8 +12,7 @@ class ScalarDist;
  */
 class ScalarStochasticNode : public StochasticNode {
     ScalarDist const * const _dist;
-    void sp(double *lower, double *upper, unsigned long length,
-	    unsigned int chain) const;
+    void sp(double *lower, double *upper, unsigned int chain) const override;
 public:
     /**
      * Constructs a new ScalarStochasticNode 
@@ -21,15 +20,15 @@ public:
     ScalarStochasticNode(ScalarDist const *dist, unsigned int nchain,
 			 std::vector<Node const *> const &parameters,
 			 Node const *lower, Node const *upper);
-    double logDensity(unsigned int chain, PDFType type) const;
-    void randomSample(RNG *rng, unsigned int chain);
+    double logDensity(unsigned int chain, PDFType type) const override;
+    void randomSample(RNG *rng, unsigned int chain) override;
     void truncatedSample(RNG *rng, unsigned int chain,
 			 double const *lower, double const *upper);
-    bool checkParentValues(unsigned int chain) const;
+    bool checkParentValues(unsigned int chain) const override;
     //StochasticNode *clone(std::vector<Node const *> const &parents,
     //Node const *lower, Node const *upper) const;
     double KL(unsigned int ch1, unsigned int ch2, RNG *rng,
-	      unsigned int nrep) const;
+	      unsigned int nrep) const override;
 };
 
 } /* namespace jags */

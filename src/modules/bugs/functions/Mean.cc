@@ -22,7 +22,7 @@ namespace bugs {
 	return svalue;
     }
 
-    bool Mean::isDifferentiable(unsigned long i) const
+    bool Mean::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

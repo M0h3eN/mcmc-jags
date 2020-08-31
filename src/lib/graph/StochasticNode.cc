@@ -252,7 +252,7 @@ void StochasticNode::support(double *lower, double *upper, unsigned long length,
     }
 
     // Get support without bounds
-    sp(lower, upper, length, chain);
+    sp(lower, upper, chain);
 
     if (_lower || _upper) {
         if (!distribution()->canBound()) {

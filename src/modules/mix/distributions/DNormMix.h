@@ -25,23 +25,23 @@ namespace mix {
 	
 	double logDensity(double const *x, PDFType type,
 			  std::vector<double const *> const &parameters,
-			  std::vector<unsigned long> const &lengths) const;
+			  std::vector<unsigned long> const &lengths)
+	    const override;
 	void randomSample(double *x,
 			  std::vector<double const *> const &parameters,
 			  std::vector<unsigned long> const &lengths,
-			  RNG *rng) const;
+			  RNG *rng) const override;
 	void support(double *lower, double *upper,
 		     std::vector<double const *> const &parameters,
-		     std::vector<unsigned long> const &lengths) const;
-	bool isSupportFixed(std::vector<bool> const &fixmask) const;
+		     std::vector<unsigned long> const &lengths) const override;
+	bool isSupportFixed(std::vector<bool> const &fixmask) const override;
 	bool checkParameterLength(std::vector<unsigned long> const &lengths)
-	    const;
+	    const override;
 	bool checkParameterValue(std::vector<double const *> const &parameters,
 				 std::vector<unsigned long> const &lengths) 
-	    const;
-	void typicalValue(double *x, std::vector<double const *> const &par,
-			  std::vector<unsigned long> const &lengths)  const;
-	unsigned long length(std::vector<unsigned long> const &parlengths) const;
+	    const override;
+	unsigned long length(std::vector<unsigned long> const &parlengths)
+	    const override;
     };
 
 }}

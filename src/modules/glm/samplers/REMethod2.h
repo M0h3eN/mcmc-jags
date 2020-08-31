@@ -45,7 +45,7 @@ namespace glm {
 	 */
 	REMethod2(SingletonGraphView const *tau,
 		  GLMMethod const *glmmethod);
-	~REMethod2();
+	~REMethod2() override;
 	/**
 	 * Updates the random effects
 	 *
@@ -53,7 +53,7 @@ namespace glm {
 	 */
 	virtual void updateSigma(RNG *rng) = 0;
 	virtual void updateTau(RNG *rng) = 0;
-	void update(RNG *rng);
+	void update(RNG *rng) override;
 	void calDesignSigma();
 	/** 
 	 * The likelihood for the standard deviation parameters sigma

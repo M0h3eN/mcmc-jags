@@ -24,12 +24,12 @@ namespace dic {
 	PDMonitor(std::vector<StochasticNode const *> const &snodes,
 		  std::vector<RNG *> const &rngs,
 		  unsigned int nrep, double scale=1);
-	~PDMonitor();
-	std::vector<unsigned long> dim() const;
-	std::vector<double> const &value(unsigned int chain) const;
-	bool poolChains() const;
-	bool poolIterations() const;
-	void update();
+	~PDMonitor() override;
+	std::vector<unsigned long> dim() const override;
+	std::vector<double> const &value(unsigned int chain) const override;
+	bool poolChains() const override;
+	bool poolIterations() const override;
+	void update() override;
 	virtual double weight(StochasticNode const *snode,
 			      unsigned int ch) const;
     };

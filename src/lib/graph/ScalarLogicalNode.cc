@@ -52,7 +52,7 @@ bool ScalarLogicalNode::checkParentValues(unsigned int chain) const
 {
     return _func->checkParameterValue(_parameters[chain]);
 }
-
+  
     void ScalarLogicalNode::gradient(double *grad, Node const *arg,
 				     unsigned int chain) const
     {

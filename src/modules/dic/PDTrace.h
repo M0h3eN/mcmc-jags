@@ -22,12 +22,12 @@ namespace dic {
     public:
 	PDTrace(std::vector<StochasticNode const *> const &snodes,
 		std::vector<RNG*> const &rngs, unsigned int nrep);
-	~PDTrace();
-	std::vector<unsigned long> dim() const;
-	std::vector<double> const &value(unsigned int chain) const;
-	bool poolChains() const;
-	bool poolIterations() const;
-	void update();
+	~PDTrace() override;
+	std::vector<unsigned long> dim() const override;
+	std::vector<double> const &value(unsigned int chain) const override;
+	bool poolChains() const override;
+	bool poolIterations() const override;
+	void update() override;
     };
 
 }}

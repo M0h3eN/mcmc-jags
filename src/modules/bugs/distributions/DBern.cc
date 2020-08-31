@@ -77,7 +77,7 @@ bool DBern::isDiscreteValued(vector<bool> const &) const
 
     bool DBern::hasScore(unsigned long i) const
     {
-	return true;
+	return i == 0;
     }
     
     double DBern::score(double x, vector<double const *> const &parameters,

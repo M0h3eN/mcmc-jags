@@ -49,7 +49,7 @@ namespace glm {
 	 *
 	 * @param rng Random number generator used for sampling
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
 	/**
 	 * Updates auxiliary variables.  The default method does
 	 * nothing.  Sampling methods that use auxiliary variables to

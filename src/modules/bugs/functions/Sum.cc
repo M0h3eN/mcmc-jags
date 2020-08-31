@@ -23,7 +23,7 @@ namespace bugs {
 	return value;
     }
 
-    bool Sum::isDifferentiable(unsigned long i) const
+    bool Sum::hasGradient(unsigned long i) const
     {
 	return true;
     }

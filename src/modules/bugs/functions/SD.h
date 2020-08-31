@@ -20,8 +20,10 @@ namespace bugs {
     public:
 	SD ();
 	double scalarEval (std::vector<double const *> const &args,
-			   std::vector<unsigned long> const &lengths) const;
-	bool checkParameterLength (std::vector<unsigned long> const &len) const;
+			   std::vector<unsigned long> const &lengths)
+	    const override;
+	bool checkParameterLength (std::vector<unsigned long> const &len)
+	    const override;
     };
 
 }}

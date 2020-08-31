@@ -21,11 +21,11 @@ namespace base {
 	
     public:
 	PoolVarianceMonitor(NodeArraySubset const &subset);
-	void update();
-	std::vector<double> const &value(unsigned int chain) const;
-	std::vector<unsigned long> dim() const;
-	bool poolChains() const;
-	bool poolIterations() const;
+	void update() override;
+	std::vector<double> const &value(unsigned int chain) const override;
+	std::vector<unsigned long> dim() const override;
+	bool poolChains() const override;
+	bool poolIterations() const override;
 	};
 
 }}

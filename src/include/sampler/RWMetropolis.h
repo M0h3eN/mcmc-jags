@@ -29,25 +29,25 @@ public:
      */
     RWMetropolis(std::vector<double> const &value, double step, 
                  double prob = 0.234);
-    ~RWMetropolis();
+    ~RWMetropolis() override;
     /**
      * Updates the current value by adding a random increment.
      */
-    void update(RNG *rng);
+    void update(RNG *rng) override;
     /**
      * Modifies the step size to achieve the target acceptance
      * probability using a noisy gradient algorithm
      *
      * @param prob acceptance probability at current update
      */
-    void rescale(double prob);
+    void rescale(double prob) override;
     /**
      * The RWMetropolis method keeps a running mean of the acceptance
      * probabilities, which is updated every time the rescale function
      * is called. The checkAdaptation function returns true if the logit
      * of the running mean is within 0.50 of the target.
      */
-    bool checkAdaptation() const;
+    bool checkAdaptation() const override;
     /**
      * Modifies the given value vector in place by adding an
      * independent normal increment to each element.  It can be

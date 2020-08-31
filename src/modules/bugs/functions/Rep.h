@@ -20,15 +20,20 @@ namespace jags {
 	Rep();
 	void evaluate(double *value, 
 		      std::vector <double const *> const &values,
-		      std::vector <unsigned long> const &lengths) const;
+		      std::vector <unsigned long> const &lengths)
+	    const override;
 	unsigned long length(std::vector <unsigned long> const &lengths,
-			    std::vector <double const *> const &values) const;
-	bool checkParameterLength(std::vector<unsigned long> const &args) const;
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
-	bool checkParameterDiscrete(std::vector<bool> const &mask) const;
-	bool checkParameterFixed(std::vector<bool> const &mask) const;
+			    std::vector <double const *> const &values)
+	    const override;
+	bool checkParameterLength(std::vector<unsigned long> const &args)
+	    const override;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
+	bool checkParameterDiscrete(std::vector<bool> const &mask)
+	    const override;
+	bool checkParameterFixed(std::vector<bool> const &mask) const override;
 	bool checkParameterValue(std::vector<double const *> const &args,
-				 std::vector<unsigned long> const &lens) const;
+				 std::vector<unsigned long> const &lens)
+	    const override;
     };
 
     } /* namespace bugs */

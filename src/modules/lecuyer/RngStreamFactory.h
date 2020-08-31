@@ -16,13 +16,13 @@ namespace lecuyer {
 	std::vector<RNG*> _rngvec;
     public:
 	RngStreamFactory();
-	~RngStreamFactory();
-	void setSeed(unsigned int seed);
+	~RngStreamFactory() override;
+	void setSeed(unsigned int seed) override;
 	void nextStream();
 	void nextSubstream();
-	std::vector<RNG *> makeRNGs(unsigned int n);
-	RNG * makeRNG(std::string const &name);
-	std::string name() const;
+	std::vector<RNG *> makeRNGs(unsigned int n) override;
+	RNG * makeRNG(std::string const &name) override;
+	std::string name() const override;
     };
 
 }}

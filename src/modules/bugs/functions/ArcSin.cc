@@ -31,7 +31,7 @@ namespace bugs {
 	return *args[0] >= -1 && *args[0] <= 1;
     }
 
-    bool ArcSin::isDifferentiable(unsigned long i) const
+    bool ArcSin::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

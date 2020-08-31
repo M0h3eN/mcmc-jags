@@ -24,12 +24,12 @@ class MNormMetropolis : public Metropolis
     unsigned int _p_over_target;
 public:
     MNormMetropolis(SingletonGraphView const *gv, unsigned int chain);
-    ~MNormMetropolis();
-    void rescale(double p);
-    void update(RNG *rng);
-    bool checkAdaptation() const;
-    void getValue(std::vector<double> &value) const;
-    void setValue(std::vector<double> const &value);
+    ~MNormMetropolis() override;
+    void rescale(double p) override;
+    void update(RNG *rng) override;
+    bool checkAdaptation() const override;
+    void getValue(std::vector<double> &value) const override;
+    void setValue(std::vector<double> const &value) override;
 };
 
 }}

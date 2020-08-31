@@ -19,17 +19,16 @@ namespace bugs {
 	return tanh(*args[0]);
     }
 
-    bool Tanh::isDifferentiable(unsigned long i) const
+    bool Tanh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }
     
-    bool Tanh::gradient(double &grad, vector<double const *> const &args,
-			unsigned long i) const
+    double Tanh::gradient(vector<double const *> const &args,
+			  unsigned long i) const
     {
 	double y = cosh(*args[0]);
-	grad = 1/(y*y);
-	return true;
+	return 1/(y*y);
     }
 
 }}

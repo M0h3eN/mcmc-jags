@@ -22,14 +22,18 @@ namespace jags {
 	Seq();
 	void evaluate(double *value, 
 		      std::vector <double const *> const &values,
-		      std::vector <unsigned long> const &lengths) const;
+		      std::vector <unsigned long> const &lengths)
+	    const override;
 	unsigned long length(std::vector <unsigned long> const &lengths,
-			     std::vector <double const *> const &values) const;
-	bool checkParameterLength(std::vector<unsigned long> const &args) const;
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
-	bool checkParameterDiscrete(std::vector<bool> const &mask) const;
-	bool checkParameterFixed(std::vector<bool> const &mask) const;
-	std::string deparse(std::vector<std::string> const &par) const;
+			     std::vector <double const *> const &values)
+	    const override;
+	bool checkParameterLength(std::vector<unsigned long> const &args)
+	    const override;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
+	bool checkParameterDiscrete(std::vector<bool> const &mask)
+	    const override;
+	bool checkParameterFixed(std::vector<bool> const &mask) const override;
+	std::string deparse(std::vector<std::string> const &par) const override;
     };
 
     }

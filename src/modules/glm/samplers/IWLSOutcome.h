@@ -28,12 +28,12 @@ namespace glm {
 	 * Returns the value of the outcome variable in a local linear
 	 * approximation to the GLM
 	 */
-	double value() const;	
+	double value() const override;	
 	/**
 	 * Returns the precision of the outcome variable in a local
 	 * linear approximation to the GLM
 	 */
-	double precision() const;
+	double precision() const override;
 	/**
 	 * Returns the variance function
 	 */

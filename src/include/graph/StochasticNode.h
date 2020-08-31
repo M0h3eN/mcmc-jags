@@ -49,8 +49,7 @@ class StochasticNode : public Node {
     std::vector<bool> const * _observed;
     const bool _discrete;
     const std::array<int, 2> _depth;
-    virtual void sp(double *lower, double *upper, unsigned long length,
-		    unsigned int chain) const = 0;
+    virtual void sp(double *lower, double *upper, unsigned int chain) const = 0;
 protected:
     std::vector<std::vector<double const*> > _parameters;
 public:
@@ -71,29 +70,20 @@ public:
 		   Distribution const *dist,
                    std::vector<Node const *> const &parameters,
 		   Node const *lower, Node const *upper);
-    ~StochasticNode();
+    ~StochasticNode() override;
     /**
      * StochasticNodes have a stochastic depth one greater than their
      * deepest parent. The deterministic depth is always zero.
      */
-    std::array<int, 2> const &depth() const;
+    std::array<int, 2> const &depth() const override;
     /**
      * Returns a pointer to the Distribution.
      */
     Distribution const *distribution() const;
     /**
-     * Draws a random sample from the prior distribution of the node
-     * given the current values of it's parents, and sets the Node
-     * to that value.
-     *
-     * @param rng Random Number Generator object
-     * @param chain Index umber of chain to modify
-     */
-    virtual void randomSample(RNG *rng, unsigned int chain) = 0;
-    /**
      * Stochastic nodes always represent random variables.
      */
-    bool isRandomVariable() const;
+    bool isRandomVariable() const override;
     /**
      * Returns a pointer to a logical vector indicating whether each
      * element of the StochasticNode is observed (true) or unobserved
@@ -104,7 +94,7 @@ public:
      * Returns the corresponding element of the boolean vector
      * returned by observedMask.
      */
-    bool isObserved(unsigned long index) const;
+    bool isObserved(unsigned long index) const override;
     /**
      * Writes the lower and upper limits of the support of a given
      * stochastic node to the supplied arrays. If the node has upper and
@@ -125,13 +115,14 @@ public:
 		 unsigned int chain) const;
     double const *lowerLimit(unsigned int chain) const;
     double const *upperLimit(unsigned int chain) const;
-    std::string deparse(std::vector<std::string> const &parameters) const;
-    bool isDiscreteValued() const;
+    std::string deparse(std::vector<std::string> const &parameters)
+	const override;
+    bool isDiscreteValued() const override;
     /**
      * A stochastic node is fixed if the setData member function
      * has been called.
      */
-    bool isFixed() const;
+    bool isFixed() const override;
     /**
      * Sets the value of the node to be the same in all chains.
      * After setData is called, the stochastic node is considered
@@ -159,16 +150,14 @@ public:
 	clone(std::vector<Node const *> const &parameters,
 	      Node const *lower, Node const *upper) const = 0;
     */
-    virtual double KL(unsigned int chain1, unsigned int chain2, RNG *rng,
-		      unsigned int nrep) const = 0;
-    void unlinkParents();
+    void unlinkParents() override;
 	
     /**
      * Used by dumpNodeNames to gather a specific subset of node types:
      */
-    inline bool isConstant() const { return false; }
-    inline bool isDeterministic() const { return false; }
-    inline bool isStochastic() const { return true; }
+    inline bool isConstant() const override { return false; }
+    inline bool isDeterministic() const override { return false; }
+    inline bool isStochastic() const override { return true; }
 
     /**
      * Returns true if the stochastic node is fully unobserved and

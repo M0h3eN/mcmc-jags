@@ -18,20 +18,20 @@ class DUnif : public ScalarDist {
     DUnif();
     double logDensity(double x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      double const *lower, double const *upper) const;
+		      double const *lower, double const *upper) const override;
     double randomSample(std::vector<double const *> const &parameters,
 			double const *lower, double const *upper,
-			RNG *rng) const;
-    double l(std::vector<double const*> const &parameters) const;
-    double u(std::vector<double const*> const &parameters) const;
+			RNG *rng) const override;
+    double l(std::vector<double const*> const &parameters) const override;
+    double u(std::vector<double const*> const &parameters) const override;
     /** 
      * Checks that a < b
      */
     bool checkParameterValue(std::vector<double const *> const &parameters)
-	const;
-    bool isSupportFixed(std::vector<bool> const &fixmask) const;
+	const override;
+    bool isSupportFixed(std::vector<bool> const &fixmask) const override;
     double KL(std::vector<double const *> const &par0,
-	      std::vector<double const *> const &par1) const;
+	      std::vector<double const *> const &par1) const override;
 };
 
 }}

@@ -38,11 +38,11 @@ namespace jags {
 	  public:
 	    MSlicer(SingletonGraphView const *gv, unsigned int chain,
 		    double width = 1, long maxwidth = 10);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	    static bool canSample(StochasticNode const *node);
-	    bool isAdaptive() const;
-	    void adaptOff();
-	    bool checkAdaptation() const;
+	    bool isAdaptive() const override;
+	    void adaptOff() override;
+	    bool checkAdaptation() const override;
 	};
 
     }

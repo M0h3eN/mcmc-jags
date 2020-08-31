@@ -22,7 +22,7 @@ namespace base {
 	return i < 2;
     }
     
-    double Subtract::gradient(vector<double const *> const &args,
+    double Subtract::gradient(vector<double const *> const &,
 			      unsigned long i) const
     {
 	return (i == 1) ? -1 : 1;

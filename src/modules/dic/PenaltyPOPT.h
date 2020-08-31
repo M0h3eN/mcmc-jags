@@ -17,7 +17,7 @@ namespace dic {
 		  std::vector<RNG *> const &rngs,
 		  unsigned int nrep);
 
-	void update();
+	void update() override;
     };
 
 }}

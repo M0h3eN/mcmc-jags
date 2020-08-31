@@ -32,7 +32,7 @@ namespace bugs {
 	return *args[0] >= -1 && *args[0] <= 1;
     }
 
-    bool ArcTanh::isDifferentiable(unsigned long i) const
+    bool ArcTanh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

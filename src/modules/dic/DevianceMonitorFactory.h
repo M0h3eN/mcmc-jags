@@ -13,8 +13,8 @@ namespace dic {
       public:
 	Monitor *getMonitor(std::string const &name, Range const &range,
 			    BUGSModel *model, std::string const &type,
-			    std::string &msg);
-	std::string name() const;
+			    std::string &msg) override;
+	std::string name() const override;
     };
     
 }}

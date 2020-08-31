@@ -30,7 +30,7 @@ class BUGSModel : public Model
 
 public:
     BUGSModel(unsigned int nchain);
-    ~BUGSModel();
+    ~BUGSModel() override;
     /**
      * Returns the symbol table of the BUGSModel.
      */

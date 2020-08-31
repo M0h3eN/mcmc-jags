@@ -16,7 +16,7 @@ namespace bugs {
 	return *args[0] ? *args[1] : *args[2];
     }
 
-    bool IfElse::isDifferentiable(unsigned long i) const
+    bool IfElse::hasGradient(unsigned long i) const
     {
 	return i == 1 || i == 2;
     }

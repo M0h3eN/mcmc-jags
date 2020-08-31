@@ -37,15 +37,15 @@ namespace jags {
 	MutableSampler(GraphView *gv, 
 		       std::vector<MutableSampleMethod*> const &methods,
 		       std::string const &name);
-	~MutableSampler();
-	void update(unsigned int chain, RNG * rng);
-	bool isAdaptive() const;
-	void adaptOff();
-	bool checkAdaptation() const;
+	~MutableSampler() override;
+	void update(unsigned int chain, RNG * rng) override;
+	bool isAdaptive() const override;
+	void adaptOff() override;
+	bool checkAdaptation() const override;
 	/**
 	 * Returns the name of the sampler, as given to the constructor
 	 */
-	std::string name() const;
+	std::string name() const override;
     };
 
 } /* namespace jags */

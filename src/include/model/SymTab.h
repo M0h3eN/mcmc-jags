@@ -75,8 +75,7 @@ public:
 		   unsigned int chain);
   /**
    * Reads the current value of selected nodes in the symbol table and
-   * writes the result to the data table. The selection is based on
-   * a given boolean function that returns true for the selected nodes.
+   * writes the result to the data table.
    *
    * @param data_table Data table to which results will be written.
    * New entries will be created for the selected nodes.  However, a
@@ -84,8 +83,14 @@ public:
    * corresponding to the selection are missing. Existing entries in
    * the data table will be overwritten.
    *
-   * @param condition Function that returns true if the values of a
-   * Node are to be read, and false otherwise.
+   * @param chain Index number of chain from which to read data values
+   *
+   * @param type Indicates which values to read: DATA_VALUES reads
+   * only observed random variables; PARAMETER_VALUES reads only
+   * unobserved random variables; ALL_VALUES reads all values
+   * (including deterministic nodes).
+   *
+   * @see NodeArray#getValue
    */
   void readValues(std::map<std::string, SArray> &data_table, 
                   unsigned int chain, ValueType type) const;

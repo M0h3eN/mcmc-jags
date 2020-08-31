@@ -21,23 +21,25 @@ namespace bugs {
 class DDirch : public VectorDist {
 public:
     DDirch();
-    std::string alias() const;
+    std::string alias() const override;
     double logDensity(double const *x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      std::vector<unsigned long> const &lengths) const;
+		      std::vector<unsigned long> const &lengths) const override;
     void randomSample(double *x,
 		      std::vector<double const *> const &parameters,
 		      std::vector<unsigned long> const &lengths, RNG *rng)
-	const;
+	const override;
     void randomSample(double *x, std::vector<bool> const &observed,
 		      std::vector<double const *> const &parameters,
 		      std::vector<unsigned long> const &lengths, RNG *rng)
-	const;
-    unsigned long length(std::vector<unsigned long> const &lengths) const;
+	const override;
+    unsigned long length(std::vector<unsigned long> const &lengths)
+	const override;
     /**
      * Checks that alpha is a vector of length at least 2
      */
-    bool checkParameterLength(std::vector<unsigned long> const &lengths) const;
+    bool checkParameterLength(std::vector<unsigned long> const &lengths)
+	const override;
     /**
      * Checks that each element of alpha is >= 0.
      *
@@ -48,20 +50,20 @@ public:
      */
     bool checkParameterValue(std::vector<double const *> const &parameters,
 			     std::vector<unsigned long> const &lengths)
-	const;
+	const override;
     void support(double *lower, double *upper,
 		 std::vector<double const *> const &parameters,
-		 std::vector<unsigned long> const &lengths) const;
-    bool isSupportFixed(std::vector<bool> const &fixmask) const;
-    bool fullRank() const;
+		 std::vector<unsigned long> const &lengths) const override;
+    bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+    bool fullRank() const override;
     double KL(std::vector<double const *> const &par0,
 	      std::vector<double const *> const &par1,
-	      std::vector<unsigned long> const &len) const;
-    bool hasScore(unsigned long i) const;
+	      std::vector<unsigned long> const &len) const override;
+    bool hasScore(unsigned long i) const override;
     void score(double *score, double const *x,
 	       std::vector<double const *> const &par,
 	       std::vector<unsigned long> const &len,
-	       unsigned long i) const;
+	       unsigned long i) const override;
 
 };
 

@@ -18,10 +18,12 @@ namespace bugs {
     public:
 	Sort ();
 	void evaluate(double *value, std::vector <double const *> const &args,
-		      std::vector <unsigned long> const &lengths) const;
+		      std::vector <unsigned long> const &lengths)
+	    const override;
 	unsigned long length(std::vector<unsigned long> const &parlengths,
-			    std::vector<double const *> const &parvalues) const;
-	bool isDiscreteValued(std::vector<bool> const &mask) const;
+			    std::vector<double const *> const &parvalues)
+	    const override;
+	bool isDiscreteValued(std::vector<bool> const &mask) const override;
     };
 
 }}

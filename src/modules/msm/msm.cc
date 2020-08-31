@@ -12,7 +12,7 @@ namespace msm {
     class MSMModule : public Module {
     public:
 	MSMModule();
-	~MSMModule();
+	~MSMModule() override;
     };
     
     MSMModule::MSMModule() 

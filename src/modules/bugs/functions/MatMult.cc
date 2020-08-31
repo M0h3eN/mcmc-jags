@@ -44,7 +44,7 @@ namespace bugs {
 		    args[0], &d1, args[1], &d2, &zero, value, &d1);
     }
 
-    bool MatMult::isDifferentiable(unsigned long i) const
+    bool MatMult::hasGradient(unsigned long i) const
     {
 	return i < 2;
     }

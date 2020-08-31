@@ -70,11 +70,11 @@ public:
      */
     TemperedMetropolis(std::vector<double> const &value, 
                        unsigned int nlevel, double max_temp, unsigned int nrep);
-    ~TemperedMetropolis();
+    ~TemperedMetropolis() override;
     /**
      * Updates the current value using tempered transitions.
      */
-    void update(RNG *rng);
+    void update(RNG *rng) override;
     /**
      * Modifies the step size at each temperature level to achieve the
      * target acceptance probability using a noisy gradient algorithm
@@ -84,11 +84,11 @@ public:
      *
      * @param prob acceptance probability at current update
      */
-    void rescale(double prob);
+    void rescale(double prob) override;
     /**
      * Checks whether the maximum temperature has been reached.
      */
-    bool checkAdaptation() const;
+    bool checkAdaptation() const override;
     /**
      * The target density is assumed to be the product of a prior density
      * and a likelihood. Only the likelihood part of the density is 

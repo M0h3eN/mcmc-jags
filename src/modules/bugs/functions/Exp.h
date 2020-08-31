@@ -17,9 +17,9 @@ namespace bugs {
     {
     public:
 	Exp ();
-	double inverseLink(double eta) const;
-	double link(double mu) const;
-	double grad(double eta) const;
+	double inverseLink(double eta) const override;
+	double link(double mu) const override;
+	double grad(double eta) const override;
     };
 
 }}

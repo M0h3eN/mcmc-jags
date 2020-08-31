@@ -23,18 +23,18 @@ namespace jags {
 	    
 	    double d(double x, PDFType type,
 		     std::vector<double const *> const &parameters, 
-		     bool log) const;
+		     bool log)  const override;
 	    double p(double x, std::vector<double const *> const &parameters,
-		     bool lower, bool log) const;
+		     bool lower, bool log)  const override;
 	    double q(double x, std::vector<double const *> const &parameters,
-		     bool lower, bool log) const;
+		     bool lower, bool log)  const override;
 	    double r(std::vector<double const *> const &parameters,
-		     RNG *rng) const;
+		     RNG *rng)  const override;
 	    /**
 	     * Check that s > 0 and n > 0
 	     */
 	    bool checkParameterValue(std::vector<double const *> const &pars)
-		const;
+		 const override;
 	};
 
     }

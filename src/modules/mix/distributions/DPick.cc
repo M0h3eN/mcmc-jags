@@ -65,28 +65,19 @@ namespace jags {
 	    }
 	}
 
-	double DPick::typicalValue(vector<double const *> const &par,
-				   double const *lower,
-				   double const *upper) const
-	{
-	    if (PROB(par) >= 0.5) {
-		return VAL1(par);
-	    }
-	    else {
-		return VAL2(par);
-	    }
-	}
-
 	bool DPick::isSupportFixed(vector<bool> const &fixmask) const
 	{
 	    return fixmask[1] && fixmask[2];
 	}
 
-	void DPick::support(double *lower, double *upper, 
-			    vector<double const *> const &par) const
+	double DPick::l(vector<double const *> const &parameters) const
 	{
-	    *lower = min(VAL1(par), VAL2(par));
-	    *upper = max(VAL1(par), VAL2(par));
+	    min(VAL1(parameters), VAL2(parameters));
+	}
+
+	double DPick::u(vector<double const *> const &parameters) const
+	{
+	    max(VAL1(parameters), VAL2(parameters));
 	}
 
 	bool DPick::isDiscreteValued(std::vector<bool> const &mask) const

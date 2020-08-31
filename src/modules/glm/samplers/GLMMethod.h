@@ -76,7 +76,7 @@ namespace glm {
 	/**
 	 * Virtual destructor
 	 */
-	virtual ~GLMMethod();
+	~GLMMethod() override;
 	/**
 	 * Calculates the coefficients of the posterior distribution
 	 * of the regression parameters. GLMMethod uses a canonical
@@ -94,15 +94,15 @@ namespace glm {
 	 * Returns false. Sampling methods inheriting from GLMMethod
 	 * are not adaptive.
 	 */
-	bool isAdaptive() const;
+	bool isAdaptive() const override;
 	/**
 	 * Does nothing, as GLMMethod is not adaptive.
 	 */
-	void adaptOff();
+	void adaptOff() override;
 	/**
 	 * Returns true, as GLMMethod is not adaptive
 	 */
-	bool checkAdaptation() const;
+	bool checkAdaptation() const override;
 	/**
 	 * Returns the name of the sampler
 	 */

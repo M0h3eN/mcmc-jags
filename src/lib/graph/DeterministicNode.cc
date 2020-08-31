@@ -75,7 +75,7 @@ void DeterministicNode::randomSample(RNG*, unsigned int chain) {
 	return false;
     }
 
-    bool DeterministicNode::isObserved(unsigned long i) const
+    bool DeterministicNode::isObserved(unsigned long) const
     {
 	return false;
     }

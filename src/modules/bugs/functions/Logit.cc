@@ -25,7 +25,7 @@ namespace bugs {
 	return (arg >= 0 && arg <= 1);
     }
 
-    bool Logit::isDifferentiable(unsigned long i) const
+    bool Logit::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

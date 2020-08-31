@@ -86,4 +86,21 @@ namespace jags {
 	return _dist->checkParameterValue(dargs, dlengths);
     }
 
+    bool VectorLogDensity::hasGradient(unsigned long i) const
+    {
+	return i > 0 && i < _dist->hasScore(i-1);
+    }
+
+    void VectorLogDensity::gradient(double *grad,
+				    vector<double const *> const &args,
+				    vector<unsigned long> const &lengths,
+				    unsigned long i) const
+    {
+	double const *x = args[0];
+
+	vector<double const *> pars(args.begin()+1, args.end());	
+	vector<unsigned long> parlengths(lengths.begin()+1, lengths.end());
+	
+	return _dist->score(grad, x, pars, parlengths, i-1);
+    }
 }

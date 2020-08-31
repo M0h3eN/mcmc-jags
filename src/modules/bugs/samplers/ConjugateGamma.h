@@ -13,9 +13,9 @@ class ConjugateGamma : public ConjugateMethod {
     double *_coef;
 public:
     ConjugateGamma(SingletonGraphView const *gv);
-    ~ConjugateGamma();
+    ~ConjugateGamma() override;
     static bool canSample(StochasticNode *snode, Graph const &graph);
-    void update(unsigned int chain, RNG *rng) const;
+    void update(unsigned int chain, RNG *rng) const override;
 };
 
 }}

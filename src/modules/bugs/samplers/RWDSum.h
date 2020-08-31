@@ -32,21 +32,21 @@ public:
     /**
      * Updates the current value by adding a random increment.
      */
-    void update(RNG *rng);
+    void update(RNG *rng) override;
     /**
      * Modifies the step size to achieve the target acceptance
      * probability using a noisy gradient algorithm
      *
      * @param prob acceptance probability at current update
      */
-    void rescale(double prob);
+    void rescale(double prob) override;
     /**
      * The RWDSum method keeps a running mean of the acceptance
      * probabilities, which is updated every time the rescale function
      * is called. The checkAdaptation function returns true if the logit
      * of the running mean is within 0.50 of the target.
      */
-    bool checkAdaptation() const;
+    bool checkAdaptation() const override;
     /**
      * Does a random walk step.  Note that this function does not
      * modify the value of the RWDSum object.
@@ -70,8 +70,8 @@ public:
      */
     static bool canSample(std::vector<StochasticNode *> const &nodes,
 			  Graph const &graph, bool discrete, bool multinom);
-    void setValue(std::vector<double> const &value);
-    void getValue(std::vector<double> &value) const;
+    void setValue(std::vector<double> const &value) override;
+    void getValue(std::vector<double> &value) const override;
 
 };
 

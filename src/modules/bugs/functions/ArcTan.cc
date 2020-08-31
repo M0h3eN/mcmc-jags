@@ -25,7 +25,7 @@ namespace bugs {
 	return atan(*args[0]);
     }
 
-    bool ArcTan::isDifferentiable(unsigned long i) const
+    bool ArcTan::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

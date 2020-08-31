@@ -15,10 +15,10 @@ namespace base {
 	void MT_sgenrand(unsigned int seed);
     public:
 	MersenneTwisterRNG(unsigned int seed, NormKind norm_kind);
-	void init(unsigned int seed);
-	bool setState(std::vector<int> const &state);
-	void getState(std::vector<int> &state) const;
-	double uniform();
+	void init(unsigned int seed) override;
+	bool setState(std::vector<int> const &state) override;
+	void getState(std::vector<int> &state) const override;
+	double uniform() override;
     };
 
 }}

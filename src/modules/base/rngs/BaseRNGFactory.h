@@ -16,11 +16,11 @@ namespace base {
 	std::vector<RNG*> _rngvec;
     public:
 	BaseRNGFactory();
-	~BaseRNGFactory();
-	void setSeed(unsigned int seed);
-	std::vector<RNG *> makeRNGs(unsigned int n);
-	RNG * makeRNG(std::string const &name);
-	std::string name() const;
+	~BaseRNGFactory() override;
+	void setSeed(unsigned int seed) override;
+	std::vector<RNG *> makeRNGs(unsigned int n) override;
+	RNG * makeRNG(std::string const &name) override;
+	std::string name() const override;
     };
 
 }}

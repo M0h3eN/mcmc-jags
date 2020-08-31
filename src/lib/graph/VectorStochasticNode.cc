@@ -100,7 +100,7 @@ VectorStochasticNode::clone(vector<Node const *> const &parameters,
     */
     
 void VectorStochasticNode::sp(double *lower, double *upper,
-			      unsigned long length, unsigned int chain) const
+			      unsigned int chain) const
 {
     _dist->support(lower, upper, _parameters[chain], _lengths);
 }

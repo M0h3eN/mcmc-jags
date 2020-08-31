@@ -29,7 +29,7 @@ namespace glm {
 	 * Updates the regression parameters element-wise (i.e. with
 	 * Gibbs sampling).
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
     };
     
 }}

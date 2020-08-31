@@ -32,12 +32,12 @@ namespace dic {
 		  std::vector<RNG *> const &rngs,
 		  unsigned int nrep);
 
-	~PenaltyPDTotal();
-	std::vector<unsigned long> dim() const;
-	std::vector<double> const &value(unsigned int chain) const;
-	bool poolChains() const;
-	bool poolIterations() const;
-	void update();
+	~PenaltyPDTotal() override;
+	std::vector<unsigned long> dim() const override;
+	std::vector<double> const &value(unsigned int chain) const override;
+	bool poolChains() const override;
+	bool poolIterations() const override;
+	void update() override;
 	};
 
 }}

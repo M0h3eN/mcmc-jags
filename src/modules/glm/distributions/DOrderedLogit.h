@@ -10,8 +10,9 @@ namespace jags {
 	{
 	public:
 	    DOrderedLogit();
-	    double r(double mu, RNG *rng) const;
-	    double p(double x, double mu, bool lower, bool give_log) const;
+	    double r(double mu, RNG *rng) const override;
+	    double p(double x, double mu, bool lower, bool give_log)
+		const override;
 	};
 
     }

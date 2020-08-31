@@ -21,42 +21,43 @@ public:
 
   double logDensity(double const *x, PDFType tpye, 
 		    std::vector<double const *> const &parameters,
-		    std::vector<unsigned long> const &lengths) const;
+		    std::vector<unsigned long> const &lengths) const override;
   void randomSample(double *x,
 		    std::vector<double const *> const &parameters,
 		    std::vector<unsigned long> const &lengths,
-		    RNG *rng) const;
+		    RNG *rng) const override;
   void randomSample(double *x, std::vector<bool> const &observed,
 		    std::vector<double const *> const &parameters,
 		    std::vector<unsigned long> const &lengths,
-		    RNG *rng) const;
+		    RNG *rng) const override;
    /**
    * Checks that elements of p lie in range (0,1) and 
    * and sum to 1. Checks that N >= 1
    */
   bool checkParameterValue(std::vector<double const *> const &parameters,
                            std::vector<unsigned long> const &lengths)
-      const;
+      const override;
   /** Checks that N is a scalar */
-  bool checkParameterLength(std::vector<unsigned long> const &lengths) const;
+  bool checkParameterLength(std::vector<unsigned long> const &lengths)
+      const override;
   /** Checks that N is discrete-valued */
-  bool checkParameterDiscrete(std::vector<bool> const &mask) const;
-  unsigned long length(std::vector<unsigned long> const &dim) const;
+  bool checkParameterDiscrete(std::vector<bool> const &mask) const override;
+  unsigned long length(std::vector<unsigned long> const &dim) const override;
   void support(double *lower, double *upper,
 	       std::vector<double const *> const &parameters,
-	       std::vector<unsigned long> const &lengths) const;
-  bool isSupportFixed(std::vector<bool> const &fixmask) const;
-  bool fullRank() const;    
-  bool isDiscreteValued(std::vector<bool> const &mask) const;
+	       std::vector<unsigned long> const &lengths) const override;
+  bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+  bool fullRank() const override;    
+  bool isDiscreteValued(std::vector<bool> const &mask) const override;
   double KL(std::vector<double const *> const &par1,
 	    std::vector<double const *> const &par2,
-	    std::vector<unsigned long> const &lengths) const;
-  std::string alias() const;
-  bool hasScore(unsigned long i) const;
+	    std::vector<unsigned long> const &lengths) const override;
+  std::string alias() const override;
+  bool hasScore(unsigned long i) const override;
   void score(double *s, double const *x,
 	     std::vector<double const *> const &parameters,
 	     std::vector<unsigned long> const &lengths,
-	     unsigned long i) const;
+	     unsigned long i) const override;
 };
 
 }}

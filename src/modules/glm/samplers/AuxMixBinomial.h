@@ -31,22 +31,22 @@ namespace glm {
 	 * @param chain Index number of the chain (starting from zero)
 	 * to use                                                                                                                                                                      */
 	AuxMixBinomial(StochasticNode const *snode, unsigned int chain);
-	~AuxMixBinomial();
+	~AuxMixBinomial() override;
 	/**
 	 * Samples the auxiliary variable from its posterior distribution
 	 * given y and calculates a new normal mixture approximation
 	 */
-	void update(RNG *rng);
+	void update(RNG *rng) override;
 	/**
 	 * Returns the residual of the auxiliary variable according to
 	 * the current normal approximation
 	 */
-	double value() const;
+	double value() const override;
 	/**
 	 * Returns the precision of the auxiliary variable according to
 	 * the current normal approximation
 	 */
-	double precision() const;
+	double precision() const override;
 	/**
 	 * AuxMixBinomial represents binary or binomial outcomes with 
 	 * a logistic link

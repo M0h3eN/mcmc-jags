@@ -21,17 +21,17 @@ class IfElse : public ScalarFunction
 {
 public:
     IfElse ();
-    double evaluate(std::vector<double const *> const &args) const;
-    bool isDifferentiable(unsigned long i) const;
+    double evaluate(std::vector<double const *> const &args) const override;
+    bool hasGradient(unsigned long i) const override;
     double gradient(std::vector<double const *> const &args,
-		    unsigned long i) const;
-    bool isDiscreteValued(std::vector<bool> const &mask) const;
+		    unsigned long i) const override;
+    bool isDiscreteValued(std::vector<bool> const &mask) const override;
     bool isAdditive(std::vector<bool> const &mask, 
-		    std::vector<bool> const &fixed) const;
+		    std::vector<bool> const &fixed) const override;
     bool isScale(std::vector<bool> const &mask, 
-		 std::vector<bool> const &fixed) const;
+		 std::vector<bool> const &fixed) const override;
     bool isLinear(std::vector<bool> const &mask, 
-		  std::vector<bool> const &fixed) const;
+		  std::vector<bool> const &fixed) const override;
 };
 
 }}

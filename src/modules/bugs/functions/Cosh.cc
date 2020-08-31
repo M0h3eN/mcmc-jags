@@ -19,7 +19,7 @@ namespace bugs {
 	return cosh(*args[0]);
     }
 
-    bool Cosh::isDifferentiable(unsigned long i) const
+    bool Cosh::hasGradient(unsigned long i) const
     {
 	return i == 0;
     }

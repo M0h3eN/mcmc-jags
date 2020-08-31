@@ -14,10 +14,12 @@ namespace jags {
 	class ScaledWishartFactory : public SingletonFactory
 	{
 	  public:
-	    ~ScaledWishartFactory();
-	    bool canSample(StochasticNode *snode, Graph const &graph) const;
-	    Sampler *makeSampler(StochasticNode *snode, Graph const &g) const;
-	    std::string name() const;
+	    ~ScaledWishartFactory() override;
+	    bool canSample(StochasticNode *snode, Graph const &graph)
+		const override;
+	    Sampler *makeSampler(StochasticNode *snode, Graph const &g)
+		const override;
+	    std::string name() const override;
 	};
 	
     }

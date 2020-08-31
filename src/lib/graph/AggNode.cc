@@ -123,13 +123,13 @@ void AggNode::deterministicSample(unsigned int chain)
     }
 }
 
-    bool AggNode::hasGradient(Node const *arg) const
+    bool AggNode::hasGradient(Node const *) const
     {
 	return true;
     }
     
     void AggNode::gradient(double *grad, Node const *arg,
-			   unsigned int chain) const
+			   unsigned int) const
     {
 	auto par = parents();
 	for (unsigned long p = 0; p < _length; ++p) {

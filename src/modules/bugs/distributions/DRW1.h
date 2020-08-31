@@ -18,21 +18,23 @@ public:
     DRW1();
     double logDensity(double const *x, PDFType type,
 		      std::vector<double const *> const &parameters,
-		      std::vector<unsigned long> const &lengths) const;
+		      std::vector<unsigned long> const &lengths) const override;
     void randomSample(double *x,
 		      std::vector<double const *> const &parameters,
 		      std::vector<unsigned long> const &lengths,
-		      RNG *rng) const;
-    unsigned long length(std::vector<unsigned long> const &lengths) const;
-    bool checkParameterLength(std::vector<unsigned long> const &lengths) const;
+		      RNG *rng) const override;
+    unsigned long length(std::vector<unsigned long> const &lengths)
+	const override;
+    bool checkParameterLength(std::vector<unsigned long> const &lengths)
+	const override;
     bool checkParameterValue(std::vector<double const *> const &parameters,
 			     std::vector<unsigned long> const &lengths)
-	const;
+	const override;
     void support(double *lower, double *upper,
 		 std::vector<double const *> const &parameters,
-		 std::vector<unsigned long> const &lengths) const;
-    bool isSupportFixed(std::vector<bool> const &fixmask) const;
-    bool fullRank() const;
+		 std::vector<unsigned long> const &lengths) const override;
+    bool isSupportFixed(std::vector<bool> const &fixmask) const override;
+    bool fullRank() const override;
 };
 
 }}

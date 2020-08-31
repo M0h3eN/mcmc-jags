@@ -18,11 +18,11 @@ namespace glm {
 	double _z;
       public:
 	BinaryProbit(StochasticNode const *snode, unsigned int chain);
-	double value() const;
-	double precision() const;
-	void update(RNG *rng);
-	void update(double mean, double var, RNG *rng);
-	bool fixedA() const;
+	double value() const override;
+	double precision() const override;
+	void update(RNG *rng) override;
+	void update(double mean, double var, RNG *rng) override;
+	bool fixedA() const override;
 	static bool canRepresent(StochasticNode const *snode);
     };
 

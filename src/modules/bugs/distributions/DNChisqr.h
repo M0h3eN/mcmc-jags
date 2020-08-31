@@ -20,14 +20,16 @@ namespace bugs {
 
 	double d(double x, PDFType type,
 		 std::vector<double const *> const &parameters, 
-		 bool give_log) const;
+		 bool give_log) const override;
 	double p(double q, std::vector<double const *> const &parameters, 
-		 bool lower, bool give_log) const;
+		 bool lower, bool give_log) const override;
 	double q(double p, std::vector<double const *> const &parameters, 
-		 bool lower, bool log_p) const;
-	double r(std::vector<double const *> const &parameters, RNG *rng) const;
-	bool checkParameterValue(std::vector<double const *> const &parameters) const;
-	std::string alias() const;
+		 bool lower, bool log_p) const override;
+	double r(std::vector<double const *> const &parameters, RNG *rng)
+	    const override;
+	bool checkParameterValue(std::vector<double const *> const &parameters)
+	    const override;
+	std::string alias() const override;
     };
 
 }}

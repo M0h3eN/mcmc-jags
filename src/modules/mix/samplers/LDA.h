@@ -62,7 +62,7 @@ namespace jags {
 		std::vector<StochasticNode*> const &topic_priors,
 		std::vector<StochasticNode*> const &word_priors,
 		GraphView const *gv, unsigned int chain);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	    /**
 	     * Tests whether a set of topics can be sampled by the LDA
 	     * method. The arguments are the same as for the LDA

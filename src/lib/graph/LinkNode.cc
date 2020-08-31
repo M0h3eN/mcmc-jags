@@ -63,7 +63,7 @@ double LinkNode::grad(unsigned int chain) const
     return _func->grad(*_parameters[chain][0]);
 }
 
-    bool LinkNode::hasGradient(Node const *arg) const
+    bool LinkNode::hasGradient(Node const *) const
     {
 	return true;
     }

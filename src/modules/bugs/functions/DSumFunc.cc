@@ -27,7 +27,7 @@ namespace bugs {
 	}
     }
 
-    bool DSumFunc::isDifferentiable(unsigned long i) const
+    bool DSumFunc::hasGradient(unsigned long i) const
     {
 	return true;
     }

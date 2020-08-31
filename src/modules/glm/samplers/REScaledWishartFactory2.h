@@ -15,10 +15,10 @@ namespace jags {
 	{
 	  public:
 	    REScaledWishartFactory2();
-	    ~REScaledWishartFactory2();
-	    bool canSample(StochasticNode *snode) const;
+	    ~REScaledWishartFactory2() override;
+	    bool canSample(StochasticNode *snode) const override;
 	    REMethod2 * newMethod(SingletonGraphView const *tau,
-				  GLMMethod const *glmmethod) const;
+				  GLMMethod const *glmmethod) const override;
 	};
 	
     }

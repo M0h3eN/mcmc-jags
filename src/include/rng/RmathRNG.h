@@ -23,8 +23,8 @@ public:
      * variables
      */
     RmathRNG(std::string const &name, NormKind norm_kind);
-    double normal();
-    double exponential();
+    double normal() override;
+    double exponential() override;
 };
 
 } /* namespace jags */

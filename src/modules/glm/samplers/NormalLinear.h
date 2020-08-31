@@ -18,11 +18,11 @@ namespace glm {
 	double const &_precision;
       public:
 	NormalLinear(StochasticNode const *snode, unsigned int chain);
-	double value() const;
-	double precision() const;
+	double value() const override;
+	double precision() const override;
 	static bool canRepresent(StochasticNode const *snode);
-	bool fixedb() const;
-	bool fixedA() const;
+	bool fixedb() const override;
+	bool fixedA() const override;
     };
 
 }}

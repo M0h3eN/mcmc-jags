@@ -13,8 +13,7 @@ class VectorDist;
 class VectorStochasticNode : public StochasticNode {
     VectorDist const * const _dist;
     std::vector<unsigned long> _lengths;
-    void sp(double *lower, double *upper,
-	    unsigned long length, unsigned int chain) const;
+    void sp(double *lower, double *upper, unsigned int chain) const override;
 public:
     /**
      * Constructs a new StochasticNode given a vector distribution and
@@ -23,13 +22,13 @@ public:
      */
     VectorStochasticNode(VectorDist const *dist, unsigned int nchain,
 			 std::vector<Node const *> const &parameters);
-    double logDensity(unsigned int chain, PDFType type) const;
-    void randomSample(RNG *rng, unsigned int chain);
-    bool checkParentValues(unsigned int chain) const;
+    double logDensity(unsigned int chain, PDFType type) const override;
+    void randomSample(RNG *rng, unsigned int chain) override;
+    bool checkParentValues(unsigned int chain) const override;
     //StochasticNode *clone(std::vector<Node const *> const &parents,
     //Node const *lower, Node const *upper) const;
     double KL(unsigned int chain1, unsigned int chain2, RNG *rng,
-	      unsigned int nrep) const;
+	      unsigned int nrep) const override;
 };
 
 } /* namespace jags */

@@ -23,7 +23,7 @@ namespace jags {
 	  public:
 	    CatDirichlet(GraphView const *gv, DirichletCat *dc, 
 			 unsigned int chain);
-	    void update(RNG *rng);
+	    void update(RNG *rng) override;
 	};
     } 
 }

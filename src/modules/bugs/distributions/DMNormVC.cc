@@ -117,6 +117,7 @@ namespace jags {
 	    return true; //FIXME: define in base class
 	}
 
+	/*
 	void DMNormVC::randomsample(double *x, double const *mu, double const *Sigma,
 				    unsigned long nrow,
 				    vector<bool> const &observed, unsigned long nobs,
@@ -179,7 +180,13 @@ namespace jags {
 		if (!observed[i]) x[i] = wf[p++];
 	    }
 	}
+	*/
 
+	bool DMNormVC::hasScore(unsigned long i) const
+	{
+	    return true;
+	}
+	
 	void DMNormVC::score(double *s, double const *x,
 			     std::vector<double const *> const &parameters,
 			     std::vector<std::vector<unsigned long>> const &dims, 

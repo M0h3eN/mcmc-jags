@@ -33,7 +33,7 @@ public:
      * when possible, for each individual StochasticNode.
      */
     std::vector<Sampler*> makeSamplers(std::list<StochasticNode*> const &nodes, 
-				       Graph const &graph) const;
+				       Graph const &graph) const override;
 };
 
 } /* namespace jags */

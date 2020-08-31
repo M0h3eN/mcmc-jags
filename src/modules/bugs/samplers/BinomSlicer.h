@@ -29,12 +29,12 @@ namespace bugs {
 	 */
 	BinomSlicer(SingletonGraphView const *gv, unsigned int chain,
 		    double width = 1, unsigned int maxwidth = 10);
-	double value() const;
-	void setValue(double value);
-	void getLimits(double *lower, double *upper) const;
-	void update(RNG *rng);
+	double value() const override;
+	void setValue(double value) override;
+	void getLimits(double *lower, double *upper) const override;
+	void update(RNG *rng) override;
 	static bool canSample(StochasticNode *node, Graph const &graph);
-	double logDensity() const;
+	double logDensity() const override;
     };
 
 }}

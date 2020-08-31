@@ -17,11 +17,12 @@ namespace bugs {
     {
     public:
 	LogGam ();
-	double evaluate(std::vector<double const *> const &args) const;
-	bool checkParameterValue(std::vector<double const *> const &args) const;
-	bool isDifferentiable(unsigned long i) const;
+	double evaluate(std::vector<double const *> const &args) const override;
+	bool checkParameterValue(std::vector<double const *> const &args)
+	    const override;
+	bool hasGradient(unsigned long i) const override;
 	double gradient(std::vector<double const *> const &args,
-			unsigned long i) const;
+			unsigned long i) const override;
     };
 
 }}

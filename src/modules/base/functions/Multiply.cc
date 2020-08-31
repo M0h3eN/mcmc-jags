@@ -32,7 +32,7 @@ namespace base {
 	return val;
     }
 
-    bool Multiply::hasGradient(unsigned long i) const
+    bool Multiply::hasGradient(unsigned long) const
     {
 	return true;
     }

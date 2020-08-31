@@ -36,7 +36,7 @@ namespace bugs {
 	}
     }
 
-    bool Transpose::isDifferentiable(unsigned long i) const
+    bool Transpose::hasGradient(unsigned long i) const
     {
 	return true;
     }

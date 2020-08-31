@@ -32,9 +32,9 @@ namespace dic {
 		  std::vector<RNG *> const &rngs,
 		  unsigned int nrep);
 
-  	std::vector<double> const &value(unsigned int chain) const;
-	void update();
-	~PenaltyPOPTTotalRep();
+  	std::vector<double> const &value(unsigned int chain) const override;
+	void update() override;
+	~PenaltyPOPTTotalRep() override;
     };
 
 }}

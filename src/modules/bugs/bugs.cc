@@ -113,7 +113,7 @@ namespace bugs {
     class BUGSModule : public Module {
     public:
 	BUGSModule();
-	~BUGSModule();
+	~BUGSModule() override;
     };
 
     BUGSModule::BUGSModule() 

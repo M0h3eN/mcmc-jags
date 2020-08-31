@@ -29,7 +29,7 @@ namespace jags {
 	/**
 	 * Destructor
 	 */
-	~SimpleRange();
+	~SimpleRange() override;
 	/**
 	 * Constructs a simple range given lower and upper limits A
 	 * logic_error is thrown if these are of different lengths

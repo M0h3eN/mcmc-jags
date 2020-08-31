@@ -39,24 +39,24 @@ namespace jags {
 	 */
 	ImmutableSampler(GraphView *gv, ImmutableSampleMethod* method,
 			 std::string const &name);
-	~ImmutableSampler();
-	void update(unsigned int chain, RNG * rng);
+	~ImmutableSampler() override;
+	void update(unsigned int chain, RNG * rng) override;
 	/**
 	 * The sampler is not adaptive
 	 */
-	bool isAdaptive() const;
+	bool isAdaptive() const override;
 	/**
 	 * This does nothing
 	 */
-	void adaptOff();
+	void adaptOff() override;
 	/**
 	 * This always returns true
 	 */
-	bool checkAdaptation() const;
+	bool checkAdaptation() const override;
 	/**
 	 * Returns the name of the sampler, as given to the constructor.b
 	 */
-	std::string name() const;
+	std::string name() const override;
     };
 
 } /* namespace jags */

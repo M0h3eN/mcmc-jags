@@ -14,9 +14,10 @@ namespace bugs {
 class MNormalFactory : public SingletonFactory
 {
 public:
-    bool canSample(StochasticNode *snode, Graph const &graph) const;
-    Sampler *makeSampler(StochasticNode *snode, Graph const &graph) const;
-    std::string name() const;
+    bool canSample(StochasticNode *snode, Graph const &graph) const override;
+    Sampler *makeSampler(StochasticNode *snode, Graph const &graph)
+	const override;
+    std::string name() const override;
 };
 
 }}

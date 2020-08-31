@@ -17,14 +17,14 @@ namespace bugs {
     {
     public:
 	Inverse ();
-	void evaluate (double *value, std::vector <double const *> const &args,
-		       std::vector<std::vector<unsigned long> > const &dims) 
-	    const;
+	void evaluate(double *value, std::vector <double const *> const &args,
+		      std::vector<std::vector<unsigned long> > const &dims) 
+	    const override;
 	std::vector<unsigned long> 
 	    dim(std::vector<std::vector<unsigned long> > const &args,
-		std::vector<double const *> const &values) const;
-	bool checkParameterDim(std::vector<std::vector<unsigned long> > const &dims) const;
-	std::string alias() const;
+		std::vector<double const *> const &values) const override;
+	bool checkParameterDim(std::vector<std::vector<unsigned long>> const &dims) const override;
+	std::string alias() const override;
     };
 
 }}
