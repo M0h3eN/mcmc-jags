@@ -250,7 +250,7 @@ namespace jags {
 	set<Node*> setnodes;
 	for (RangeIterator p(_range); !p.atEnd(); p.nextLeft()) {
 	    unsigned long j = _range.leftOffset(p);
-	    if (x[j] != JAGS_NA) {
+	    if (!jags_isna(x[j])) {
 		unsigned long k = _true_range.leftOffset(p);
 		Node *node = _node_pointers[k];
 		if (node == nullptr) {
@@ -293,7 +293,7 @@ namespace jags {
 		    else {
 			//Only overwrite values if RHS is not missing
 			unsigned long j = _range.leftOffset(q);
-			if (x[j] != JAGS_NA) {
+			if (!jags_isna(x[j])) {
 			    node_value[_offsets[k]] = x[j];
 			}
 		    }
@@ -349,7 +349,7 @@ namespace jags {
 	//Gather all the nodes for which a data value is supplied
 	for (RangeIterator p(_range); !p.atEnd(); p.nextLeft()) {
 	    unsigned long j = _range.leftOffset(p);
-	    if (x[j] != JAGS_NA) {
+	    if (!jags_isna(x[j])) {
 		unsigned long k = _true_range.leftOffset(p);
 		if (_node_pointers[k] == nullptr) {
 		    //Insert a new constant data node

@@ -82,7 +82,7 @@ static bool isInitialized(Node const *node, unsigned int n)
 {
     double const *value = node->value(n);
     for (unsigned long i = 0; i < node->length(); ++i) {
-	if (value[i] == JAGS_NA) 
+	if (jags_isna(value[i])) 
 	    return false;
     }
     return true;

@@ -111,7 +111,7 @@ void VectorStochasticNode::sp(double *lower, double *upper,
     {
 	double kl =  _dist->KL(_parameters[ch1], _parameters[ch2],
 			       _lengths);
-	if (kl == JAGS_NA) {
+	if (jags_isna(kl)) {
 	    return _dist->KL(_parameters[ch1], _parameters[ch2], _lengths,
 			     rng, nrep);
 	}

@@ -27,7 +27,7 @@ namespace base {
 	    vector<double> value = _subset.value(ch);
 	    vector<double> &rmean  = _values[ch];
 	    for (unsigned int i = 0; i < value.size(); ++i) {
-		if (value[i] == JAGS_NA) {
+		if (jags_isna(value[i])) {
 		    rmean[i] = JAGS_NA;
 		}
 		else {

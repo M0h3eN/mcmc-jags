@@ -30,7 +30,7 @@ namespace dic {
 			for (unsigned int i = 0; i < _nodes.size(); ++i) {
 				newval += (-2.0 * _nodes[i]->logDensity(ch, PDF_FULL));
 			}
-			if (newval == JAGS_NA) {
+			if (jags_isna(newval)) {
 			    _mean = JAGS_NA;
 			    _mm = JAGS_NA;
 			    _pv[1] = JAGS_NA;

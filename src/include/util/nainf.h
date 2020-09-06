@@ -12,6 +12,7 @@ extern "C" {
 
   int jags_finite(double);
   int jags_isnan(double);
+  int jags_isna(double);
 
 #ifdef __cplusplus
 }

@@ -20,7 +20,7 @@ namespace jags {
 
 static void writeDouble(double x, ostream &out)
 {
-    if (x == JAGS_NA) {
+    if (jags_isna(x)) {
 	out << "NA";
     }
     else if (jags_isnan(x)) {
@@ -56,13 +56,13 @@ static void writeDouble(double x, ostream &out)
 	    for (unsigned int v = 0; v < nvar; ++v) {
 		if (ans[v]) continue;
 		if (monitor->poolIterations()) {
-		    if (y[v] == JAGS_NA) {
+		    if (jags_isna(y[v])) {
 			ans[v] = true;
 		    }
 		}
 		else {
 		    for (unsigned int k = 0; k < control.niter(); ++k) {
-			if (y[k * nvar + v] == JAGS_NA) {
+			if (jags_isna(y[k * nvar + v])) {
 			    ans[v] = true;
 			    break;
 			}

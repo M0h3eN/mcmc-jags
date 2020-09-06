@@ -67,7 +67,7 @@ namespace dic {
 		    for (unsigned int i = 0; i < _nodes.size(); ++i) {
 				total += _nodes[i]->logDensity(ch, PDF_FULL);
 		    }
-			if (total == JAGS_NA) {
+			if (jags_isna(total)) {
 			    // Don't try and convert NA to density or deviance
 			}else if( _density_type == DENSITY ) {
 				total = exp(total);

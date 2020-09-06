@@ -167,7 +167,7 @@ Node * Compiler::constFromTable(ParseTree const *p)
 	for (unsigned int j = 0; j < n; ++j, r.nextLeft()) {
 	    unsigned long offset = sarray.range().leftOffset(r);
 	    value[j] = v[offset];
-	    if (value[j] == JAGS_NA) {
+	    if (jags_isna(value[j])) {
 		return nullptr;
 	    }
 	}
@@ -179,7 +179,7 @@ Node * Compiler::constFromTable(ParseTree const *p)
 	//Scalar constant
 	unsigned long offset = sarray.range().leftOffset(subset_range.first());  
 	double value = sarray.value()[offset];
-	if (value == JAGS_NA) {
+	if (jags_isna(value)) {
 	    return nullptr;
 	}
 	else {
@@ -778,7 +778,7 @@ Node * Compiler::allocateStochastic(ParseTree const *stoch_relation)
 	unsigned int nmissing = 0;
 	for (RangeIterator p(target_range); !p.atEnd(); p.nextLeft()) {
 	    unsigned long j = data_range.leftOffset(p);
-	    if (data_value[j] == JAGS_NA) {
+	    if (jags_isna(data_value[j])) {
 		++nmissing;
 	    }
 	    this_data[i++] = data_value[j];
@@ -903,7 +903,7 @@ Node * Compiler::allocateLogical(ParseTree const *rel)
 
 	for (RangeIterator p(target_range); !p.atEnd(); p.nextLeft()) {
 	    unsigned long j = data_range.leftOffset(p);
-	    if (data_value[j] != JAGS_NA) {
+	    if (!jags_isna(data_value[j])) {
 		CompileError(var, var->name() + printRange(target_range),
 			     "is a logical node and cannot be observed");
 	    }

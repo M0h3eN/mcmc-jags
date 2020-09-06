@@ -54,7 +54,7 @@ namespace dic {
 		for (unsigned int i = 0; i < _nodes.size(); ++i) {
 		    for (unsigned int ch = 0; ch < _nchain; ++ch) {
 				double newval = _nodes[i]->logDensity(ch, PDF_FULL);
-				if (newval == JAGS_NA) {
+				if (jags_isna(newval)) {
 				    _means[i] = JAGS_NA;
 				    _mms[i] = JAGS_NA;
 				    _variances[i] = JAGS_NA;

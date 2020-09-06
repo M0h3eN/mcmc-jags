@@ -92,6 +92,8 @@ AC_LANG_POP
 jagsmoddir=${libdir}/JAGS/modules-${JAGS_MAJOR}
 AC_SUBST(jagsmoddir)
 
+AC_C_BIGENDIAN
+
 AC_CONFIG_FILES([
   Makefile
   m4/Makefile

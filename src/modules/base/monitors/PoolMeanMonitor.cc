@@ -30,7 +30,7 @@ namespace base {
 
 		    vector<double> value = _subset.value(ch);
 		    for (unsigned int i = 0; i < value.size(); ++i) {
-				if (value[i] == JAGS_NA) {
+			        if (jags_isna(value[i])) {
 				    _values[i] = JAGS_NA;
 				}
 				else {

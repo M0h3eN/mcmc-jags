@@ -30,7 +30,7 @@ namespace base {
 	    vector<double> &rmm  = _mms[ch];
 		vector<double> &rvar  = _variances[ch];		
 	    for (unsigned int i = 0; i < value.size(); ++i) {
-		if (value[i] == JAGS_NA) {
+		if (jags_isna(value[i])) {
 		    rmean[i] = JAGS_NA;
 			rmm[i] = JAGS_NA;
 			rvar[i] = JAGS_NA;

@@ -120,7 +120,7 @@ ScalarStochasticNode::clone(vector<Node const *> const &parameters,
 	}
 	else {
 	    double kl =  _dist->KL(_parameters[ch1], _parameters[ch2]);
-	    if (kl == JAGS_NA) {
+	    if (jags_isna(kl)) {
 		return _dist->KL(_parameters[ch1], _parameters[ch2],
 				 nullptr, nullptr, rng, nrep);
 	    }

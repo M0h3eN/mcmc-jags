@@ -876,7 +876,7 @@ static void writeValue(double x, std::ostream &out, bool isdiscrete)
 {
   using namespace std;
 
-  if (x == JAGS_NA) {
+  if (jags_isna(x)) {
     out << "NA";
   }
   else if (jags_isnan(x)) {

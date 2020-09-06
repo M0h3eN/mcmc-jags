@@ -52,7 +52,7 @@ namespace dic {
 		for (unsigned int ch = 0; ch < _nchain; ++ch) {
 		    for (unsigned int i = 0; i < _nodes.size(); ++i) {
 				double newval = _nodes[i]->logDensity(ch, PDF_FULL);
-				if (newval == JAGS_NA) {
+				if (jags_isna(newval)) {
 				    // Don't try and convert NA to density or deviance
 				}else if( _density_type == DENSITY ) {
 					newval = exp(newval);

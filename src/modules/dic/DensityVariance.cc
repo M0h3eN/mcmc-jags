@@ -57,7 +57,7 @@ namespace dic {
 			vector<double> &rvar  = _variances[ch];		
 		    for (unsigned int i = 0; i < _nodes.size(); ++i) {
 				double newval = _nodes[i]->logDensity(ch, PDF_FULL);
-				if (newval == JAGS_NA) {
+				if (jags_isna(newval)) {
 				    rmean[i] = JAGS_NA;
 					rmm[i] = JAGS_NA;
 					rvar[i] = JAGS_NA;

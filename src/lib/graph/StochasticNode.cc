@@ -298,7 +298,7 @@ bool isParameter(StochasticNode const *node)
 	
 	vector<bool> mask(length);
 	for (unsigned long i = 0; i < length; ++i) {
-	    mask[i] = (value[i] != JAGS_NA);
+	    mask[i] = (!jags_isna(value[i]));
 	}
 	_observed = getUnique(mask);
     }

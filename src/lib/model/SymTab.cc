@@ -105,7 +105,7 @@ static bool allMissing(SArray const &sarray)
     unsigned long N = sarray.length();
     vector<double> const &v = sarray.value();
     for (unsigned long i = 0; i < N; ++i) {
-	if (v[i] != JAGS_NA)
+	if (!jags_isna(v[i]))
 	    return false;
     }
     return true;
