@@ -2,65 +2,62 @@
 
 #include <util/integer.h>
 
-#include <stdexcept>
+//#include <stdexcept>
 #include <cmath>
 #include <cfloat>
 #include <climits>
-#include <string>
+//#include <string>
 
-using std::runtime_error;
 using std::fabs;
-using std::string;
+using std::sqrt;
+using std::round;
 
-static const double eps = 16 * DBL_EPSILON;
+/*
+  Numerical tolerance for values close to an integer. Following R
+  we use the square root of the machine precision.
+*/
+static const double eps = sqrt(DBL_EPSILON);
 
-static int coerceInteger(double fval)
-{
-    if (fval > 0) {
-	return static_cast<int>(fval + eps);
-    }
-    else {
-	return static_cast<int>(fval - eps);
-    }
-}
-
-static unsigned long coerceULong(double fval)
-{
-    return static_cast<unsigned long>(fval + eps);
-}
+/* 
+   Largest integer that can be represented exactly in a 64-bit
+   double. 1 bit for the sign and 11 bits for the exponent leaves 52
+   bits for the fraction.  Hence up to 2^53-1 can be represented
+   exactly and 2^53 is even so there is no loss of precision from the
+   missing last bit.
+*/
+static const unsigned long JAGS_BIGINT = 9007199254740992UL;
 
 namespace jags {
 
-int asInteger(double fval)
-{
-    if (fval >= INT_MAX || fval <= INT_MIN) {
-	throw runtime_error(string("double value out of range for conversion to int"));
+    int asInteger(double fval)
+    {
+	if (fval < INT_MIN) {
+	    return INT_MIN;
+	}
+	else if (fval > INT_MAX) {
+	    return INT_MAX;
+	}
+	else {
+	    return static_cast<int>(round(fval));
+	}
     }
-    return coerceInteger(fval);
-}
 
-bool checkInteger(double fval)
-{
-    if (fval >= INT_MAX || fval <= INT_MIN) {
-	return false;
+    bool checkInteger(double fval)
+    {
+	return fabs(fval - round(fval)) < eps;
     }
-    return fabs(fval - coerceInteger(fval)) < eps;
-}
-
+    
     unsigned long asULong(double fval)
     {
-	if (fval >= ULONG_MAX || fval < 0) {
-	    throw runtime_error("double value out of range for conversion to unsigned long");
+	if (fval < 0) {
+	    return 0UL;
 	}
-	return coerceULong(fval);
-    }
-
-    bool checkULong(double fval)
-    {
-	if (fval >= ULONG_MAX || fval < 0) {
-	    return false;
+	else if (fval > JAGS_BIGINT) {
+	    return JAGS_BIGINT;
 	}
-	return fabs(fval - coerceULong(fval)) < eps;
+	else {
+	    return static_cast<unsigned long>(round(fval));
+	}
     }
     
 }

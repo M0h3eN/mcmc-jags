@@ -224,9 +224,9 @@ bool Compiler::indexExpression(ParseTree const *p, vector<unsigned long> &value)
     else {
 	for (unsigned int i = 0; i < node->length(); ++i) {
 	    double v = node->value(0)[i];
-	    if (!checkULong(v)) {
+	    if (!checkInteger(v)) {
 		throw NodeError(node, 
-				"Index expression evaluates to invalid value");
+				"Index expression not an integer.");
 	    }
 	    value.push_back(asULong(v));
 	}
