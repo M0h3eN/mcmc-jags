@@ -16,14 +16,16 @@ namespace jags {
     public:
 	ArrayLogDensity(ArrayDist const *dist);
 	std::vector<unsigned long> dim(
-	    std::vector<std::vector<unsigned long> > const &dims,
+	    std::vector<std::vector<unsigned long>> const &dims,
 	    std::vector<double const *> const &values) const override;
 	bool checkParameterDim(
-	    std::vector<std::vector<unsigned long> > const &dims)
+	    std::vector<std::vector<unsigned long>> const &dims)
+	    const override;
+	bool checkParameterDiscrete(std::vector<bool> const &args)
 	    const override;
 	bool checkParameterValue(
 	    std::vector<double const *> const &args,
-	    std::vector<std::vector<unsigned long> > const &dims)
+	    std::vector<std::vector<unsigned long>> const &dims)
 	    const override;
 	void evaluate(
 	    double *value,
@@ -32,7 +34,7 @@ namespace jags {
 	    const override;
 	bool hasGradient(unsigned long i) const override;
 	void gradient(double *grad, std::vector<double const *> const &args,
-		      std::vector<std::vector<unsigned long> > const &dims,
+		      std::vector<std::vector<unsigned long>> const &dims,
 		      unsigned long i) const override;
 
     };

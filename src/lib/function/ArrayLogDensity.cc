@@ -56,36 +56,25 @@ namespace jags {
 
 	return true;
     }
-    
+
+    bool
+    ArrayLogDensity::checkParameterDiscrete(vector<bool> const &mask) const
+    {
+	vector<bool> distmask(mask.begin()+1, mask.end());
+	
+	if (_dist->isDiscreteValued(distmask) && !mask[0]) {
+	    return false;
+	}
+	return _dist->checkParameterDiscrete(distmask);
+    }
+
     bool 
     ArrayLogDensity::checkParameterValue(vector<double const *> const &args,
-					  vector<vector<unsigned long> > const &dims) 
+					 vector<vector<unsigned long>> const &dims) 
 	const
     {
-	//We have to include discreteness check here as there is
-	//no equivalent of checkParameterDiscrete for Functions.
-
-	unsigned long npar = _dist->npar();
-
-	vector<bool> mask(npar);
-	for (unsigned long i = 0; i < npar; ++i) {
-	    double p = *args[i + 1];
-	    mask[i] = (p == static_cast<long>(p));
-	}
-	if (!_dist->checkParameterDiscrete(mask)) return false;
-
-	if (_dist->isDiscreteValued(mask)) {
-	    if (*args[0] != static_cast<long>(*args[0])) {
-		return false;
-	    }
-	}
-
-	vector<double const *> dargs(npar);
-	vector<vector<unsigned long> > ddims(npar);
-	for (unsigned long i = 0; i < npar; ++i) {
-	    dargs[i] = args[i+1];
-	    ddims[i] = dims[i+1];
-	}
+	vector<double const *> dargs(args.begin()+1, args.end());
+	vector<vector<unsigned long>> ddims(dims.begin()+1, dims.end());
 	return _dist->checkParameterValue(dargs, ddims);
     }
     

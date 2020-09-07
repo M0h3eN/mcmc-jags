@@ -54,35 +54,24 @@ namespace jags {
 	return true;
     }
 
+    bool
+    VectorLogDensity::checkParameterDiscrete(vector<bool> const &mask) const
+    {
+	vector<bool> distmask(mask.begin()+1, mask.end());
+	
+	if (_dist->isDiscreteValued(distmask) && !mask[0]) {
+	    return false;
+	}
+	return _dist->checkParameterDiscrete(distmask);
+    }
+
     bool 
     VectorLogDensity::checkParameterValue(vector<double const *> const &args,
 					  vector<unsigned long> const &lengths) 
 	const
     {
-	//We have to include discreteness check here as there is
-	//no equivalent of checkParameterDiscrete for Functions.
-
-	unsigned long npar = _dist->npar();
-
-	vector<bool> mask(npar);
-	for (unsigned long i = 0; i < npar; ++i) {
-	    double p = *args[i + 1];
-	    mask[i] = (p == static_cast<int>(p));
-	}
-	if (!_dist->checkParameterDiscrete(mask)) return false;
-
-	if (_dist->isDiscreteValued(mask)) {
-	    if (*args[0] != static_cast<int>(*args[0])) {
-		return false;
-	    }
-	}
-
-	vector<double const *> dargs(npar);
-	vector<unsigned long> dlengths(npar);
-	for (unsigned long i = 0; i < npar; ++i) {
-	    dargs[i] = args[i+1];
-	    dlengths[i] = lengths[i+1];
-	}
+	vector<double const *> dargs(args.begin()+1, args.end());
+	vector<unsigned long> dlengths(lengths.begin()+1, lengths.end());
 	return _dist->checkParameterValue(dargs, dlengths);
     }
 

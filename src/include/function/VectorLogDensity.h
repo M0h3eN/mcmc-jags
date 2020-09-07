@@ -20,6 +20,8 @@ namespace jags {
 	    const override;
 	bool checkParameterLength(std::vector<unsigned long> const &lens)
 	    const override;
+	bool checkParameterDiscrete(std::vector<bool> const &args)
+	    const override;
 	bool checkParameterValue(std::vector<double const *> const &args,
 				 std::vector<unsigned long> const &lens)
 	    const override;
