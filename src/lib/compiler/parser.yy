@@ -75,13 +75,13 @@ using jags::ParseTree;
 
 %left OR
 %left AND
-%left NOT
+%precedence NOT
 %nonassoc GT GE LT LE EQ NE
 %left '+' '-'
 %left '*' '/'
 %left SPECIAL
 %nonassoc ':'
-%left NEG
+%precedence NEG
 %right '^'
 
 
@@ -102,7 +102,7 @@ using jags::ParseTree;
 %expect 2
 
 %%
-input:   /* empty */
+input: %empty
 | model_stmt
 | var_stmt model_stmt
 | data_stmt model_stmt
@@ -274,6 +274,10 @@ expression: var
     $$ = new ParseTree(jags::P_FUNCTION, yylineno); $$->setName("NEG");
     setParameters($$, $2);
 }
+| NOT expression {
+    $$ = new ParseTree(jags::P_FUNCTION, yylineno); $$->setName("!");
+    setParameters($$, $2);
+}
 | expression ':' expression {
     $$ = new ParseTree(jags::P_FUNCTION, yylineno); $$->setName(":");
     setParameters($$, $1, $3);
@@ -329,7 +333,9 @@ range_list: range_element { $$ = new std::vector<ParseTree*>(1, $1); }
 | range_list ',' range_element { $$=$1; $$->push_back($3); }
 ;
 
-range_element: {$$ = new ParseTree(jags::P_RANGE, yylineno);}
+range_element: %empty {
+    $$ = new ParseTree(jags::P_RANGE, yylineno);
+}
 | expression {
     $$ = new ParseTree(jags::P_RANGE, yylineno); 
     setParameters($$,$1);
