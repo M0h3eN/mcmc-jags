@@ -37,42 +37,6 @@ using std::FILE;
 // Need to distinguish between errors that delete the model
 // and errors that don't delete the model (in update)
 // so that we can then dump parameter values from parser.cc
-#define CATCH_ERRORS_DUMP						\
-    catch (NodeError const &except) {					\
-        except.printMessage(_err, _model->symtab());			\
-	return false;							\
-    }									\
-    catch (std::runtime_error const &except) {				\
-	_err << "RUNTIME ERROR:\n";					\
-	_err << except.what() << endl;					\
-	return false;							\
-    }									\
-    catch (std::logic_error const &except) {				\
-	_err << "LOGIC ERROR:\n" << except.what() << '\n';		\
-	_err << "Please send a bug report to "				\
-	     << PACKAGE_BUGREPORT << endl;				\
-	return false;							\
-    }
-
-#define CATCH_ERRORS							\
-    catch (NodeError const &except) {					\
-        except.printMessage(_err, _model->symtab());			\
-	clearModel();							\
-	return false;							\
-    }									\
-    catch (std::runtime_error const &except) {				\
-	_err << "RUNTIME ERROR:\n";					\
-	_err << except.what() << endl;					\
-	clearModel();							\
-	return false;							\
-    }									\
-    catch (std::logic_error const &except) {				\
-	_err << "LOGIC ERROR:\n" << except.what() << '\n';		\
-	_err << "Please send a bug report to "				\
-	     << PACKAGE_BUGREPORT << endl;				\
-	clearModel();							\
-	return false;							\
-    }
 
 namespace jags {
 
@@ -93,6 +57,32 @@ Console::~Console()
 	}
 	delete _pvariables;
     }
+}
+
+void Console::handle(bool clear) {
+
+    try {
+	throw;
+    }
+    catch (NodeError const &except) {
+	except.printMessage(_err, _model->symtab());
+    }
+    catch (std::runtime_error const &except) {
+	_err << "RUNTIME ERROR:\n";
+	_err << except.what() << endl;
+    }
+    catch (std::logic_error const &except) {
+	_err << "LOGIC ERROR:\n" << except.what() << '\n';
+	_err << "Please send a bug report to "
+	     << PACKAGE_BUGREPORT << endl;
+    }
+    catch(...) {
+	_err << "Uncaught exception\n";
+	_err << "Please send a bug report to "
+	     << PACKAGE_BUGREPORT << endl;
+    }
+
+    if (clear) clearModel();
 }
 
 static void getVariableNames(ParseTree const *ptree, set<string> &nameset,
@@ -246,7 +236,10 @@ bool Console::compile(map<string, SArray> &data_table, unsigned int nchain,
 	    delete _model;
 	    _model = nullptr;
 	}
-	CATCH_ERRORS;
+	catch(...) {
+	    handle();
+	    return false;
+	}
     }
 
     _model = new BUGSModel(nchain);
@@ -301,7 +294,10 @@ bool Console::compile(map<string, SArray> &data_table, unsigned int nchain,
 	    return false;
 	}
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
     
     return true;
 }
@@ -326,7 +322,10 @@ bool Console::initialize()
 	_out << "Initializing model" << endl;
 	_model->initialize(false);
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
     
     return true;
 }
@@ -345,8 +344,11 @@ bool Console::setParameters(map<string, SArray> const &init_table,
 
   try {
     _model->setParameters(init_table, chain - 1);
-  } 
-  CATCH_ERRORS;
+  }
+  catch(...) {
+      handle();
+      return false;
+  }
 	
   return true;
 }
@@ -364,7 +366,10 @@ bool Console::setRNGname(string const &name, unsigned int chain)
 	    return false;
 	}
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 	
     return true;
 }
@@ -382,7 +387,10 @@ bool Console::update(unsigned int n)
     try {
 	_model->update(n);
     }
-    CATCH_ERRORS_DUMP;
+    catch(...) {
+	handle(false);
+	return false;
+    }
 
     return true;
 }
@@ -428,7 +436,10 @@ bool Console::setMonitor(string const &name, Range const &range,
 	    return false;
 	}
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
@@ -449,7 +460,10 @@ bool Console::clearMonitor(string const &name, Range const &range,
 	  return false;
       }
   }
-  CATCH_ERRORS;
+  catch(...) {
+      handle();
+      return false;
+  }
 
   return true;
 }
@@ -514,7 +528,10 @@ bool Console::dumpState(map<string,SArray> &data_table,
       }
     }
   }
-  CATCH_ERRORS;
+  catch(...) {
+      handle();
+      return false;
+  }
   // Model is subsequently cleared by calling functions in parser
   
   return true;
@@ -539,7 +556,10 @@ bool Console::dumpMonitors(map<string,SArray> &data_table,
 	    }
 	}
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
@@ -574,7 +594,10 @@ bool Console::coda(string const &prefix, string const &type)
             _err << "WARNING:\n" << warn;
         }
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
@@ -587,7 +610,6 @@ bool Console::coda(vector<pair<string, Range> > const &nodes,
 	return false;
     }
 
-
     try {
         string warn;
 	_model->coda(nodes, prefix, warn, type);
@@ -595,7 +617,10 @@ bool Console::coda(vector<pair<string, Range> > const &nodes,
             _err << "WARNINGS:\n" << warn;
         }
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
@@ -629,7 +654,10 @@ bool Console::checkAdaptation(bool &status)
     try {
 	status =  _model->checkAdaptation();
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
@@ -648,7 +676,10 @@ bool Console::adaptOff(void)
   try {
       _model->adaptOff();
   }
-  CATCH_ERRORS;
+  catch(...) {
+      handle();
+      return false;
+  }
 
   return true;
 }
@@ -677,7 +708,10 @@ bool Console::dumpSamplers(vector<vector<string> > &sampler_names)
     try {
 	_model->samplerNames(sampler_names);
     }
-    CATCH_ERRORS;
+    catch(...) {
+	handle();
+	return false;
+    }
 
     return true;
 }
