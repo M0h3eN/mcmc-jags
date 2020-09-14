@@ -95,7 +95,7 @@
     %}
 
 %defines
-%name-prefix "zz"
+%define api.prefix {zz}
 %union
 {
   int intval;
@@ -180,7 +180,7 @@
 
 %%
 
-input: {
+input: %empty {
     if (interactive && command_buffer_count == 0) 
 	std::cout << ". " << std::flush;
 }
@@ -696,39 +696,39 @@ r_value: DOUBLE {$$ = new jags::ParseTree(jags::P_VALUE); $$->setValue($1);}
 /* Rules for parsing generic attributes.  We don't want to do anything
    with the results, just have the parser accept them */
 
-r_generic_attribute: NAME '=' r_generic_vector {;}
+r_generic_attribute: NAME '=' r_generic_vector {}
 ;
 
-r_generic_list: r_generic_list_element {;}
-| r_generic_list ',' r_generic_list_element {;}
+r_generic_list: r_generic_list_element {}
+| r_generic_list ',' r_generic_list_element {}
 ;
 
-r_generic_list_element: r_generic_vector {;}
-| NAME '=' r_generic_vector {;}
+r_generic_list_element: r_generic_vector {}
+| NAME '=' r_generic_vector {}
 ;
 
-r_generic_vector: r_numeric_vector {;}
-| ASINTEGER '(' r_numeric_vector ')' {;}
-| r_character_vector {;}
-| LIST '(' r_generic_list ')' {;}
-| STRUCTURE '(' r_generic_list ')' {;}
-| R_NULL {;}
+r_generic_vector: r_numeric_vector {}
+| ASINTEGER '(' r_numeric_vector ')' {}
+| r_character_vector {}
+| LIST '(' r_generic_list ')' {}
+| STRUCTURE '(' r_generic_list ')' {}
+| R_NULL {}
 ;
 
-r_numeric_vector: DOUBLE {;}
+r_numeric_vector: DOUBLE {}
 | 'c' '(' r_double_list ')'
 ;
 
-r_double_list: DOUBLE {;}
-| r_double_list ',' DOUBLE {;}
+r_double_list: DOUBLE {}
+| r_double_list ',' DOUBLE {}
 ;
 
-r_character_vector: STRING {;}
-| 'c' '(' r_string_list ')' {;}
+r_character_vector: STRING {}
+| 'c' '(' r_string_list ')' {}
 ;
 
-r_string_list: STRING {;}
-| r_string_list ',' STRING {;}
+r_string_list: STRING {}
+| r_string_list ',' STRING {}
 ;
 
 /* Rules for interacting with the operating system */
