@@ -4,6 +4,12 @@
 namespace jags {
 
     /**
+     * Integers from 1 to JAGS_BIGINT can be represented exactly in
+     * a double precision float.
+     */
+    extern const unsigned long JAGS_BIGINT;
+    
+    /**
      * Checks whether the given double is within a small numerical
      * tolerance of an exact integer.
      */
@@ -16,10 +22,8 @@ namespace jags {
     int asInteger(double);
     /**
      * Rounds the nearest integer and returns an unsigned long. Values
-     * outside the range 0 to 2^53 are truncated to 0 (if lower) or
-     * 2^53 (if higher). The latter is the supremum of the set of
-     * integers that can be represented exactly in a double precision
-     * float.
+     * outside the range 0 to JAGS_BIGINT are truncated to 0 (if
+     * lower) or JAGS_BIGINT (if higher).
      */
     unsigned long asULong(double);
 

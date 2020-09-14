@@ -50,7 +50,7 @@ namespace jags {
 	{
 	    // Generate auxiliary variable
 	    double g0 = logDensity();
-	    double z = g0 - rng->exponential();;
+	    double z = g0 - rng->exponential();
 
 	    // Generate random interval of width "_width[i]" about current value
 	    double xold = _value[i];
@@ -125,7 +125,7 @@ namespace jags {
 	{
 	    // Generate auxiliary variable
 	    double g0 = logDensity();
-	    double z = g0 - rng->exponential();;
+	    double z = g0 - rng->exponential();
 
 	    // Generate random interval of width "_width" about current value
 	    vector<double> L(_length), R(_length);

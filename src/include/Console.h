@@ -39,6 +39,7 @@
    std::vector<ParseTree*> *_pvariables;
    std::vector<std::string> _array_names;
    static unsigned int &rngSeed();
+   void handle(bool clear=true);  
  public:
    /**
     * Constructor

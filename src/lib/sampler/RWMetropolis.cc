@@ -49,7 +49,7 @@ void RWMetropolis::update(RNG *rng)
 
 bool RWMetropolis::checkAdaptation() const
 {
-    if (_pmean == 0 || _pmean == 1) {
+    if (_pmean <= 0 || _pmean >= 1) {
 	return false;
     }
 

@@ -44,9 +44,13 @@ static bool hasRepeats(jags::Range const &target_range)
 
 static vector<unsigned long> expand(vector<unsigned long> const &dim)
 {
+    /* 
+       Add some padding around the array dimensions to allow expansion
+       without reallocating memory. This only affects larger arrays.
+    */
     vector<unsigned long> truedim = dim;
     for (unsigned long i = 0; i < dim.size(); ++i) {
-	truedim[i] = static_cast<unsigned long>(1.05 * dim[i]);
+	truedim[i] += dim[i]/20;
     }
 
     return truedim;
@@ -57,10 +61,9 @@ namespace jags {
     NodeArray::NodeArray(string const &name, vector<unsigned long> const &dim, 
 			 unsigned int nchain)
 	: _name(name), _range(dim), _true_range(expand(dim)), _nchain(nchain), 
-	  _node_pointers(product(expand(dim)), nullptr),
-	  _offsets(product(expand(dim)), numeric_limits<unsigned long>::max()),
+	  _node_pointers(_true_range.length(), nullptr),
+	  _offsets(_true_range.length(), numeric_limits<unsigned long>::max()),
 	  _locked(false)
-	  
     {
     }
 
@@ -92,7 +95,7 @@ namespace jags {
 	if (resize) {
 	    SimpleRange new_range = SimpleRange(upper);
 	    SimpleRange new_true_range = SimpleRange(expand(upper));
-	    unsigned long N  = product(new_true_range.dim(false));
+	    unsigned long N  = new_true_range.length();
 	    vector<unsigned long> new_offsets(N, numeric_limits<unsigned long>::max());
 	    vector<Node *> new_node_pointers(N, nullptr);
 	    for (RangeIterator p(_range); !p.atEnd(); p.nextLeft()) {

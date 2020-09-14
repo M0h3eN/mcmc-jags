@@ -14,9 +14,9 @@ namespace jags {
     class SampleMethodNoAdapt : public MutableSampleMethod
     {
       public:
-	bool isAdaptive() const final { return false; };
-	void adaptOff() final {};
-	bool checkAdaptation() const final { return true; };
+	bool isAdaptive() const final { return false; }
+	void adaptOff() final {}
+	bool checkAdaptation() const final { return true; }
     };
 
 } /* namespace jags */

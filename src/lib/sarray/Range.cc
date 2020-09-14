@@ -136,7 +136,7 @@ namespace jags {
 	else if (rhs._last < _last) {
 	    return false;
 	}
-	//Then lexigraphic ordering of the scope
+	//Then lexical ordering of the scope
 	return _scope < rhs._scope;
     }
 	
