@@ -1,5 +1,5 @@
-#ifndef BASE_FUN_TEST_H
-#define BASE_FUN_TEST_H
+#ifndef BASE_FUN_TEST_H_
+#define BASE_FUN_TEST_H_
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <testlib.h>
@@ -71,6 +71,6 @@ class BaseFunTest : public CppUnit::TestFixture, public JAGSFixture
     void seq();
 };
 
-#endif  // BASE_FUN_TEST_H
+#endif  // BASE_FUN_TEST_H_
 
 

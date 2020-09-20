@@ -1,5 +1,5 @@
-#ifndef INFIX_H_
-#define INFIX_H_
+#ifndef FUNC_INFIX_H_
+#define FUNC_INFIX_H_
 
 #include <function/ScalarFunction.h>
 
@@ -21,4 +21,4 @@ public:
 
 }}
 
-#endif /* INFIX_H_ */
+#endif /* FUNC_INFIX_H_ */

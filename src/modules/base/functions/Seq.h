@@ -1,5 +1,5 @@
-#ifndef SEQ_H_
-#define SEQ_H_
+#ifndef FUNC_SEQ_H_
+#define FUNC_SEQ_H_
 
 #include <function/VectorFunction.h>
 
@@ -39,4 +39,4 @@ namespace jags {
     }
 } /* namespace jags */
 
-#endif /* SEQ_H_ */
+#endif /* FUNC_SEQ_H_ */
