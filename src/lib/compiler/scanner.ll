@@ -29,10 +29,7 @@ BRACKET		[ \t]*\(
 "var"			return VAR;
 "data"                  return DATA;
 "model"			return MODEL;
-"length"/{BRACKET}      return LENGTH;
-"dim"/{BRACKET}         return DIM;
-"for"/{BRACKET}        	return FOR;
-"in"/{BRACKET}		return IN;
+"for"        	        return FOR;
 "in"                    return IN;
 ";"			return ';';
 ","			return ',';
@@ -88,11 +85,6 @@ BRACKET		[ \t]*\(
 }
 ("."[0-9]+){EXPONENT}? {
   yylval.val = atof(yytext); return DOUBLE;
-}
-
-([a-zA-Z]+[a-zA-Z0-9\._]*)/{BRACKET} {
-  yylval.stringptr = new std::string(yytext);
-  return FUNC;
 }
 
 [a-zA-Z]+[a-zA-Z0-9\._]*	 {

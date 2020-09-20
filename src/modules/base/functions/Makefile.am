@@ -4,11 +4,13 @@ libbasefunctions_la_CPPFLAGS = -I$(top_srcdir)/src/include
 
 libbasefunctions_la_SOURCES = Infix.cc Add.cc Subtract.cc Divide.cc	\
 Multiply.cc Neg.cc Pow.cc And.cc Or.cc Not.cc Equal.cc NotEqual.cc	\
-GreaterThan.cc GreaterOrEqual.cc LessThan.cc LessOrEqual.cc Seq.cc
+GreaterThan.cc GreaterOrEqual.cc LessThan.cc LessOrEqual.cc Seq.cc      \
+Dim.cc Length.cc NRow.cc NCol.cc
 
 noinst_HEADERS = Infix.h Add.h Subtract.h Divide.h Multiply.h Neg.h	\
 Pow.h And.h Or.h Not.h Equal.h NotEqual.h GreaterThan.h			\
-GreaterOrEqual.h LessThan.h LessOrEqual.h Seq.h
+GreaterOrEqual.h LessThan.h LessOrEqual.h Seq.h Dim.h Length.h NRow.h	\
+NCol.h
 
 ### Test library 
 

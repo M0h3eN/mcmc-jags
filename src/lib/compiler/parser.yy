@@ -59,7 +59,6 @@ using jags::ParseTree;
 %token DATA
 %token MODEL
 %token <stringptr> NAME
-%token <stringptr> FUNC
 %token <stringptr> SPECIAL
 %token <stringptr> BADCHAR
 %token IN
@@ -181,7 +180,7 @@ determ_relation: var assignment expression {
     $$ = new ParseTree(jags::P_DETRMREL, yylineno);
     setParameters($$, $1, $3);
 } 
-| FUNC '(' var ')' assignment expression {
+| NAME '(' var ')' assignment expression {
 
   /* 
      The link function is given using an S-style replacement function
@@ -242,17 +241,9 @@ sum: expression '+' expression {
 
 expression: var 
 | DOUBLE {$$ = new ParseTree(jags::P_VALUE, yylineno); $$->setValue($1);}
-| LENGTH '(' var ')' {
-    $$ = new ParseTree(jags::P_LENGTH, yylineno);
-    setParameters($$,$3);
-}
-| DIM '(' var ')' {
-    $$ = new ParseTree(jags::P_DIM, yylineno);
-    setParameters($$,$3);
-}
-| FUNC '(' expression_list ')' {
-  $$ = new ParseTree(jags::P_FUNCTION, yylineno); setName($$, $1);
-  setParameters($$, $3);
+| NAME '(' expression_list ')' {
+    $$ = new ParseTree(jags::P_FUNCTION, yylineno); setName($$, $1);
+    setParameters($$, $3);
 }
 | product {
     $$ = new ParseTree(jags::P_FUNCTION, yylineno); $$->setName("*");
@@ -342,12 +333,12 @@ range_element: %empty {
 }
 ;
 
-distribution: FUNC '(' expression_list ')'
+distribution: NAME '(' expression_list ')'
 {
   $$ = new ParseTree(jags::P_DENSITY, yylineno); setName($$, $1);
   setParameters($$, $3);
 }
-| FUNC '(' ')'
+| NAME '(' ')'
 {
     //BUGS has a dflat() distribution with no parameters
     $$ = new ParseTree(jags::P_DENSITY, yylineno); setName($$, $1);
