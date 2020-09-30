@@ -66,11 +66,7 @@ class Compiler {
   Node * allocateLogical(ParseTree const *dtrm_rel);
   void setConstantMask(ParseTree const *rel);
   void writeConstantData(ParseTree const *rel);
-    /*
-  Node *getLength(ParseTree const *p, SymTab const &symtab);
-  Node *getDim(ParseTree const *p, SymTab const &symtab);
-    */
-  Node *getArraySize(ParseTree const *p, SymTab const &symtab);
+  Node *evalBuiltinFunction(ParseTree const *p, SymTab const &symtab);
   void getArrayDim(ParseTree const *p);
   bool getParameterVector(ParseTree const *t,
 			  std::vector<Node const *> &parents);

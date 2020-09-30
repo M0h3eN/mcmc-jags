@@ -1,8 +1,13 @@
 /* -*-C++-*- */
 %{
-/* Note the use of trailing context in the rules for the functions,
-   allowing function names to be used as variable names.  This occurs
-   in the "otree" example where "mean" is used as a variable name.
+/* 
+   We need trailing context for the distribution modifiers T(,) and
+   I(,).  The BUGS language allows these modifiers to follow a
+   syntactically valid stochastic relation separated by only white
+   space.  To distinguish a modifier from the start of another
+   stochastic relation, "T" and "I" are reserved names when followed
+   by an opening bracket, but otherwise we allow the use of "T" and
+   "I" as variable names in user code.
 */
 
 #include <compiler/ParseTree.h>

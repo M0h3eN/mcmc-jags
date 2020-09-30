@@ -562,136 +562,117 @@ getFunction(ParseTree const *t, FuncTab const &functab)
     return func;
 }
 
-Node *Compiler::getArraySize(ParseTree const *p, SymTab const &symtab)
+Node *Compiler::evalBuiltinFunction(ParseTree const *p, SymTab const &symtab)
 {
     /*
-     * The functions length(), dim(), nrow(), ncol() return the
-     * dimensions of a node.  To assist the compiler, we also allow
-     * these functions to return the dimensions of an array - or a
-     * subset of and array - even if the corresponding node is not
-     * defined.
+     * The functions length(), dim(), nrow(), ncol() are built into
+     * the Compiler. The values of these functions do not depend on
+     * the values of the arguments but only their size or dimension.
+     * 
+     * When one of these functions is evaluated by the Compiler a new
+     * ConstantNode is generated. It is not appropriate to create a
+     * LogicalNode, as this would create redundant parent-child
+     * relationships in the model graph.  Furthermore the results of
+     * these built-in functions are always fixed, whereas a
+     * LogicalNode is only fixed if all parents are fixed. Hence these
+     * functions must be built into the compiler and cannot be handled
+     * by Function objects.
      */
     if (p->treeClass() != P_FUNCTION) {
 	throw logic_error("Malformed parse tree. Expecting function call");
     }
-    if (p->name() != "length" && p->name() != "dim" &&
-	p->name() != "nrow" && p->name() != "ncol")
+    string const &funcname = p->name();
+    if (funcname != "length" && funcname != "dim" &&
+	funcname != "nrow" && funcname != "ncol")
     {
-	return nullptr;
+	return nullptr; //Not a built-in function
     }
     if (p->parameters().size() > 1) {
-	CompileError(p, "Too many parameters for", p->name());
+	//All built-in functions take a single parameter
+	CompileError(p, "Too many arguments for", funcname);
     }
-    ParseTree const *var = p->parameters()[0];
-    if (var->treeClass() != P_VAR) {
+    ParseTree const *arg = p->parameters()[0];
+    if (arg->treeClass() == P_VAR) {
 	/* 
-	   The function argument does not take he form "name" or
-	   "name[subset]" then we pass and let the corresponding
-	   function deal with it.
-	*/
-	return nullptr;
-    }
-    NodeArray const *array = symtab.getVariable(var->name());
-    if (!(array && array->isLocked())) {
-	return nullptr;
-    }
-    Range subset_range = getRange(var, array->range());
-    if (isNULL(subset_range)) {
-	return nullptr;
-    }
-    else if (p->name() == "length") {
-	double length = subset_range.length();
-	return getConstant(length, _model.nchain(), false);
-    }
-    else if (p->name() == "dim") {
-	vector<unsigned long> idim = subset_range.dim(false);
-	vector<double> ddim(idim.begin(), idim.end());
-	
-	vector<unsigned long> d(1, subset_range.ndim(false));
-	return getConstant(d, ddim, _model.nchain(), false);
-    }
-    else if (p->name() == "nrow" || p->name() == "ncol") {
-	if (subset_range.ndim(false) != 2) {
-	    CompileError(p, "Incorrect number of dimensions for", p->name());
+	 * If the argument is of the form "name[range]" then we can
+	 * calculate the dimensions directly from the array and the
+	 * expression for the range. When data are supplied to the
+	 * data table an array of appropriate size is created before
+	 * any nodes are defined. This allows the Compiler to resolve
+	 * these expressions early in the complation process.
+	 */
+	NodeArray const *array = symtab.getVariable(arg->name());
+	if (!(array && array->isLocked())) {
+	    return nullptr;
 	}
-	vector<unsigned long> idim = subset_range.dim(false);
-	if (p->name() == "nrow") {
-	    return getConstant(idim[0], _model.nchain(), false);
-	}
-	else {
-	    return getConstant(idim[1], _model.nchain(), false);
-	}
-    }
-    else {
-	return nullptr;
-    }
-}
-
-    /*
-Node *Compiler::getLength(ParseTree const *p, SymTab const &symtab)
-{
-    if (p->treeClass() != P_FUNCTION || p->name() != "length") {
-	throw logic_error("Malformed parse tree. Expecting length expression");
-    }
-    if (p->parameters().size() > 1) {
-	CompileError(p, "Too many parameters for length");
-    }
-    ParseTree const *var = p->parameters()[0];
-    if (var->treeClass() != P_VAR) {
-	return nullptr;
-    }
-    NodeArray const *array = symtab.getVariable(var->name());
-    if (array) {
-	Range subset_range = getRange(var, array->range());
+	Range subset_range = getRange(arg, array->range());
 	if (isNULL(subset_range)) {
 	    return nullptr;
 	}
-	else {
+	else if (funcname == "length") {
 	    double length = subset_range.length();
 	    return getConstant(length, _model.nchain(), false);
 	}
-    }
-    else {
-	return nullptr;
-    }
-}
-
-
-Node *Compiler::getDim(ParseTree const *p, SymTab const &symtab)
-{
-    if (p->treeClass() != P_FUNCTION || p->name() != "dim") {
-	throw logic_error("Malformed parse tree. Expecting dim expression");
-    }
-    if (p->parameters().size() > 1) {
-	CompileError(p, "Too many parameters for dim");
-    }
-    ParseTree const *var = p->parameters()[0];
-    if (var->treeClass() != P_VAR) {
-	throw logic_error("Malformed parse tree. Expecting variable name");
-    }
-    NodeArray const *array = symtab.getVariable(var->name());
-    if (array) {
-	Range subset_range = getRange(var, array->range());
-	if (isNULL(subset_range)) {
-	    return nullptr;
+	else if (funcname == "dim") {
+	    vector<unsigned long> idim = subset_range.dim(false);
+	    vector<double> ddim(idim.begin(), idim.end());
+	    
+	    vector<unsigned long> d(1, subset_range.ndim(false));
+	    return getConstant(d, ddim, _model.nchain(), false);
+	}
+	else if (funcname == "nrow" || funcname == "ncol") {
+	    if (subset_range.ndim(false) != 2) {
+		CompileError(p, "Incorrect number of dimensions for", funcname);
+	    }
+	    vector<unsigned long> idim = subset_range.dim(false);
+	    if (funcname == "nrow") {
+		return getConstant(idim[0], _model.nchain(), false);
+	    }
+	    else {
+		return getConstant(idim[1], _model.nchain(), false);
+	    }
 	}
 	else {
-	    vector<unsigned long> idim = subset_range.dim(false);
-	    vector<double> ddim(idim.size());
-            for (unsigned long j = 0; j < idim.size(); ++j) {
-                ddim[j] = idim[j];
-	    }
-
+	    return nullptr; //Unreachable but here for -Wall
+	}
+    }
+    else {
+	/**
+	 * For more complex expressions than "name[range]" we need to
+	 * create a node from the function argument and read its
+	 * dimensions.
+	 */
+	Node const *argnode = getParameter(arg);
+	if (argnode == nullptr) {
+	    return nullptr;
+	}
+	else if (funcname == "length") {
+	    return getConstant(argnode->length(), _model.nchain(), false);
+	}
+	else if (funcname == "dim") {
+	    vector<unsigned long> idim = argnode->dim();
+	    vector<double> ddim(idim.begin(), idim.end());
+	    
 	    vector<unsigned long> d(1, idim.size());
 	    return getConstant(d, ddim, _model.nchain(), false);
 	}
-    }
-    else {
-	return nullptr;
+	else if (funcname == "nrow" || funcname == "ncol") {
+	    vector<unsigned long> const &idim = argnode->dim();
+	    if (idim.size() != 2) {
+		CompileError(p, "Incorrect number of dimensions for", funcname);
+	    }
+	    if (funcname == "nrow") {
+		return getConstant(idim[0], _model.nchain(), false);
+	    }
+	    else {
+		return getConstant(idim[1], _model.nchain(), false);
+	    }
+	}
+	else {
+	    return nullptr; //Unreachable but here for -Wall
+	}
     }
 }
-    */
-
 
 /*
  * Evaluates the expression t, and returns a pointer to a Node. If the
@@ -727,7 +708,7 @@ Node * Compiler::getParameter(ParseTree const *t)
 	}
 	break;
     case P_FUNCTION:
-	node = getArraySize(t, _model.symtab());
+	node = evalBuiltinFunction(t, _model.symtab());
 	if (!node && getParameterVector(t, parents)) {
 	    FunctionPtr const &func = getFunction(t, funcTab());
 	    if (_index_expression) {

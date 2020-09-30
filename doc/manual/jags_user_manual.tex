@@ -408,6 +408,7 @@ var x[N], Y[N], mu[N], alpha, beta, tau, sigma, x.bar;
 \end{verbatim}
 
 \subsection{Undeclared nodes}
+\label{subsection:undeclared}
 
 If a node array is not declared then JAGS has three methods of
 determining its size.
@@ -440,13 +441,25 @@ Then \verb+B+ is also an $N \times N$ matrix.
 
 \subsection{Querying array dimensions}  
 
-The \JAGS\ compiler has two built-in functions for querying array
-sizes.  The \verb+length()+ function returns the number of elements in
-a node array, and the \verb+dim()+ function returns a vector
-containing the dimensions of an array.  These two functions may be
-used to simplify the data preparation. For example, if \verb+Y+
-represents a vector of observed values, then using the \verb+length()+
-function in a for loop:
+The \JAGS\ compiler has built-in functions for querying array
+dimensions. These functions try to infer the dimensions of the array
+using one of the methods described in section
+\ref{subsection:undeclared}.
+
+\begin{itemize}
+  \item \texttt{length()} returns the number of elements in
+    a node array.
+  \item \texttt{dim()} returns a vector
+    containing the dimensions of an array.
+  \item \texttt{nrow()} returns the number of rows in a 2-dimensional
+    array.
+  \item \texttt{ncol()} returns the number of columns in a
+    2-dimensional array.
+\end{itemize}
+
+These functions may be used to simplify the data preparation. For
+example, if \texttt{Y} represents a vector of observed values, then
+using the \texttt{length()} function in a for loop:
 \begin{verbatim}
 for (i in 1:length(Y)) {
     Y[i] ~ dnorm(mu[i], tau)
@@ -456,31 +469,41 @@ avoids the need to put a separate data value \verb+N+ in the file
 representing the length of \verb+Y+.  
 
 For multi-dimensional arrays, the \verb+dim+ function serves a similar
-purpose. The \verb+dim+ function returns a vector, which must be stored
-in an array before its elements can be accessed. For this reason, calls
-to the \verb+dim+ function must always be in a data block (see section
-\ref{section:data:tranformations}).
+purpose. The \verb+dim+ function returns a vector, which must be
+stored in an array before its elements can be accessed. For example,
+if \texttt{Z} represents a 2-dimensional array of observed values, then
+we can write:
 \begin{verbatim}
-data {
-   D <- dim(Z)
-}
 model {
+   D <- dim(Z)
    for (i in 1:D[1]) {
       for (j in 1:D[2]) {
-         Z[i,j] <- dnorm(alpha[i] + beta[j], tau)
+         Z[i,j] ~ dnorm(alpha[i] + beta[j], tau)
       }
    }
    ...
 }
 \end{verbatim}
-Clearly, the \verb+length()+ and \verb+dim()+ functions can only
-work if the size of the node array can be inferred, using one of the
-three methods outlined above.
+The \texttt{nrow()} and \texttt{ncol()} functions return directly the
+number of rows and columns of a 2-dimensional array. The example above
+can also be written:
+\begin{verbatim}
+model {
+   for (i in 1:nrow(Z)) {
+      for (j in 1:ncol(Z)) {
+         Y[i,j] ~ dnorm(alpha[i] + beta[j], tau)
+      }
+   }
+   ...
+}
+\end{verbatim}
+It is an error to pass an array with 2 or more dimensions to
+\texttt{nrow()} or \texttt{ncol()}.
 
-Note: the \verb+length()+ and \verb+dim()+ functions are different
-from all other functions in \JAGS: they do not act on nodes, but only
-on node {\em arrays}. As a consequence, an expression such as
-\verb+dim(a %*% b)+ is syntactically incorrect.
+From JAGS 5.0.0, these functions can act on general expressions. For
+example if \texttt{A} and \texttt{B} are conforming matrices then
+\verb+dim(A %*% B)+ returns the dimensions of their product.
+
 
 \chapter{Steps in running a model}
 \label{chapter:running}
@@ -1889,7 +1912,7 @@ is parameterized differently in BUGS and \R, and using the alias
 \texttt{dweibull} instead of the \BUGS\ name \texttt{dweib} does not
 change this.
 
-\chapter{Topics in modelling}
+%% \chapter{Topics in modelling}
 
 %Build models from simpler components
 
@@ -2302,7 +2325,7 @@ Usage & Description & Restrictions \\
 \end{table}
 
 Functions taking matrix arguments are summarized in
-table~\ref{table:bugs::matrix}.
+table~\ref{table:bugs:matrix}.
 
 The matrix multiplication operator \verb+%*%+ operator is an example
 of the binary \verb+%special%+ operator discussed in
