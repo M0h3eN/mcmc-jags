@@ -33,8 +33,8 @@ void ParseTree::setName(string const &name)
 	_name = name;
 	break;
     case P_RANGE: case P_BOUNDS: case P_VALUE: case P_STOCHREL: case P_DETRMREL:
-    case P_FOR: case  P_RELATIONS: case P_VECTOR: case P_DIM: case P_LENGTH:
-    case P_SUBSET: case P_INTERVAL:
+    case P_FOR: case  P_RELATIONS: case P_VECTOR: case P_SUBSET:
+    case P_INTERVAL:
 	throw logic_error("Can't set name of ParseTree object");
     }
 }
@@ -66,8 +66,8 @@ string const &ParseTree::name() const
     case P_ARRAY:
 	break;
     case P_RANGE: case P_BOUNDS: case P_VALUE: case P_STOCHREL: case P_DETRMREL:
-    case P_FOR: case  P_RELATIONS: case P_VECTOR: case P_DIM: case P_LENGTH:
-    case P_SUBSET: case P_INTERVAL:
+    case P_FOR: case  P_RELATIONS: case P_VECTOR:  case P_SUBSET:
+    case P_INTERVAL:
 	throw logic_error("Can't get name of ParseTree: invalid treeClass");
     }
     return _name;

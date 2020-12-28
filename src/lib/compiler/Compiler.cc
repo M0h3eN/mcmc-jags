@@ -690,14 +690,6 @@ Node * Compiler::getParameter(ParseTree const *t)
     case P_VAR:
 	node = getArraySubset(t);
 	break;
-/*
-    case P_LENGTH:
-	node = getLength(t,_model.symtab());
-	break;
-    case P_DIM:
-        node = getDim(t, _model.symtab());
-	break;
-*/
     case P_LINK:
 	if (getParameterVector(t, parents)) {
 	    LinkFunction const *link = funcTab().findLink(t->name());
@@ -768,8 +760,7 @@ bool Compiler::getParameterVector(ParseTree const *t,
 	break;
     case P_VAR: case P_RANGE: case P_BOUNDS:  case P_COUNTER: case P_VALUE:
     case P_STOCHREL: case P_DETRMREL: case P_FOR: case P_RELATIONS:
-    case P_VECTOR: case P_ARRAY: case P_DIM: case P_LENGTH: case P_SUBSET:
-    case P_INTERVAL:
+    case P_VECTOR: case P_ARRAY: case P_SUBSET: case P_INTERVAL:
 	throw logic_error("Invalid Parse Tree.");
     }
     return true;
@@ -937,7 +928,7 @@ Node * Compiler::allocateLogical(ParseTree const *rel)
     case P_VALUE: 
 	node = getConstant(expression->value(), _model.nchain(), false);
 	break;
-    case P_VAR: case P_FUNCTION: case P_LINK: case P_LENGTH: case P_DIM:
+    case P_VAR: case P_FUNCTION: case P_LINK:
 	node = getParameter(expression);
 	break;
     case P_RANGE: case P_BOUNDS: case P_DENSITY: case P_COUNTER:
