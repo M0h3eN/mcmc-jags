@@ -20,6 +20,7 @@ using std::exp;
 using std::string;
 using std::binary_search;
 using std::upper_bound;
+using std::isfinite;
 
 static double mkLower(jags::SingletonGraphView const *gv) {
     double lower = 0, upper = 0;
@@ -71,7 +72,7 @@ namespace base {
 	    lik[i] = liksum;
 	}
 	
-	if (!jags_finite(liksum)) {
+	if (!isfinite(liksum)) {
 	    throwNodeError(_gv->node(), "Cannot normalize density");
 	}
 
@@ -102,7 +103,7 @@ namespace base {
 	//Distribution cannot be unbounded
 	double ulimit = JAGS_NEGINF, llimit = JAGS_POSINF;
 	node->support(&llimit, &ulimit, 1, 0);
-	if (!jags_finite(ulimit) || !jags_finite(llimit))
+	if (!isfinite(ulimit) || !isfinite(llimit))
 	    return false;
 	
 	/* If there are too many possibilities then FiniteMethod,

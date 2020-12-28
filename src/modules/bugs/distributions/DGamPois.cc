@@ -108,7 +108,7 @@ double DGamPois::KL(vector<double const *> const &par0,
     if (fabs(s0 - s1) > 1e-16) {
 	//We can't calculat Kullback-Leibler divergence in closed form when
 	//s0 and s1 are different
-	return JAGS_NA;
+	return JAGS_NAN;
     }
     
     return s0 * (log(p0) - log(p1))  + 

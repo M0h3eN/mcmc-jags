@@ -204,7 +204,7 @@ void MixtureNode::updateActive(unsigned int chain)
 	std::cout << "Got " << printIndex(i) << "\nOriginally\n";
 	for (unsigned int j = 0; j < _Nindex; ++j) {
 	    std::cout << par[j]->value(chain)[0] << "\n";
-	    if (par[j]->value(chain)[0] == JAGS_NA)
+	    if (jags_isna(par[j]->value(chain)[0]))
 		std::cout << "(which is  missing)\n";
 	}
 	*/

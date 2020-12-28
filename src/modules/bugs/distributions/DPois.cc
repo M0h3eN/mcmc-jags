@@ -32,8 +32,8 @@ DPois::d(double x, PDFType type,
     if (type == PDF_LIKELIHOOD) {
 	//Avoid expensive normalizing constant
 	double lambda = LAMBDA(par);
-	if (x < 0 || (lambda == 0 && x != 0) || R_D_nonint(x) || 
-	    !jags_finite(lambda)) 
+	if (x < 0 || (lambda == 0 && x != 0) || R_D_nonint(x) ||
+	    !isfinite(lambda)) 
 	{
 	    return give_log ?  JAGS_NEGINF : 0;
 	}

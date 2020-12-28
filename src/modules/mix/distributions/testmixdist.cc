@@ -4,7 +4,6 @@
 #include "DNormMix.h"
 
 #include <MersenneTwisterRNG.h>
-#include <util/nainf.h>
 #include <JRmath.h>
 
 #include <cmath>

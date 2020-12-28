@@ -6,6 +6,7 @@
 
 using std::string;
 using std::vector;
+using std::fill;
 
 namespace jags {
 
@@ -18,7 +19,6 @@ ArrayDist::ArrayDist(string const &name, unsigned int npar)
 			  vector<vector<unsigned long>> const &,
 			  unsigned long) const
     {
-	throw DistError(this, "Undefined score function");
     }
     
     void ArrayDist::randomSample(double *, vector<bool> const &,
@@ -52,7 +52,7 @@ ArrayDist::ArrayDist(string const &name, unsigned int npar)
 			 vector<double const *> const &,
 			 vector<vector<unsigned long> > const &) const
     {
-	return JAGS_NA;
+	return JAGS_NAN;
     }
     
 

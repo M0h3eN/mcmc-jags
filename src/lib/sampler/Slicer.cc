@@ -13,6 +13,7 @@
 using std::vector;
 using std::fabs;
 using std::runtime_error;
+using std::isfinite;
 
 namespace jags {
 
@@ -26,7 +27,7 @@ bool Slicer::updateStep(RNG *rng)
 {
     // Test current value
     double g0 = logDensity();
-    if (!jags_finite(g0)) {
+    if (!isfinite(g0)) {
 	if (g0 > 0) {
 	    _state = SLICER_POSINF;
 	    return false;
@@ -127,7 +128,7 @@ bool Slicer::updateDouble(RNG *rng)
 
   // Test current value
   double g0 = logDensity();
-  if (!jags_finite(g0)) {
+  if (!isfinite(g0)) {
     if (g0 < 0) {
 	_state = SLICER_NEGINF;
 	return false;

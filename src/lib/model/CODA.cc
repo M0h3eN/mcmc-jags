@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <cmath>
 
 using std::list;
 using std::vector;
@@ -15,6 +16,8 @@ using std::string;
 using std::ostringstream;
 using std::ofstream;
 using std::ostream;
+using std::isnan;
+using std::isfinite;
 
 namespace jags {
 
@@ -23,10 +26,10 @@ static void writeDouble(double x, ostream &out)
     if (jags_isna(x)) {
 	out << "NA";
     }
-    else if (jags_isnan(x)) {
+    else if (isnan(x)) {
 	out << "NaN";
     }
-    else if (!jags_finite(x)) {
+    else if (!isfinite(x)) {
 	if (x > 0) 
 	    out << "Inf";
 	else 

@@ -40,7 +40,7 @@ bool ScalarFunction::isPower(vector<bool> const &mask,
     double ScalarFunction::gradient(vector<double const*> const &,
 				    unsigned long) const
     {
-	return JAGS_NA;
+	return 0;
     }
 
     

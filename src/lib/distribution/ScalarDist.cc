@@ -88,7 +88,7 @@ bool ScalarDist::isSupportFixed(vector<bool> const &) const
     double ScalarDist::KL(vector<double const *> const &,
 			  vector<double const *> const &) const
     {
-	return JAGS_NA;
+	return JAGS_NAN;
     }
 
     double ScalarDist::score(double, std::vector<double const *> const &,

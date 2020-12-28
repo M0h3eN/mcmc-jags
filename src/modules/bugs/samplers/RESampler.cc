@@ -3,7 +3,6 @@
 #include <graph/StochasticNode.h>
 #include <graph/NodeError.h>
 #include <distribution/Distribution.h>
-#include <sarray/nainf.h>
 #include <rng/RNG.h>
 #include <module/ModuleError.h>
 
@@ -18,6 +17,7 @@ using std::copy;
 using std::exp;
 using std::sqrt;
 using std::min;
+using std::isfinite;
 
 static vector<StochasticNode*> merg(StochasticNode *variance,
 			     vector<StochasticNode*> const &effects)
@@ -163,8 +163,8 @@ void RESampler::transformValues(const double *v, unsigned int length,
 	throwLogicError("Length error in RESampler::transformValues");
     }
     
-    bool bb = jags_finite(_lower); //bounded below
-    bool ba = jags_finite(_upper); //bounded above
+    bool bb = isfinite(_lower); //bounded below
+    bool ba = isfinite(_upper); //bounded above
     if (bb && ba) {
 	double w = 1.0 / (1 + exp(-v[0]));
 	nv[0] = (1 - w) * _lower + w * _upper;

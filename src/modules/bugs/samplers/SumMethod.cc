@@ -26,6 +26,7 @@ using std::floor;
 using std::fabs;
 using std::list;
 using std::find;
+using std::isfinite;
 
 namespace jags {
     
@@ -227,7 +228,7 @@ namespace jags {
 		if (_sumchild->logDensity(chain, PDF_LIKELIHOOD) != 0) {
 		    throw logic_error("SumMethod failed to fix initial values");
 		}
-		if (jags_finite(gv->logFullConditional(_chain))) {
+		if (isfinite(gv->logFullConditional(_chain))) {
 		    _x = xnew; //Preserve changes
 		}
 		else {
@@ -247,7 +248,7 @@ namespace jags {
 	{
 	    // Test current value
 	    double g0 = logDensity();
-	    if (!jags_finite(g0)) {
+	    if (!isfinite(g0)) {
 		return;
 	    }
 

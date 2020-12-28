@@ -43,7 +43,9 @@ public:
     bool isPower(std::vector<bool> const &mask,
 		 std::vector<bool> const &isfixed) const override;
     /**
-     * Calculates the first derivative of the function
+     * Calculates the first derivative of the function. The default
+     * implementation returns JAGS_NAN indicating that the gradient
+     * cannot be calculated.
      *
      * @param args Vector of arguments
      *

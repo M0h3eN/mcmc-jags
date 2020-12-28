@@ -6,7 +6,6 @@
 
 #include <rng/TruncatedNormal.h>
 #include <rng/RNG.h>
-#include <util/nainf.h>
 
 #include <cmath>
 #include <stdexcept>
@@ -14,6 +13,7 @@
 using std::sqrt;
 using std::exp;
 using std::logic_error;
+using std::isfinite;
 
 //sqrt(2*pi)
 #define STP 2.506628274631
@@ -28,7 +28,7 @@ static double Alpha(double mu)
 
 static double lnorm(double left, RNG *rng)
 {
-    if (!jags_finite(left)) {
+    if (!isfinite(left)) {
 	throw logic_error("Non-finite boundary in truncated normal");
     }
     if (left < 0) {
@@ -132,7 +132,7 @@ static double inorm_right_tail(double left, double right, RNG *rng)
 
 static double inorm(double left, double right, RNG *rng)
 {
-    if (!jags_finite(left) || !jags_finite(right)) {
+    if (!isfinite(left) || !isfinite(right)) {
 	throw logic_error("Non-finite boundary in truncated normal");
     }
     if (right < left) {

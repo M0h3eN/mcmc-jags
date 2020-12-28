@@ -43,7 +43,7 @@ VectorDist::VectorDist(string const &name, unsigned int npar)
 			  vector<double const *> const &,
 			  vector<unsigned long> const &) const
     {
-	return JAGS_NA;
+	return JAGS_NAN;
     }
 
     void VectorDist::score(double *, double const *,

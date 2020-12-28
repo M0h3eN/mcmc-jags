@@ -1,5 +1,4 @@
 #include <function/testfun.h>
-#include <util/nainf.h>
 #include <util/logical.h>
 
 #include <cppunit/extensions/HelperMacros.h>
@@ -18,6 +17,8 @@ using std::vector;
 using std::string;
 using std::copy;
 using std::floor;
+using std::isfinite;
+using std::isnan;
 
 /* All functions */
 
@@ -159,10 +160,10 @@ void checkLimits(ScalarFunction const *f, double lower, double upper)
     CPPUNIT_ASSERT_MESSAGE(f->name(), checkval(f, lower));
     CPPUNIT_ASSERT_MESSAGE(f->name(), checkval(f, upper));
 
-    CPPUNIT_ASSERT_MESSAGE(f->name(), !jags_isnan(eval(f, lower)));
-    CPPUNIT_ASSERT_MESSAGE(f->name(), !jags_isnan(eval(f, upper)));
+    CPPUNIT_ASSERT_MESSAGE(f->name(), !isnan(eval(f, lower)));
+    CPPUNIT_ASSERT_MESSAGE(f->name(), !isnan(eval(f, upper)));
 
-    if (jags_finite(upper)) {
+    if (isfinite(upper)) {
 	if (upper > 1) {
 	    upper *= (1.0 + DBL_EPSILON);
 	}
@@ -174,7 +175,7 @@ void checkLimits(ScalarFunction const *f, double lower, double upper)
 	}
 	CPPUNIT_ASSERT_MESSAGE(f->name(), !checkval(f, upper));
     }
-    if (jags_finite(lower)) {
+    if (isfinite(lower)) {
 	if (lower > 1) {
 	    lower *= (1.0 - DBL_EPSILON);
 	}

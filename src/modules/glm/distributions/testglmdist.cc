@@ -7,7 +7,6 @@
 #include "DOrderedLogit.h"
 
 #include <MersenneTwisterRNG.h>
-#include <util/nainf.h>
 #include <JRmath.h>
 
 #include <cmath>
@@ -24,6 +23,7 @@ using std::multiset;
 using std::abs;
 using std::ostringstream;
 using std::sort;
+using std::isfinite;
 
 #define F77_DPOTRF F77_FUNC(dpotrf,DPOTRF)
 #define F77_DPOTRI F77_FUNC(dpotri, DPOTRI)
@@ -170,13 +170,13 @@ static void scalar_trunclik_cont(RScalarDist const *dist,
     // variables by approximate integration using the trapezoid method
     
     CPPUNIT_ASSERT(!dist->isDiscreteValued());
-    CPPUNIT_ASSERT(jags_finite(bound));
+    CPPUNIT_ASSERT(isfinite(bound));
     
     //Ensure that the density is finite at the other boundary (ob)
     //If not then just return as this method will not work
     double ob = lower ? dist->l(par) : dist->u(par);
-    if (jags_finite(ob)) {
-	if (!jags_finite(dist->d(ob, jags::PDF_FULL, par, false))) {
+    if (isfinite(ob)) {
+	if (!isfinite(dist->d(ob, jags::PDF_FULL, par, false))) {
 	    return;
 	}
     }
@@ -185,7 +185,7 @@ static void scalar_trunclik_cont(RScalarDist const *dist,
     //If lower==false then the grid is in reverse order
     vector<double> x;
     unsigned int N = 1000;
-    if (jags_finite(ob)) {
+    if (isfinite(ob)) {
 	x.push_back(ob);
     }
     double pmax = dist->p(bound, par, lower, false);

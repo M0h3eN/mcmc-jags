@@ -49,13 +49,3 @@ int jags_isna(double x)
     }
     return 0;
 }
-
-int jags_isnan(double x)
-{
-    return isnan(x);
-}
-
-int jags_finite(double x)
-{
-    return isfinite(x);
-}

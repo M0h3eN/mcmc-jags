@@ -13,7 +13,6 @@
 #include <graph/ConstantNode.h>
 #include <graph/NodeError.h>
 #include <graph/Node.h>
-#include <util/nainf.h>
 
 #include <fstream>
 #include <sstream>

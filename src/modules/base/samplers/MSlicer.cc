@@ -4,7 +4,6 @@
 #include <distribution/Distribution.h>
 #include <module/ModuleError.h>
 #include <rng/RNG.h>
-#include <util/nainf.h>
 
 #include "MSlicer.h"
 
@@ -14,6 +13,7 @@
 using std::vector;
 using std::string;
 using std::fabs;
+using std::isfinite;
 
 #define MIN_ADAPT 50
 
@@ -166,7 +166,7 @@ namespace jags {
 	{
 	    // Test current value
 	    double g0 = logDensity();
-	    if (!jags_finite(g0)) {
+	    if (!isfinite(g0)) {
 		if (g0 > 0) {
 		    throwNodeError(_gv->node(),
 				   "Slicer stuck at value with infinite density");

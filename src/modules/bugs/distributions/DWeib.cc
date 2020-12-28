@@ -2,7 +2,6 @@
 #include "DWeib.h"
 
 #include <rng/RNG.h>
-#include <util/nainf.h>
 
 #include <vector>
 #include <cmath>

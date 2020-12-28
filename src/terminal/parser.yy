@@ -879,10 +879,10 @@ static void writeValue(double x, std::ostream &out, bool isdiscrete)
   if (jags_isna(x)) {
     out << "NA";
   }
-  else if (jags_isnan(x)) {
+  else if (isnan(x)) {
     out << "NaN";
   }
-  else if (!jags_finite(x)) {
+  else if (!isfinite(x)) {
     if (x > 0)
       out << "Inf";
     else

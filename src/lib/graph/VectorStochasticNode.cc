@@ -10,12 +10,14 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 using std::vector;
 using std::string;
 using std::max;
 using std::min;
 using std::copy;
+using std::isnan;
 
 namespace jags {
 
@@ -111,7 +113,7 @@ void VectorStochasticNode::sp(double *lower, double *upper,
     {
 	double kl =  _dist->KL(_parameters[ch1], _parameters[ch2],
 			       _lengths);
-	if (jags_isna(kl)) {
+	if (isnan(kl)) {
 	    return _dist->KL(_parameters[ch1], _parameters[ch2], _lengths,
 			     rng, nrep);
 	}

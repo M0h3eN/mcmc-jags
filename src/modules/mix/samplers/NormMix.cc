@@ -17,6 +17,7 @@ using std::exp;
 using std::string;
 using std::pair;
 using std::set;
+using std::isfinite;
 
 namespace jags {
 
@@ -99,8 +100,8 @@ namespace mix {
     void NormMix::step(vector<double>  &x, double step, RNG *rng) const
     {
 	for (unsigned int i = 0; i < x.size(); ++i) {
-	    bool bb = jags_finite(_lower[i]); //bounded below
-	    bool ba = jags_finite(_upper[i]); //bounded above
+	    bool bb = isfinite(_lower[i]); //bounded below
+	    bool ba = isfinite(_upper[i]); //bounded above
 	    double eps = rng->normal() * step;
 		
 	    if (bb && ba) {
@@ -132,8 +133,8 @@ namespace mix {
     {
 	double lj = 0;
 	for (unsigned int i = 0; i < x.size(); ++i) {
-	    bool bb = jags_finite(_lower[i]); //bounded below
-	    bool ba = jags_finite(_upper[i]); //bounded above
+	    bool bb = isfinite(_lower[i]); //bounded below
+	    bool ba = isfinite(_upper[i]); //bounded above
 	    if (bb && ba) {
 		lj += log(x[i] - _lower[i]) + log(_upper[i] - x[i]);
 	    }

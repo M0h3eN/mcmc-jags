@@ -18,7 +18,6 @@
 #include "Subtract.h"
 
 #include <function/testfun.h>
-#include <util/nainf.h>
 #include <util/integer.h>
 using jags::checkInteger;
 

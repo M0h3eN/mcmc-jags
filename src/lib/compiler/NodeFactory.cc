@@ -1,6 +1,5 @@
 #include <compiler/NodeFactory.h>
 #include <graph/Node.h>
-#include <util/nainf.h>
 
 #include <cfloat>
 #include <cmath>

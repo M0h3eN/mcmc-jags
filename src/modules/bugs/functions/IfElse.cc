@@ -1,6 +1,5 @@
 #include <config.h>
 #include "IfElse.h"
-#include <util/nainf.h>
 
 using std::vector;
 

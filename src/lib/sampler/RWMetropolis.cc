@@ -1,7 +1,6 @@
 #include <config.h>
 #include <sampler/RWMetropolis.h>
 #include <rng/RNG.h>
-#include <util/nainf.h>
 
 #include <cmath>
 
@@ -9,6 +8,7 @@ using std::vector;
 using std::log;
 using std::exp;
 using std::fabs;
+using std::isfinite;
 
 namespace jags {
 
@@ -41,7 +41,7 @@ void RWMetropolis::update(RNG *rng)
     step(value, _step_adapter.stepSize(), rng);
     setValue(value);
     double log_p_new = logDensity() + logJacobian(value);
-    double odds = ( jags_finite( log_p ) && jags_finite( log_p_new ) )
+    double odds = ( isfinite( log_p ) && isfinite( log_p_new ) )
                 ?  exp( log_p_new - log_p )
                 : ( log_p_new > log_p ? 1 : 0 );
     accept(rng, odds);

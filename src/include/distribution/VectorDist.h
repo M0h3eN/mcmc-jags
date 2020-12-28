@@ -170,7 +170,7 @@ class VectorDist : public Distribution
    *
    * This is a virtual function that must be overloaded for any
    * distribution that allows exact Kullback-Leibler divergence
-   * calculations. The default method returns JAGS_NA, indicating that
+   * calculations. The default method returns JAGS_NAN, indicating that
    * the method is not implemented.
    */
   virtual double KL(std::vector<double const *> const &par1,

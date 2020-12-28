@@ -2,7 +2,6 @@
 #include "DScaledGamma.h"
 
 #include <JRmath.h>
-#include <util/nainf.h>
 
 using std::vector;
 

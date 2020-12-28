@@ -4,7 +4,6 @@
 #include <graph/DeterministicNode.h>
 #include <graph/Graph.h>
 #include <graph/NodeError.h>
-#include <util/nainf.h>
 
 #include <stdexcept>
 #include <set>
@@ -21,6 +20,8 @@ using std::logic_error;
 using std::string;
 using std::copy;
 using std::fpclassify;
+using std::isnan;
+using std::isfinite;
 
 static unsigned int sumLength(vector<jags::StochasticNode *> const &nodes)
 {
@@ -209,7 +210,7 @@ double GraphView::logFullConditional(unsigned int chain) const
     }
 
     double lfc = lprior + llike;
-    if(jags_isnan(lfc)) {
+    if(isnan(lfc)) {
 	/* 
 	   Try to find where the calculation went wrong. At this point,
 	   we are definitely going to throw an exception. It's just a
@@ -219,11 +220,11 @@ double GraphView::logFullConditional(unsigned int chain) const
 
 	//Check prior
 	for (p = _nodes.begin(); p != _nodes.end(); ++p) {
-	    if (jags_isnan((*p)->logDensity(chain, pdf_prior))) {
+	    if (isnan((*p)->logDensity(chain, pdf_prior))) {
 		throw NodeError(*p, "Failure to calculate log density");
 	    }
 	}
-	if (jags_isnan(lprior)) {
+	if (isnan(lprior)) {
 	    throw runtime_error("Failure to calculate prior density");
 	}
 
@@ -239,16 +240,16 @@ double GraphView::logFullConditional(unsigned int chain) const
 
 	//Check likelihood
 	for (q = _stoch_children.begin(); q != _stoch_children.end(); ++q) {
-	    if (jags_isnan((*q)->logDensity(chain, PDF_LIKELIHOOD))) {
+	    if (isnan((*q)->logDensity(chain, PDF_LIKELIHOOD))) {
 		throw NodeError(*q, "Failure to calculate log density");
 	    }
 	}
-	if (jags_isnan(llike)) {
+	if (isnan(llike)) {
 	    throw runtime_error("Failure to calculate likelihood");
 	}
 
 	//This could happen adding -Inf to +Inf
-	if (!jags_finite(lprior) && !jags_finite(llike)) {
+	if (!isfinite(lprior) && !isfinite(llike)) {
 	    throw runtime_error("Prior and likelihood are incompatible");
 	}
 
@@ -271,10 +272,10 @@ double GraphView::logPrior(unsigned int chain) const
 	lprior += (*p)->logDensity(chain, pdf_prior);
     }
   
-    if(jags_isnan(lprior)) {
+    if(isnan(lprior)) {
 	//Try to find where the calculation went wrong
 	for (p = _nodes.begin(); p != _nodes.end(); ++p) {
-	    if (jags_isnan((*p)->logDensity(chain, pdf_prior))) {
+	    if (isnan((*p)->logDensity(chain, pdf_prior))) {
 		throw NodeError(*p, "Failure to calculate log prior density");
 	    }
 	}
@@ -293,10 +294,10 @@ double GraphView::logLikelihood(unsigned int chain) const
 	llik += (*q)->logDensity(chain, PDF_LIKELIHOOD);
     }
   
-    if(jags_isnan(llik)) {
+    if(isnan(llik)) {
 	//Try to find where the calculation went wrong
 	for (q = _stoch_children.begin(); q != _stoch_children.end(); ++q) {
-	    if (jags_isnan((*q)->logDensity(chain, PDF_LIKELIHOOD))) {
+	    if (isnan((*q)->logDensity(chain, PDF_LIKELIHOOD))) {
 		throw NodeError(*q, "Failure to calculate log likelihood");
 	    }
 	}

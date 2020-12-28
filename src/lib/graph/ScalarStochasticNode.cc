@@ -6,9 +6,11 @@
 
 #include <vector>
 #include <string>
+#include <cmath>
 
 using std::vector;
 using std::string;
+using std::isnan;
 
 namespace jags {
 
@@ -120,7 +122,7 @@ ScalarStochasticNode::clone(vector<Node const *> const &parameters,
 	}
 	else {
 	    double kl =  _dist->KL(_parameters[ch1], _parameters[ch2]);
-	    if (jags_isna(kl)) {
+	    if (isnan(kl)) {
 		return _dist->KL(_parameters[ch1], _parameters[ch2],
 				 nullptr, nullptr, rng, nrep);
 	    }

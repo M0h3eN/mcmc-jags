@@ -46,6 +46,7 @@
 #include <algorithm>
 #include <list>
 #include <map>
+#include <cmath>
 
 using std::vector;
 using std::pair;
@@ -57,6 +58,8 @@ using std::map;
 using std::copy;
 using std::reverse;
 using std::list;
+using std::isfinite;
+using std::isnan;
 
 namespace jags {
 
@@ -295,7 +298,7 @@ getMixtureNode1(NodeArray *array, vector<SSI> const &limits, Compiler *compiler)
 	// Get lower and upper limits of support
 	double l = JAGS_NEGINF, u = JAGS_POSINF;
 	snode->support(&l, &u, 1U, 0);
-	if (!jags_finite(l) || !jags_finite(u)) {
+	if (!isfinite(l) || !isfinite(u)) {
 	    return nullptr; //Unbounded parent => serious trouble
 	}
 	if (l < 0 || u > ULONG_MAX) {

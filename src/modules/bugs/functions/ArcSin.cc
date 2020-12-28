@@ -1,6 +1,5 @@
 #include <config.h>
 #include "ArcSin.h"
-#include <util/nainf.h>
 
 #include <cmath>
 

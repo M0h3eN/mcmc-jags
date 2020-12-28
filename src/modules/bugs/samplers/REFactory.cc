@@ -4,7 +4,6 @@
 #include <graph/GraphMarks.h>
 #include <graph/Graph.h>
 #include <graph/NodeError.h>
-#include <sarray/nainf.h>
 
 #include "REFactory.h"
 #include "RESampler.h"
@@ -133,8 +132,8 @@ void REFactory::makeSampler(set<StochasticNode*, less_sampler> &nodes,
 
 		    double v = (*p)->value(ch)[0];
 		    support(&lower, &upper, 1U, *p, ch);
-		    bool bb = jags_finite(lower);
-		    bool ba = jags_finite(upper);
+		    bool bb = isfinite(lower);
+		    bool ba = isfinite(upper);
 		    if (bb && ba) {
 			initial_value[0] = log(v - lower) - log(upper - v);
 		    }
