@@ -17,19 +17,21 @@ namespace base {
 
     bool Divide::hasGradient(unsigned long i) const
     {
-	return i < 2;
+	return true;
     }
     
     double Divide::gradient(vector<double const *> const &args,
 			    unsigned long i) const
     {
-	if (i == 1) {
-	    double x = *args[1];
-	    return -1/(x*x);
+	double x = *args[0];
+	double y = *args[1];
+
+	if (i == 0) {
+	    return 1/y;
 	}
 	else {
-	    //i == 0
-	    return *args[0];
+	    //i == 1
+	    return -x/(y*y);
 	}
     }
     

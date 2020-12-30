@@ -23,6 +23,7 @@ class BaseFunTest : public CppUnit::TestFixture, public JAGSFixture
     CPPUNIT_TEST( power );
     CPPUNIT_TEST( scale );
     CPPUNIT_TEST( seq );
+    CPPUNIT_TEST( grad );
     CPPUNIT_TEST_SUITE_END();
 	    
     jags::ScalarFunction *_add;
@@ -54,6 +55,10 @@ class BaseFunTest : public CppUnit::TestFixture, public JAGSFixture
     void comparison2(double, double);
     void comparison3();
 
+    void gradient1(double);
+    void gradient2(double, double);
+    void gradient3(double, double, double);
+    
   public:
     void setUp();
     void tearDown();
@@ -69,6 +74,7 @@ class BaseFunTest : public CppUnit::TestFixture, public JAGSFixture
     void power();
     void scale();
     void seq();
+    void grad();
 };
 
 #endif  // BASE_FUN_TEST_H_

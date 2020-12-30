@@ -69,6 +69,23 @@ bool checkargs(jags::ScalarFunction const *f, double x, double y);
 double eval(jags::ScalarFunction const *f, double x, double y, double z);
 bool checkargs(jags::ScalarFunction const *f, double x, double y, double z);
 
+//Evaluate gradient for a scalar function taking a single argument
+double gradient(jags::ScalarFunction const *f, const double x, unsigned long i);
+double numgradient(jags::ScalarFunction const *f, const double x,
+		   unsigned long i, double delta);
+
+//Evaluate gradient for a scalar function taking two arguments
+double gradient(jags::ScalarFunction const *f, const double x, double y,
+		unsigned long i);
+double numgradient(jags::ScalarFunction const *f, const double x, double y,
+		   unsigned long i, double delta);
+
+//Evaluate gradient for a scalar function taking three arguments
+double gradient(jags::ScalarFunction const *f, const double x, double y,
+		double z, unsigned long i);
+double numgradient(jags::ScalarFunction const *f, const double x, double y,
+		   double z, unsigned long i, double delta);
+
 /* Tests for vector functions */
 
 //Convert a double to a vector of length 1

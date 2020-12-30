@@ -189,6 +189,7 @@ void checkLimits(ScalarFunction const *f, double lower, double upper)
     }
 }
 
+    
 static vector<bool> discreteMask(vector<double const *> const &args)
 {
     vector<bool> out(args.size(), true);
@@ -219,7 +220,41 @@ static double checkEval(ScalarFunction const *f,
     CPPUNIT_ASSERT_MESSAGE(f->name(), checkArgs(f, args));
     return f->evaluate(args);
 }
-			   
+
+static double checkGradient(ScalarFunction const *f,
+			    vector<double const *> const &args,
+			    unsigned long i)
+{
+    //Evaluate gradient with checks
+    CPPUNIT_ASSERT_MESSAGE(f->name(), checkArgs(f, args));
+    CPPUNIT_ASSERT_MESSAGE(f->name(), f->hasGradient(i));
+    return f->gradient(args, i);
+}
+
+static double numericGradient(ScalarFunction const *f,
+			      vector<double const*> const &args,
+			      unsigned long i, double delta)
+{
+    CPPUNIT_ASSERT_MESSAGE(f->name(), checkArgs(f, args));
+    CPPUNIT_ASSERT_MESSAGE(f->name(), f->hasGradient(i));
+
+    //Create mutable copy of the arguments
+    unsigned long N = args.size();
+    vector<double> args0(N);
+    vector<double const *> args1(N);
+    for (unsigned long j = 0; j < N; ++j) {
+	args0[j] = *args[j];
+	args1[j] = &args0[j];
+    }
+
+    args0[i] = *args[i] - delta;
+    double y1 = checkEval(f, args1);
+    args0[i] = *args[i] + delta;
+    double y2 = checkEval(f, args1);
+	
+    return (y2 - y1)/(2*delta);
+}
+
 /* 
    Evaluate a scalar function that takes a single argument
 */
@@ -238,6 +273,18 @@ bool checkargs(ScalarFunction const *f, const double x)
 {
     return checkArgs(f, mkArgs(&x));
 }
+
+double gradient(ScalarFunction const *f, const double x, unsigned long i)
+{
+    return checkGradient(f, mkArgs(&x), i);
+}
+
+double numgradient(ScalarFunction const *f, const double x,
+		   unsigned long i, double delta)
+{
+    return numericGradient(f, mkArgs(&x), i, delta);
+}
+
 
 /* 
    Evaluate a scalar function that takes two arguments
@@ -258,6 +305,18 @@ double eval(ScalarFunction const *f, double x, double y)
 bool checkargs(ScalarFunction const *f, double x, double y)
 {
     return checkArgs(f, mkArgs(&x, &y));
+}
+
+double gradient(ScalarFunction const *f, const double x, double y,
+		unsigned long i)
+{
+    return checkGradient(f, mkArgs(&x, &y), i);
+}
+
+double numgradient(ScalarFunction const *f, const double x, double y,
+		   unsigned long i, double delta)
+{
+    return numericGradient(f, mkArgs(&x, &y), i, delta);
 }
 
 /* 
@@ -281,6 +340,18 @@ double eval(ScalarFunction const *f, double x, double y, double z)
 bool checkargs(ScalarFunction const *f, double x, double y, double z)
 {
     return checkArgs(f, mkArgs(&x, &y, &z));
+}
+
+double gradient(ScalarFunction const *f, const double x, double y, double z,
+		unsigned long i)
+{
+    return checkGradient(f, mkArgs(&x, &y, &z), i);
+}
+
+double numgradient(ScalarFunction const *f, const double x, double y, double z,
+		   unsigned long i, double delta)
+{
+    return numericGradient(f, mkArgs(&x, &y, &z), i, delta);
 }
 
 static vector<bool> discreteMask(vector<double const *> const &args,
