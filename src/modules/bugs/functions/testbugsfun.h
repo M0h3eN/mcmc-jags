@@ -19,8 +19,9 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     CPPUNIT_TEST( npar );
     CPPUNIT_TEST( name );
     CPPUNIT_TEST( alias );
+    CPPUNIT_TEST( grad );
+    
     CPPUNIT_TEST( trig );
-
     CPPUNIT_TEST( hyper );
     CPPUNIT_TEST( link );
     //CPPUNIT_TEST( summary );
@@ -40,6 +41,7 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     CPPUNIT_TEST( discrete );
     CPPUNIT_TEST( combine );
     CPPUNIT_TEST( rep );
+
     CPPUNIT_TEST_SUITE_END();
 
     jags::ScalarFunction *_abs;
@@ -63,6 +65,7 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     jags::VectorFunction *_inprod;
     jags::VectorFunction *_interplin;
     jags::ArrayFunction  *_inverse;
+    jags::ArrayFunction  *_inverse_lu;
     jags::ArrayFunction  *_logdet;
     jags::ScalarFunction *_logfact;
     jags::ScalarFunction *_loggam;
@@ -157,6 +160,7 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     void interplin();
     void combine();
     void rep();
+    void grad();
 };
 
 #endif  // BUGS_FUN_TEST_H

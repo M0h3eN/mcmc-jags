@@ -7,6 +7,10 @@
 #include "ArcSinh.h"
 #include "ArcTan.h"
 #include "ArcTanh.h"
+//#include "BesselI.h" //
+//#include "BesselJ.h" //
+//#include "BesselK.h" //
+//#include "BesselY.h" //
 #include "CLogLog.h"
 #include "Combine.h"
 #include "Cos.h"
@@ -14,6 +18,7 @@
 #include "DIntervalFunc.h"
 #include "DRoundFunc.h"
 #include "DSumFunc.h"
+//#include "Equals.h" //
 #include "Exp.h"
 #include "ICLogLog.h"
 #include "IfElse.h"
@@ -21,6 +26,7 @@
 #include "InProd.h"
 #include "InterpLin.h"
 #include "Inverse.h"
+#include "InverseLU.h"
 #include "LogDet.h"
 #include "LogFact.h"
 #include "LogGam.h"
@@ -67,6 +73,7 @@ using std::vector;
 using std::string;
 using std::equal;
 using std::copy;
+using std::pair;
 
 #include <climits>
 #include <cmath>
@@ -130,6 +137,7 @@ void BugsFunTest::setUp()
 
     //Matrix functions
     _inverse = new jags::bugs::Inverse;
+    _inverse_lu = new jags::bugs::InverseLU;
     _logdet = new jags::bugs::LogDet;
     _matmult = new jags::bugs::MatMult;
     _transpose = new jags::bugs::Transpose;
@@ -201,6 +209,7 @@ void BugsFunTest::tearDown()
 
     //Matrix functions
     delete _inverse;
+    delete _inverse_lu;
     delete _logdet;
     delete _matmult;
     delete _transpose;
@@ -271,6 +280,7 @@ void BugsFunTest::npar()
 
     //Matrix functions
     CPPUNIT_ASSERT_EQUAL(_inverse->npar(), 1UL);
+    CPPUNIT_ASSERT_EQUAL(_inverse_lu->npar(), 1UL);
     CPPUNIT_ASSERT_EQUAL(_logdet->npar(), 1UL);
     CPPUNIT_ASSERT_EQUAL(_matmult->npar(), 2UL);
     CPPUNIT_ASSERT_EQUAL(_transpose->npar(), 1UL);
@@ -343,6 +353,7 @@ void BugsFunTest::name()
 
     //Matrix functions
     CPPUNIT_ASSERT_EQUAL(string("inverse.chol"), _inverse->name());
+    CPPUNIT_ASSERT_EQUAL(string("inverse.lu"), _inverse_lu->name());
     CPPUNIT_ASSERT_EQUAL(string("logdet"), _logdet->name());
     CPPUNIT_ASSERT_EQUAL(string("%*%"), _matmult->name());
     CPPUNIT_ASSERT_EQUAL(string("t"), _transpose->name());
@@ -413,6 +424,7 @@ void BugsFunTest::alias()
 
     //Matrix functions
     CPPUNIT_ASSERT_EQUAL(string("inverse"), _inverse->alias());
+    CPPUNIT_ASSERT_EQUAL(string(""), _inverse_lu->alias());
     CPPUNIT_ASSERT_EQUAL(string(""), _logdet->alias());
     CPPUNIT_ASSERT_EQUAL(string(""), _matmult->alias());
     CPPUNIT_ASSERT_EQUAL(string(""), _transpose->alias());
@@ -475,6 +487,29 @@ void BugsFunTest::trig()
     for (double v = -10; v < 10; v = v + 0.1) {
 	trig(v);
     }
+
+    //Test gradients
+    double delta = 1e-6;
+    double eps = 1e-3;
+    for (double v = -6; v < 6; v = v + 0.1) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_sin, v),
+				     numgradient(_sin, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_cos, v),
+				     numgradient(_cos, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_tan, v),
+				     numgradient(_tan, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arctan, v),
+				     numgradient(_arctan, v, delta), eps);
+
+    }
+    delta = 1e-4;
+    for (double v = -0.99; v <= 0.99; v = v + 0.01) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arcsin, v),
+				     numgradient(_arcsin, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arccos, v),
+				     numgradient(_arccos, v, delta), eps);
+    }
+    
 }
 
 void BugsFunTest::hyper(const double v)
@@ -490,6 +525,29 @@ void BugsFunTest::hyper(const double v)
     CPPUNIT_ASSERT_DOUBLES_EQUAL(v, eval(_arcsinh, sinhv), tol);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(fabs(v), eval(_arccosh, coshv), tol);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(v, eval(_arctanh, tanhv), tol);
+    
+    double delta = 1e-6;
+    double eps = 1e-3;
+    for (double v = -3; v < 3; v = v + 0.1) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_sinh, v),
+				     numgradient(_sinh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_cosh, v),
+				     numgradient(_cosh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_tanh, v),
+				     numgradient(_tanh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arcsinh, v),
+				     numgradient(_arcsinh, v, delta), eps);
+
+    }
+    for (double v = -0.99; v <= 0.99; v = v + 0.01) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arctanh, v),
+				     numgradient(_arctanh, v, delta), eps);
+    }
+    for (double v = 1.01; v <= 6.00; v = v + 0.01) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arccosh, v),
+				     numgradient(_arccosh, v, delta), eps);
+    }
+
 }
 
 void BugsFunTest::hyper()
@@ -507,6 +565,29 @@ void BugsFunTest::hyper()
     for (double v = -5; v < 5; v = v + 0.1) {
 	hyper(v);
     }
+
+    //Test gradients
+    double delta = 1e-4;
+    double eps = 1e-3;
+    for (double v = -3; v < 3; v = v + 0.1) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_sinh, v),
+				     numgradient(_sinh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_cosh, v),
+				     numgradient(_cosh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_tanh, v),
+				     numgradient(_tanh, v, delta), eps);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arcsinh, v),
+				     numgradient(_arcsinh, v, delta), eps);
+    }
+    for (double v = -0.90; v <= 0.90; v = v + 0.01) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arctanh, v),
+				     numgradient(_arctanh, v, delta), eps);
+    }
+    for (double v = 1.01; v <= 3.00; v = v + 0.01) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_arccosh, v),
+				     numgradient(_arccosh, v, delta), eps);
+    }
+    
 }
 
 void BugsFunTest::link(ScalarFunction const *f, LinkFunction const *l,
@@ -520,12 +601,12 @@ void BugsFunTest::link(ScalarFunction const *f, LinkFunction const *l,
 
     //Test link function over a range of values
     double delta = (upper - lower)/(N - 1);
-    double yold = l->inverseLink(lower);
-    
+    double yold = eval(l, lower);
+
     for (int i = 0; i < N; ++i) {
 
 	const double x = lower + i * delta;
-	const double y = l->inverseLink(x);
+	const double y = eval(l, x);
 
 	//Inverse link function is strictlying increasing 
 	CPPUNIT_ASSERT(l->grad(x) > 0);
@@ -537,6 +618,19 @@ void BugsFunTest::link(ScalarFunction const *f, LinkFunction const *l,
 	//Inverting the link function puts us back where we were.
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, eval(f, y), tol);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, l->link(y), tol);
+
+	//Check gradient 
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,
+				     numgradient(l, x, 1e-4)/gradient(l, x),
+				     1e-3);
+	if (checkargs(f, y - 1e-3) && checkargs(f, y + 1e-3)) {
+	    //Need a bit slack for numeric graident when reaching the boundary
+	    // of link functions such as cloglog, probit, etc.
+	    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0,
+					 numgradient(f, y, 1e-4)/gradient(f,y),
+					 1e-3);
+	}
+	    
     }
 }
 
@@ -622,6 +716,19 @@ void BugsFunTest::summary(vector<double> const &v)
     }
     CPPUNIT_ASSERT_DOUBLES_EQUAL(vsum, log(eval(_prod, vexp)), tol);
 
+    //Check gradients
+    vector<double> vgrad = vgradient(_sum, v, 0UL);
+    vector<double> vngrad = vnumgradient(_sum, v, 0UL, 1e-4);
+    CPPUNIT_ASSERT_EQUAL(vgrad.size(), vngrad.size());
+    for (unsigned long i = 0; i < vgrad.size(); ++i) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(vgrad[i], vngrad[i], 1e-3);
+    }
+    vgrad = vgradient(_prod, v, 0UL);
+    vngrad = vnumgradient(_prod, v, 0UL, 1e-4);
+    CPPUNIT_ASSERT_EQUAL(vgrad.size(), vngrad.size());
+    for (unsigned long i = 0; i < vgrad.size(); ++i) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(vgrad[i], vngrad[i], 1e-3);
+    }
 }
 
 
@@ -652,6 +759,16 @@ void BugsFunTest::summary(vector<double> const &v1,
     }
 
     CPPUNIT_ASSERT_DOUBLES_EQUAL(vsum, log(eval(_prod, v1exp, v2exp)), tol);
+
+    //Check gradient (_sum only)
+    for (unsigned long j = 0; j < 2; ++j) {
+	vector<double> vgrad = vgradient(_sum, v1, v2, j);
+	vector<double> vngrad = vnumgradient(_sum, v1, v2, j, 1e-4);
+	CPPUNIT_ASSERT_EQUAL(vgrad.size(), vngrad.size());
+	for (unsigned long i = 0; i < vgrad.size(); ++i) {
+	    CPPUNIT_ASSERT_DOUBLES_EQUAL(vgrad[i], vngrad[i], 1e-3);
+	}
+    }
 }
 
 void BugsFunTest::summary()
@@ -661,7 +778,9 @@ void BugsFunTest::summary()
     double v2[5] = {1, 3, 5, 9, 11};
     double v3[2] = {-M_PI, M_PI};
     double v4[6] = {-1, 1, 2, 2, -3, -2.5};
-
+    double v5[1] = {1};
+    double v6[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    
     //All summary functions should fail when given an empty vector
     vector<double> x0(0);
     CPPUNIT_ASSERT(!checkargs(_max, x0));
@@ -681,6 +800,14 @@ void BugsFunTest::summary()
     summary<5>(v2);
     summary<2>(v3);
     summary<6>(v4);
+    summary<1>(v5);
+    summary<9>(v6);
+
+    summary<1,1>(v0, v0);
+    summary<1,9>(v0, v1);
+    summary<1,5>(v0, v2);
+    summary<1,2>(v0, v3);
+    summary<1,6>(v0, v4);
 
     summary<9,9>(v1, v1);
     summary<9,5>(v1, v2);
@@ -700,7 +827,6 @@ void BugsFunTest::summary()
 void BugsFunTest::math()
 {
     //Check that bad arguments are caught
-    CPPUNIT_ASSERT(!checkargs(_logfact, -1));
     CPPUNIT_ASSERT(!checkargs(_logfact, -1));
     CPPUNIT_ASSERT(!checkargs(_loggam, -1));
     CPPUNIT_ASSERT(!checkargs(_sqrt, -1));
@@ -724,6 +850,21 @@ void BugsFunTest::math()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(log(6.0), eval(_loggam, 4), tol);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(log(24.0), eval(_logfact, 4), tol);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(2.0, eval(_sqrt, 4), tol);
+
+    //Check Gradients
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_logfact, 0.0),
+				 numgradient(_logfact, 0.0, 1e-4), 1e-3);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_sqrt, 0.1),
+				 numgradient(_sqrt, 0.1, 1e-4), 1e-3);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_loggam, 0.5),
+				 numgradient(_loggam, 0.1, 1e-4), 1e-3);
+
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_logfact, log(5.0)),
+				 numgradient(_logfact, 0, 1e-4), 1e-3);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_sqrt, 4),
+				 numgradient(_sqrt, 4, 1e-4), 1e-3);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_loggam, log(24.0)),
+				 numgradient(_loggam, log(24.0), 1e-4), 1e-3);
 }
 
 void BugsFunTest::lossy()
@@ -836,6 +977,7 @@ void BugsFunTest::slap()
     CPPUNIT_ASSERT(neverclosed(_sort, 1));
 
     CPPUNIT_ASSERT(neverclosed(_inverse, 1));
+    CPPUNIT_ASSERT(neverclosed(_inverse_lu, 1));
     CPPUNIT_ASSERT(neverclosed(_logdet, 1));
 
     CPPUNIT_ASSERT(neverclosed(_interplin, 3));
@@ -1004,46 +1146,65 @@ void BugsFunTest::sort()
 
 void BugsFunTest::matrix()
 {
-    //Just basic checks on the identity matrix
-
     for (unsigned int n = 1; n < 6; ++n) {
-	vector<double> A(n*n, 0);
+	//Basic checks on the identity matrix
+	unsigned long N = n * n;
+	array_value A(vector<double>(N, 0), vector<unsigned long>(2,n));
 	for (unsigned int i = 0; i < n; ++i) {
-	    A[i + n*i] = 1;
+	    A.first[i + n*i] = 1;
 	}
-	vector<double const *> argA(1, &A[0]);
 
-	vector<unsigned long> dA(n, n);
-	vector<vector<unsigned long> > dimA(1, dA);
-    
-	vector<double> invA(n*n);
-	_inverse->checkParameterDim(dimA);
-	_inverse->evaluate(&invA[0], argA, dimA);
-	for (unsigned int i = 0; i < n; ++i) {
-	    CPPUNIT_ASSERT_DOUBLES_EQUAL(A[i], invA[i], tol);
-	}
-    
-	double logdetA;
-	_logdet->checkParameterDim(dimA);
-	_logdet->evaluate(&logdetA, argA, dimA);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, logdetA, tol);
-    
-	vector<double const *> argA2(2, &A[0]);
-	vector<vector<unsigned long> > dimA2(2, dA);
-	vector<double> Asquared(n*n);
-	_matmult->checkParameterDim(dimA2);
-	_matmult->evaluate(&Asquared[0], argA2, dimA2);
-	for (unsigned int i = 0; i < n; ++i) {
-	    CPPUNIT_ASSERT_DOUBLES_EQUAL(A[i], Asquared[i], tol);
-	}
-    
-	vector<double> tA(n*n);
-	_transpose->checkParameterDim(dimA);
-	_transpose->evaluate(&tA[0], argA, dimA);
-	for (unsigned int i = 0; i < n; ++i) {
-	    CPPUNIT_ASSERT_DOUBLES_EQUAL(A[i], tA[i], tol);
-	}
+	array_value invChol = aeval(_inverse, A);
+	CPPUNIT_ASSERT(all_equal(A, invChol, tol));
+
+	array_value invLU = aeval(_inverse_lu, A);
+	CPPUNIT_ASSERT(all_equal(A, invLU, tol));
+	
+	array_value logdetA = aeval(_logdet, A);
+	const array_value logdetA_ref({0.0}, {1UL});
+	CPPUNIT_ASSERT(all_equal(logdetA_ref, logdetA, tol));
     }
+	
+    //Asymmetric 3x3 matrix
+    const array_value B({1,1,0,0,2,0,0,3,3}, {3UL,3UL});
+
+    //Check inverse of B
+    const array_value invB_ref({1, -0.5, 0, 0, 0.5, 0, 0, -0.5, 0.3333333},
+			       {3UL, 3UL});
+    array_value invB = aeval(_inverse_lu, B);
+    CPPUNIT_ASSERT(all_equal(invB_ref, invB, 1e-6));
+
+    //Invert again and check against B
+    array_value invinvB = aeval(_inverse_lu, invB);
+    CPPUNIT_ASSERT(all_equal(B, invinvB, tol));
+
+    //3x2 matrix
+    const array_value C({1,2,3,4,5,6}, {3UL, 2UL});
+
+    //Check transpose
+    const array_value Ctrans_ref({1,4,2,5,3,6}, {2UL, 3UL});
+    array_value Ctrans = aeval(_transpose, C);
+    CPPUNIT_ASSERT(all_equal(Ctrans_ref, Ctrans, tol));
+
+    //Transpose again and check against C
+    array_value Ctranstrans = aeval(_transpose, Ctrans);
+    CPPUNIT_ASSERT(all_equal(C, Ctranstrans, tol));
+
+    //Check matrix multiplication
+    const array_value D({1,0,0,2,3,-1}, {2UL, 3UL});
+    const array_value CxD_ref({1, 2, 3, 8, 10, 12, -1, 1, 3}, {3UL, 3UL});
+    const array_value DxC_ref({10, 1, 22, 4}, {2UL, 2UL});
+    
+    array_value CxD = aeval(_matmult, C, D);
+    CPPUNIT_ASSERT(all_equal(CxD_ref, CxD, tol));
+
+    array_value DxC = aeval(_matmult, D, C);
+    CPPUNIT_ASSERT(all_equal(DxC_ref, DxC, tol));
+
+    const array_value invDxC_ref({0.2222222,-0.0555556,-1.2222222,0.5555556},
+				 {2UL,2UL});
+    array_value invDxC = aeval(_inverse_lu, DxC);
+    CPPUNIT_ASSERT(all_equal(invDxC_ref, invDxC, 1e-6));
 }
 
 void BugsFunTest::inprod()
@@ -1158,6 +1319,7 @@ void BugsFunTest::discrete()
 
     //Matrix functions
     CPPUNIT_ASSERT(isdiscrete(_inverse, 1, never));
+    CPPUNIT_ASSERT(isdiscrete(_inverse_lu, 1, never));
     CPPUNIT_ASSERT(isdiscrete(_logdet, 1, never));
     CPPUNIT_ASSERT(isdiscrete(_matmult, 2, all));
     CPPUNIT_ASSERT(isdiscrete(_transpose, 1, all));
@@ -1263,4 +1425,85 @@ void BugsFunTest::rep() {
     CPPUNIT_ASSERT(!checkargs(_rep, x3, badl3));
     
     //CPPUNIT_FAIL("rep");
+}
+
+void BugsFunTest::grad()
+{
+    //Trigonometric functions and their inverses
+    CPPUNIT_ASSERT(_sin->hasGradient(0));
+    CPPUNIT_ASSERT(_cos->hasGradient(0));
+    CPPUNIT_ASSERT(_tan->hasGradient(0));
+    CPPUNIT_ASSERT(_arccos->hasGradient(0));
+    CPPUNIT_ASSERT(_arcsin->hasGradient(0));
+    CPPUNIT_ASSERT(_arctan->hasGradient(0));
+
+    //Hyperbolic functions and their inverses
+    CPPUNIT_ASSERT(_sinh->hasGradient(0));
+    CPPUNIT_ASSERT(_cosh->hasGradient(0));
+    CPPUNIT_ASSERT(_tanh->hasGradient(0));
+    CPPUNIT_ASSERT(_arcsinh->hasGradient(0));
+    CPPUNIT_ASSERT(_arccosh->hasGradient(0));
+    CPPUNIT_ASSERT(_arctanh->hasGradient(0));
+
+    //Link functions and their inverses
+    CPPUNIT_ASSERT(_cloglog->hasGradient(0));
+    CPPUNIT_ASSERT(_log->hasGradient(0));
+    CPPUNIT_ASSERT(_logit->hasGradient(0));
+    CPPUNIT_ASSERT(_probit->hasGradient(0));
+    CPPUNIT_ASSERT(_icloglog->hasGradient(0));
+    CPPUNIT_ASSERT(_exp->hasGradient(0));
+    CPPUNIT_ASSERT(_ilogit->hasGradient(0));
+    CPPUNIT_ASSERT(_phi->hasGradient(0));
+
+    //Scalar summaries of vectors
+    for (unsigned long i = 0; i < 3; ++i) {
+	CPPUNIT_ASSERT(!_max->hasGradient(i));
+	CPPUNIT_ASSERT(!_min->hasGradient(i));
+	CPPUNIT_ASSERT(_sum->hasGradient(i));
+	CPPUNIT_ASSERT(_prod->hasGradient(i));
+    }
+    //CPPUNIT_ASSERT(_sd->hasGradient(0)); //FIXME
+
+    //Mathematical functions
+    CPPUNIT_ASSERT(_logfact->hasGradient(0));
+    CPPUNIT_ASSERT(_loggam->hasGradient(0));
+    CPPUNIT_ASSERT(_sqrt->hasGradient(0));
+
+    //Lossy scalar functions
+    CPPUNIT_ASSERT(!_round->hasGradient(0));
+    CPPUNIT_ASSERT(!_step->hasGradient(0));
+    CPPUNIT_ASSERT(!_trunc->hasGradient(0));
+    CPPUNIT_ASSERT(!_abs->hasGradient(0));
+
+    //Observable functions
+    for (unsigned long i = 0; i < 2; ++i) {
+	CPPUNIT_ASSERT(!_dinterval->hasGradient(i));
+	CPPUNIT_ASSERT(!_dround->hasGradient(i));
+	CPPUNIT_ASSERT(_dsum->hasGradient(i));
+    }
+
+    //Sorting functions
+    CPPUNIT_ASSERT(!_order->hasGradient(0));
+    CPPUNIT_ASSERT(!_rank->hasGradient(0));
+    CPPUNIT_ASSERT(!_sort->hasGradient(0));
+
+    //Matrix functions
+    //CPPUNIT_ASSERT(_inverse->hasGradient(0)); //FIXME
+    //CPPUNIT_ASSERT(_logdet->hasGradient(0)); //FIXME
+    CPPUNIT_ASSERT(_transpose->hasGradient(0));
+    for (unsigned long i = 0; i < 2; ++i) {
+	CPPUNIT_ASSERT(_matmult->hasGradient(i));
+	CPPUNIT_ASSERT(_inprod->hasGradient(i));
+    }
+
+    //Odds and sods
+    CPPUNIT_ASSERT(!_ifelse->hasGradient(0));
+    CPPUNIT_ASSERT(_ifelse->hasGradient(1));
+    CPPUNIT_ASSERT(_ifelse->hasGradient(2));
+    for (unsigned long i = 0; i < 3; ++i) {
+	//CPPUNIT_ASSERT(_interplin->hasGradient(i)); //FIXME
+	CPPUNIT_ASSERT(_combine->hasGradient(i));
+    }
+    //CPPUNIT_ASSERT(_rep->hasGradient(0)); //FIXME
+    CPPUNIT_ASSERT(!_rep->hasGradient(1));
 }

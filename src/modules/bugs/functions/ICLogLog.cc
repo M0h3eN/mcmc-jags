@@ -26,6 +26,6 @@ namespace bugs {
 
     double ICLogLog::grad(double eta) const
     {
-	return exp(eta) * exp(-exp(eta));
+	return exp(eta -exp(eta));
     }
 }}

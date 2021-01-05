@@ -400,12 +400,12 @@ void BaseFunTest::gradient1(double v)
     double delta = 1e-4;
     double eps = 1e-3;
     
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_neg, v, 0),
-				 numgradient(_neg, v, 0, delta), eps);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_add, v, 0),
-				 numgradient(_add, v, 0, delta), eps);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_multiply, v, 0),
-				 numgradient(_multiply, v, 0, delta), eps);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_neg, v),
+				 numgradient(_neg, v, delta), eps);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_add, v),
+				 numgradient(_add, v, delta), eps);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(gradient(_multiply, v),
+				 numgradient(_multiply, v, delta), eps);
 }
 
 void BaseFunTest::gradient2(double v1, double v2)

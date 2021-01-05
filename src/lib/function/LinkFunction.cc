@@ -15,4 +15,8 @@ string const & LinkFunction::linkName () const
     return _link;
 }
 
+    bool LinkFunction::hasGradient(unsigned long i) const {
+	return true;
+    }
+    
 } //namespace jags
