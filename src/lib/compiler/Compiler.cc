@@ -131,16 +131,14 @@ void Compiler::getLHSVars(ParseTree const *relations)
     }
 }
 
-
-    
 Node * Compiler::constFromTable(ParseTree const *p)
 {
-    // Get a constant value directly from the data table
+    /* Get a constant value directly from the data table */
 
     if (!_index_expression) {
 	throw logic_error("Can only call constFromTable inside index expression");
     }
-
+    
     if (_countertab.getCounter(p->name())) {
 	// DO NOT get value from the data table if there is a counter
 	// that shares the same name.
@@ -148,6 +146,7 @@ Node * Compiler::constFromTable(ParseTree const *p)
     }
     map<string,SArray>::const_iterator i = _data_table.find(p->name());
     if (i == _data_table.end()) {
+	//No entry in data table with this name
 	return nullptr;
     }
     SArray const &sarray = i->second;
@@ -157,14 +156,18 @@ Node * Compiler::constFromTable(ParseTree const *p)
 	//Range expression not evaluated
 	return nullptr;
     }
+    else if (!sarray.range().contains(subset_range)) {
+	//Out of range. This is almost certainly an error, but we are
+	//conservative here and just return a null pointer.
+	return nullptr;
+    }
     else if (subset_range.length() > 1) {
 	//Multivariate constant
 	RangeIterator r(subset_range);
 	unsigned long n = subset_range.length();
-	//double const *v = sarray.value();
 	vector<double> const &v = sarray.value();
 	vector<double> value(n);
-	for (unsigned int j = 0; j < n; ++j, r.nextLeft()) {
+	for (unsigned long j = 0; j < n; ++j, r.nextLeft()) {
 	    unsigned long offset = sarray.range().leftOffset(r);
 	    value[j] = v[offset];
 	    if (jags_isna(value[j])) {
@@ -173,7 +176,6 @@ Node * Compiler::constFromTable(ParseTree const *p)
 	}
 	return getConstant(subset_range.dim(false), value, 
 			   _model.nchain(), true);
-	
     }
     else {
 	//Scalar constant
