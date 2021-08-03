@@ -3,6 +3,7 @@
 
 #include <graph/Graph.h>
 #include <sarray/SimpleRange.h>
+#include <model/StochasticIndex.h>
 
 #include <string>
 #include <map>
@@ -14,7 +15,8 @@ namespace jags {
 class SArray;
 class Model;
 class AggNode;
-
+class MixtureNode;
+    
 /**
  * @short Multi-dimensional array that can be tiled with Node objects
  * 
@@ -34,6 +36,7 @@ class NodeArray {
   std::vector<unsigned long> _offsets;
   std::map<Range, Node *> _mv_nodes;
   std::map<Range, AggNode *> _generated_nodes;
+  std::map<std::vector<StochasticIndex>, MixtureNode *> _mixture_nodes;
   bool _locked;
   
   /* Grow dynamically */
@@ -82,6 +85,8 @@ public:
    * of it.
    */
   Node* getSubset(Range const &range, Model &model);
+  Node* getMixture(std::vector<StochasticIndex> const &indices,
+		   Model &model);
   /**
    * Sets the values of the nodes in the array. 
    *

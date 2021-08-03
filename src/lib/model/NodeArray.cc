@@ -57,7 +57,7 @@ static vector<unsigned long> expand(vector<unsigned long> const &dim)
 }
 
 namespace jags {
-    
+
     NodeArray::NodeArray(string const &name, vector<unsigned long> const &dim, 
 			 unsigned int nchain)
 	: _name(name), _range(dim), _true_range(expand(dim)), _nchain(nchain), 
@@ -241,6 +241,15 @@ namespace jags {
 	return anode;
     }
 
+    /*
+    Node* getMixture(std::vector<StochasticIndex> const &indices,
+		     Model &model)
+    {
+	
+	return nullptr;//FIXME
+    }
+    */
+	  
     void NodeArray::setValue(SArray const &value, unsigned int chain)
     {
 	if (_range != value.range()) {
