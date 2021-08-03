@@ -12,7 +12,7 @@ namespace bugs {
  *
  * @param A pointer to array containing the values of the matrix
  *
- * @param n number or rows or columns in the matrix
+ * @param n number of rows or columns in the matrix
  */
 bool inverse_lu (double *X, double const *A, unsigned long n);
 
@@ -40,6 +40,15 @@ bool inverse_chol (double *X, double const *A, unsigned long n);
  */
 double logdet(double const *A, unsigned long n);
 
+/**
+ * Determinant of a square matrix
+ *
+ * @param A pointer to array containing the values of the matrix. 
+ *
+ * @param n number or rows or columns in the matrix
+ */
+double det(double const *A, unsigned long n);
+    
 }}
 
 #endif /* MATRIX_H_ */

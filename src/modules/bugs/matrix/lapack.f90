@@ -93,13 +93,22 @@ contains
   SUBROUTINE JAGS_DSYMV( UPLO, N, ALPHA, A, LDA, X, INCX, BETA, Y, INCY)&
        & BIND(C, NAME="jags_dsymv")
     CHARACTER(c_char), INTENT(IN) :: UPLO
-    INTEGER(c_int), VALUE, INTENT(IN) :: N, LDA, INCX, INCY
-    REAL(c_double), VALUE, INTENT(IN) :: ALPHA, BETA
+    INTEGER(c_int), INTENT(IN) :: N, LDA, INCX, INCY
+    REAL(c_double), INTENT(IN) :: ALPHA, BETA
     REAL(c_double), INTENT(IN) :: X(*), A( LDA, *)
     REAL(c_double), INTENT(INOUT) :: Y( * )
     CALL DSYMV( UPLO, N, ALPHA, A, LDA, X, INCX, BETA, Y, INCY)
   END SUBROUTINE JAGS_DSYMV
 
+  SUBROUTINE JAGS_DGEQRF( M, N, A, LDA, TAU, WORK, LWORK, INFO)&
+       & BIND(C, NAME="jags_dgeqrf")
+    INTEGER(c_int), INTENT(IN) :: M, N, LDA, LWORK
+    REAL(c_double), INTENT(OUT) :: INFO
+    REAL(c_double), INTENT(INOUT) :: A( LDA, * )
+    REAL(c_double), INTENT(OUT) :: TAU( * ), WORK( * )
+    CALL DGEQRF(M, N, A, LDA, TAU, WORK, LWORK, INFO)
+  END SUBROUTINE JAGS_DGEQRF
+  
 endmodule jags_lapack
    
 

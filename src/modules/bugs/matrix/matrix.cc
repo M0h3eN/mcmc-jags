@@ -89,42 +89,28 @@ bool check_symmetric_ispd(double const *a, unsigned long n)
 }
 */
 
-/*
 double det(double const *a, int n)
 {
-   // Determinant of n x n matrix a via the QR decomposition
+   // Log determinant of n x n matrix a via the QR decomposition
   
   int N = n*n;
-  double *acopy = new double[N];
-  for (int i = 0; i < N; i++) {
-    acopy[i] = a[i];
-  }
+  vector<double> acopy(N);
+  copy(a, a + N, acopy.begin());
 
-  int *jpvt = new int[n];
-  for (int i = 0; i < n; i++) {
-    jpvt[i] = 0;
-  }
-
-  double *tau = new double[N];
+  vector<double> tau(N);
 
   int lwork = -1;
   double worktest = 0;
   int info = 0;
-  F77_DGEQRF(&n, &n, acopy, &n, jpvt, tau, &worktest, &lwork, &info); 
+  jags_dgeqrf(&n, &n, acopy.data(), &n, tau.data(), &worktest, &lwork, &info); 
   if (info != 0) {
-    delete [] acopy;
-    delete [] jpvt;
-    delete [] tau;
-    throw runtime_error("unable to calculate workspace size for dgeqrf");
+    throwRuntimeError("unable to calculate workspace size for dgeqrf");
   }
   lwork = static_cast<int>(worktest);
-  double *work = new double[lwork];
-  F77_DGEQRF(&n, &n, acopy, &n, jpvt, tau, work, &lwork, &info); 
+  vector<double> work(lwork);
+  jags_dgeqrf(&n, &n, acopy.data(), &n, tau.data(), work.data(), &lwork, &info); 
   if (info != 0) {
-    delete [] acopy;
-    delete [] jpvt;
-    delete [] tau;
-    throw runtime_error("unable to calculate eigenvalues in dgeqrf");
+    throwRuntimeError("unable to calculate eigenvalues in dgeqrf");
   }
 
   double det = (n % 2 == 1) ? 1.0 : -1.0;
@@ -132,13 +118,8 @@ double det(double const *a, int n)
     det *= acopy[i + n*i];
   }
 
-  delete [] acopy;
-  delete [] jpvt;
-  delete [] tau;
-
   return det;
 }
-*/
 
 
 bool inverse_chol (double *X, double const *A, unsigned long n)
@@ -191,7 +172,7 @@ bool inverse_lu (double *X, double const *A, unsigned long n)
     int info = 0;
     int ni = asInteger(n);
     vector<int> ipiv(n);
-    jags_dgesv (&ni, &ni, &Acopy[0], &ni, &ipiv[0], X, &ni, &info);
+    jags_dgesv (&ni, &ni, Acopy.data(), &ni, ipiv.data(), X, &ni, &info);
     return info == 0;
 }
 

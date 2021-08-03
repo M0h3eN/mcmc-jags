@@ -23,6 +23,8 @@ extern "C" {
 
     void jags_dtrtri (const char *uplo, const char *diag, const int *n, double *a, const int *lda, int *info);
 
+    void jags_dgeqrf (const int *m, const int *n, double *a, const int *lda, double *tau, double *work, const int *lwork, int *info);
+
 }
 
 #endif

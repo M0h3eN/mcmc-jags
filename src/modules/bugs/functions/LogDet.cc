@@ -29,11 +29,28 @@ namespace bugs {
 	return isSquareMatrix(dims[0]) || isScalar(dims[0]);
     }
 
-    vector<unsigned long>
-    LogDet::dim(vector<vector<unsigned long> > const &,
-		vector<double const *> const &) const
+    vector<unsigned long> LogDet::dim(vector<vector<unsigned long> > const &,
+				      vector<double const *> const &) const
     {
 	return vector<unsigned long>(1,1);
     }
 
+    
+    void LogDet::gradient(double *grad, vector<double const *> const &args,
+			  vector<vector<unsigned long>> const &dims,
+			  unsigned long i) const
+    {
+	//FIXME Needs testing
+	unsigned long nrow = dims[0][0];
+	vector<double> work(nrow * nrow);
+	inverse_chol (work.data(), args[0], nrow);
+	for (unsigned long j = 0; j < nrow; ++j) {
+	    grad[j*nrow + j] += work[j*nrow + j];
+	    for (unsigned long k = 0; k < j; ++k) {
+		grad[k*nrow + j] += 2 * work[k*nrow + j];
+	    }
+	}
+    }
+    
 }}
+
