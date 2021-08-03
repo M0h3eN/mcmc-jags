@@ -6,6 +6,7 @@
 \usepackage{multirow}
 \usepackage{amsfonts}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
 \newcommand{\JAGS}{\textsf{JAGS}}
 \newcommand{\rjags}{\textsf{rjags}}
@@ -1789,6 +1790,97 @@ Cholesky inverse       & invers.chol & inverse & BUGS \\
 \chapter{Distributions}
 \label{chapter:distributions}
 
+\section{Parameterization and conjugate distributions}
+\label{section:conjugate}
+
+Probability distributions in the \BUGS\ language may be parameterized
+differently from other languages, such as R, or from definitions you
+may find in textbooks and online references. Historically, Bayesian
+inference put a lot of emphasis on {\em conjugate} prior
+distributions, {\em i.e.} distributions that belongs to the same
+family before and after observing the data. Conjugate distributions
+give a closed form expression for the posterior density and, in the
+early days of MCMC, they were useful for efficient sampling. The
+\BUGS\ language was designed to make it easy to define conjugate
+priors.  This led to parameterizations that are unusual and not always
+intuitive. We have long passed the need to use conjugate prior
+distributions for computational efficiency, but the \BUGS\ language
+still carries this legacy.
+
+Parameterization issues can be illustrated with location-scale models.
+These are continuous distributions on the real line where the
+probability density function takes the form
+\[
+p(y \mid \mu, \sigma) = \frac{1}{\sigma} \, p_0
+\left(\frac{y - \mu}{\sigma}\right)
+\]
+for location parameter $\mu$ and scale parameter $\sigma$. Here $p_0$
+is the density of a reference distribution with location 0 and scale
+1.
+
+The normal distribution belongs to the location-scale family. In this
+case, $p_0$ represents the density of the standard normal distribution
+with mean 0 and standard deviation 1. Note that the scale parameter
+coincides with the standard deviation for the normal distribution, but
+this is not the case for other distributions.
+
+In the \BUGS\ language, the normal distribution (\texttt{dnorm}) is
+not parameterized in terms of the scale $\sigma$ but in terms of the
+{\em precision} $\tau = 1/\sigma^2$.
+\[
+p(y \mid \mu, \tau) = \tau^{1/2} \, p_0\left((y - \mu) \tau^{1/2}\right)
+\]
+This parameterization was chosen because a gamma prior on the
+precision parameter $\tau$ is conjugate for the normal
+distribution. The $t$-distribution (\texttt{dt}) is also parameterized
+in terms of the precision.
+
+Other choices of parameterization are possible. The double exponential
+distribution (\texttt{ddexp}) is parameterized in terms of the {\em
+  inverse scale} $\lambda=1/\sigma$
+\[
+p(y \mid \mu, \lambda) = \lambda \, p_0\left((y - \mu) \lambda \right)
+\]
+Again, this parameterization was chosen because a gamma prior on the
+inverse scale parameter is conjugate for the Laplace distribution. The
+logistic distribution (\texttt{dlogis}) is also parameterized in terms
+of the inverse scale.
+
+It was common practice to put a diffuse gamma prior on the precision
+or inverse scale parameter, {\em e.g.}
+\begin{verbatim}
+for (i in 1:N) {
+   Y[i] ~ dnorm(mu[i], tau)
+}
+tau ~ dgamma(0.001, 0.001)
+\end{verbatim}
+In this example, the parameter \texttt{tau} has a gamma distribution
+with a small value for its two hyper-parameters (the shape and the
+rate). This {\em diffuse gamma} prior is an approximation to the
+improper flat prior on a log scale which, under some circumstances,
+may be considered ``non informative''. However, it is a mistake to
+think that the diffuse gamma prior is always non-informative. It may
+encode quite strong prior information about the variance. The routine
+use of diffuse gamma priors is not good practice.
+
+To define an informative prior distribution, it is much easier to
+think in terms of the scale parameter. A useful strategy is to define
+a prior on the scale parameter and then transform it. For example,
+instead of using a diffuse gamma prior for \texttt{tau} we might use:
+\begin{verbatim}
+sigma ~ dnorm(0, 1) T(0, ) # Half normal prior on standard deviation
+tau <- 1/sigma^2           # Precision as a function of standard deviation
+\end{verbatim}
+
+In summary, be aware of the different parameterizations of
+location-scale distributions and think carefully about the appropriate
+prior for the scale.
+
+Section \ref{section:glm:precision} contains further information on
+distributions in the \textsf{glm} module that may be useful priors on
+the precision parameter of a normal and multivariate normal
+distribution.
+
 \section{Truncating distributions}
 \label{section:truncation}
 
@@ -2421,15 +2513,15 @@ The degrees of freedom parameter $k$ does not need to be an integer.
 \label{bugs:ddexp}
 
 The double exponential (or Laplace) distribution with mean $\mu$ (mu) and
-scale $\tau$ (tau) is defined by
+inverse scale parameter $\lambda$ (lambda) is defined by
 \begin{verbatim}
-y ~ ddexp(mu, tau)
+y ~ ddexp(mu, lambda)
 \end{verbatim}
-for $\tau > 0$. It has probability density function
+for $\lambda > 0$. It has probability density function
 \[
-\tau \exp(-\tau | y - \mu |)/2
+\lambda \exp(-\lambda | y - \mu |)/2
 \]
-The variance of the double exponential distribution is $2/\tau^2$.
+The variance of the double exponential distribution is $2/\lambda^2$.
 
 \subsubsection{Exponential}
 \label{bugs:dexp}
@@ -2526,22 +2618,22 @@ page~\ref{bugs:dweib} for more details.
 \label{bugs:dlogis}
 
 The logistic distribution with mean $\mu$ (mu) and inverse scale
-$\tau$ (tau) is defined by
+$\lambda$ (lambda) is defined by
 \begin{verbatim}
-y ~ dlogis(mu, tau)
+y ~ dlogis(mu, lambda)
 \end{verbatim}
-for $\tau > 0$. It has probability density function
+for $\lambda > 0$. It has probability density function
 \[
-\frac{\textstyle \tau \exp\{(y - \mu) \tau\}}
-     {\textstyle  \left[1 + \exp\{(y - \mu) \tau\}\right]^2}
+\frac{\textstyle \lambda \exp\{(y - \mu) \lambda \}}
+     {\textstyle  \left[1 + \exp\{(y - \mu) \lambda \}\right]^2}
 \]   
-The variance of the logistic distribution is $\pi^2/(3*\tau^2)$.
+The variance of the logistic distribution is $\pi^2/(3\lambda^2)$.
 
 The cumulative distribution function of the logistic distribution is
 \[
-P(Y \leq y) = \frac{1}{\textstyle  1 + \exp\{ - (y - \mu) \tau\}}
+P(Y \leq y) = \frac{1}{\textstyle  1 + \exp\{ - (y - \mu) \lambda \}}
 \]
-which, for $\tau = 1$, is the logistic link function.
+which, for $\lambda = 1$, is the logistic link function.
 
 \subsubsection{Log-normal}
 \label{bugs:dlnorm}
@@ -3434,16 +3526,15 @@ When $\mu$ is a linear predictor then the \texttt{dordered.probit}
 distribution represents the ordered probit regression model.
 
 \subsection{Distributions for precision parameters}
+\label{section:glm:precision}
 
 One of the difficulties with the normal distribution in the BUGS
-language is that it is parameterized in terms of the precision, and not
-in terms of the variance or standard deviation. The same is true of
-other location-scale distributions ({\em e.g.} Student t, logistic,
-double exponential). The reasons for this are historical. When BUGS
-was first developed, it exploited conjugate distributions for maximum
-sampling efficiency. It turns out that conjugate priors are most
-easily expressed in terms of the precision. The conjugate prior for
-the precision of the normal distribution is the gamma distribution.
+language is that it is parameterized in terms of the precision (the
+reciprocal of the variance), and not in terms of the variance or
+standard deviation. As discussed in section \ref{section:conjugate},
+when BUGS was first developed, it exploited conjugate distributions
+for maximum sampling efficiency.  The conjugate prior for the normal
+distribution is a gamma prior on the precision.
 \begin{verbatim}
 for (i in 1:N) {
    eps[i] ~ dnorm(0, tau)
@@ -3461,15 +3552,15 @@ tau ~ dwish(R, df)
 \end{verbatim}
 Thus the BUGS language allows these conjugate priors to be expressed
 very simply. However, nobody has an intuitive understanding of what a
-prior distribution on the precision means. The choice of parameters
-\texttt{shape} and \texttt{rate} or \texttt{R} and \texttt{df} can be
-difficult.
+prior distribution on the precision means. The choice of values for
+the hyper-parameters \texttt{shape} and \texttt{rate}, or \texttt{R}
+and \texttt{df}, can be difficult.
 
 The \texttt{glm} module provides two distributions for precision
 parameters that are parameterized in a way that is intuitively easier
 to understand. Associated samplers in the \texttt{glm} module ensure
 that the distributions are sampled efficiently, especially when they
-are used as priors for the precision of random effects.
+are used as priors for the precision of normal random effects.
 
 \subsubsection{Scaled gamma: \texttt{dscaled.gamma}}
 
@@ -3484,7 +3575,7 @@ If $\tau$ is the precision parameter of the normal distribution, then
 \texttt{dscaled.gamma} implicitly defines a prior on the standard
 deviation $\sigma = 1/\sqrt{\tau)}$:
 \[
-\sigma \sim s t_{df}^{+}
+\sigma \sim s \, t_{df}^{+}
 \]
 where $t_{df}^{+}$ represents the t-distribution with $df$ degrees of
 freedom restricted to positive values.
@@ -3514,7 +3605,8 @@ freedom is to diminish the weight of the tail.
 
 \subsubsection{Scaled Wishart: \texttt{dscaled.wishart}}
 
-The scaled Wishart distribution is defined by
+The scaled Wishart distribution is a multivariate generalization
+of the scaled gamma distribution. It is defined by
 \begin{verbatim}
 Omega[1:M,1:M] ~ dscaled.wishart(s[1:M], df)
 \end{verbatim}
@@ -3523,8 +3615,7 @@ degrees of freedom, and $\Omega$ (Omega) is an $M \times M$ positive
 definite symmetric matrix (If you want all elements to have the
 same prior scale then use \texttt{rep(s, M)} as the first parameter).
 
-The scaled Wishart is a multivariate generalization of the scaled
-gamma distribution. It was proposed by \citet{HuangWand2013} as a flexible
+The scaled Wishart was proposed by \citet{HuangWand2013} as a flexible
 family of prior distributions for the precision parameter of the
 multivariate normal. When used in this way, the
 \texttt{dscaled.wishart} distribution implicitly defines a prior on
