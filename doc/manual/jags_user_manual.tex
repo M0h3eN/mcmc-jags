@@ -2403,11 +2403,12 @@ the second code still works.
 \hline
 Usage & Description & Restrictions \\
 \hline
-\verb+inverse.chol(m)+ & Matrix inverse & $m$ is a symmetric positive definite matrix  \\
-\verb+inverse.lu(m)+ & Matrix inverse & $m$ is an invertible square matrix  \\
-\verb+logdet(m)+ & Log determinant & $m$ symmetric positive definite matrix \\
-\verb+t(m)+    & Transpose                & $a$ is a matrix \\
-\verb+m1 %*% m2+  & Matrix multiplication & $m1,m2$ conforming vector or matrices\\
+\verb+inverse.chol(m)+ & Matrix inverse & $m$ is symmetric positive definite  \\
+\verb+inverse.lu(m)+ & Matrix inverse & $m$ is invertible \\
+\verb+logdet(m)+ & Log determinant & $m$ is symmetric positive definite \\
+\verb+det(m)+ & Determinant & $m$ is square \\
+\verb+t(m)+    & Transpose                & \\
+\verb+m1 %*% m2+  & Matrix multiplication & $m1,m2$ conforming vectors or matrices\\
 
 \hline
 \end{tabular}
@@ -2442,13 +2443,15 @@ distributions have additional constraints: they are {\em symmetric}
 ({\em i.e.} $m_{ij} = m_{ji}$) and {\em positive definite} ({\em i.e.}
 $x^T M x > 0$ for any conforming vector $x$). This is true for
 variance and precision matrices, for example. To invert these matrices
-use the \texttt{matrix.chol} function. The \texttt{inverse.chol}
+use the \texttt{inverse.chol} function. The \texttt{inverse.chol}
 function has the alias \texttt{inverse} for compatibility with
 OpenBUGS and earlier versions of JAGS.
 
 The \texttt{logdet} function calculates the log-determinant of a
-symmetric positive-definite matrix. It may be useful in custom
-likelihood calculations.
+symmetric positive-definite matrix using the Cholesky
+decomposition. It may be useful in custom likelihood calculations. The
+\texttt{det} function calculates the determinant of a general square
+matrix using the QR decomposition.
 
 \subsubsection{Notes on symmetric positive definite matrices}
 
