@@ -7,7 +7,7 @@ using std::vector;
 
 #define MU(par) (*par[0])
 #define SCALE(par) (1 / *par[1])
-#define TAU(par) (*par[1])
+#define LAMBDA(par) (*par[1])
 
 namespace jags {
 namespace bugs {
@@ -18,7 +18,7 @@ DLogis::DLogis()
 
 bool DLogis::checkParameterValue (vector<double const *> const &par) const
 {
-    return (TAU(par) > 0);
+    return (LAMBDA(par) > 0);
 }
 
 double 
@@ -58,15 +58,15 @@ DLogis::r(vector<double const *> const &par, RNG *rng) const
 			 unsigned long i) const
     {
 	double mu = MU(par);
-	double tau = TAU(par);
+	double lambda = LAMBDA(par);
 	
-	double y = 2 * plogis(x, mu, 1/tau, true, false) - 1;
+	double u = 2 * plogis(x, mu, 1/lambda, true, false) - 1;
 
 	if (i == 0) {
-	    return tau * y;
+	    return lambda * u;
 	}
 	else if (i == 1) {
-	    return 1/tau - (x - mu) * y;
+	    return 1/lambda - (x - mu) * u;
 	}
 	else {
 	    return 0;
