@@ -33,7 +33,7 @@ class GraphMarks {
      * Constructor. Each node in the graph initially has mark zero 
      */
     GraphMarks(Graph const &graph);
-    ~GraphMarks();
+    ~GraphMarks() = default;
     /**
      * Returns a reference to the marked graph 
      */

@@ -45,9 +45,6 @@ GraphMarks::GraphMarks(Graph const &graph)
 {
 }
 
-GraphMarks::~GraphMarks()
-{}
-
 Graph const &GraphMarks::graph() const
 {
     return _graph;
