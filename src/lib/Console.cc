@@ -476,7 +476,7 @@ void Console::clearModel()
 
 bool Console::dumpState(map<string,SArray> &data_table,
 			string &rng_name,
-			DumpType type, unsigned int chain)
+			ValueType type, unsigned int chain)
 {
   if (!_model) {
     _err << "No model" << endl;
@@ -491,26 +491,10 @@ bool Console::dumpState(map<string,SArray> &data_table,
     return false;
   }
 
-  /* Slightly awkward translation here from DumpType defined in Console.h
-     to ValueType defined in NodeArray.h.
-  */
-  ValueType vtype;
-  switch (type) {
-  case DUMP_PARAMETERS:
-      vtype = PARAMETER_VALUES;
-      break;
-  case DUMP_DATA:
-      vtype = DATA_VALUES;
-      break;
-  case DUMP_ALL:
-      vtype = ALL_VALUES;
-      break;
-  }
-  
   try {
-      _model->symtab().readValues(data_table, chain - 1, vtype);
+      _model->symtab().readValues(data_table, chain - 1, type);
       
-    if (type == DUMP_PARAMETERS || type == DUMP_ALL) {
+    if (type == PARAMETER_VALUES || type == ALL_VALUES) {
       
       vector<int> rngstate;
       if (_model->rng(chain - 1)) {

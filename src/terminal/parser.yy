@@ -63,7 +63,7 @@
     void doCoda (jags::ParseTree const *var, std::string const &stem, std::string const &type);
     void doAllCoda (std::string const &stem, std::string const &type);
     void dumpNodeNames (std::string const &file, std::string const &type);
-    void doDump (std::string const &file, jags::DumpType type, unsigned int chain);
+    void doDump (std::string const &file, jags::ValueType type, unsigned int chain);
     void dumpMonitors(std::string const &file, std::string const &type);
     void doSystem(std::string const *command);
     std::string ExpandFileName(char const *s);
@@ -259,7 +259,7 @@ data_in: data r_assignment_list ENDDATA {
 ;
 
 data_to: DATA TO file_name {
-    doDump(*$3, jags::DUMP_DATA, 1);
+    doDump(*$3, jags::DATA_VALUES, 1);
     delete $3;
 }
 ;
@@ -326,11 +326,11 @@ parameters_in: parameters r_assignment_list ENDDATA
 ;
 
 parameters_to: PARAMETERS TO file_name {
-    doDump(*$3, jags::DUMP_PARAMETERS, 1);
+    doDump(*$3, jags::PARAMETER_VALUES, 1);
     delete $3;
 }
 | PARAMETERS TO file_name ',' CHAIN '(' INT ')' {
-    doDump(*$3, jags::DUMP_PARAMETERS, $7);
+    doDump(*$3, jags::PARAMETER_VALUES, $7);
     delete $3;
 }
 ;
@@ -896,7 +896,7 @@ static void writeValue(double x, std::ostream &out, bool isdiscrete)
   }
 }
 
-void doDump(std::string const &file, jags::DumpType type, unsigned int chain)
+void doDump(std::string const &file, jags::ValueType type, unsigned int chain)
 {
     std::map<std::string,jags::SArray> data_table;
     std::string rng_name;
@@ -1170,7 +1170,7 @@ static void errordump()
 	    std::cout << "Dumping chain " << i << " at iteration " 
 		      << console->iter() << " to file " << fname.str() 
 		      << std::endl;
-	    doDump(fname.str(), jags::DUMP_ALL, i);
+	    doDump(fname.str(), jags::ALL_VALUES, i);
 	    fname.str("");
 	}
 	// Moved clearModel from Console.cc CATCH_ERRORS to here

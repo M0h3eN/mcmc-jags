@@ -430,7 +430,7 @@ namespace glm {
 	double sigma2 = trigamma(n);
 	double sigma = sqrt(sigma2);
 	    
-	for (int i = 0; i < _ncomp; i++) {
+	for (unsigned int i = 0; i < _ncomp; i++) {
 	    _means[i] = _means[i] * sigma + mu;
 	    _variances[i] *= sigma2;
 	}
@@ -481,7 +481,7 @@ namespace glm {
 	means.clear();
 	variances.clear();
 
-	for (int i = 0; i < _ncomp; ++i) {
+	for (unsigned int i = 0; i < _ncomp; ++i) {
 	    weights.push_back(_weights[i]);
 	    means.push_back(_means[i]);
 	    variances.push_back(_variances[i]);

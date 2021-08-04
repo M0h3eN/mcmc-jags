@@ -4,6 +4,7 @@
 #include <util/nainf.h>
 
 #include <cmath>
+#include <limits>
 
 #include <JRmath.h>
 #include <rng/RNG.h>

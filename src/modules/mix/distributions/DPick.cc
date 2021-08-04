@@ -72,12 +72,12 @@ namespace jags {
 
 	double DPick::l(vector<double const *> const &parameters) const
 	{
-	    min(VAL1(parameters), VAL2(parameters));
+	    return min(VAL1(parameters), VAL2(parameters));
 	}
 
 	double DPick::u(vector<double const *> const &parameters) const
 	{
-	    max(VAL1(parameters), VAL2(parameters));
+	    return max(VAL1(parameters), VAL2(parameters));
 	}
 
 	bool DPick::isDiscreteValued(std::vector<bool> const &mask) const

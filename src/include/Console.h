@@ -2,6 +2,7 @@
  #define CONSOLE_H_
 
  #include <sarray/SArray.h>
+ #include <model/NodeArray.h>
 
  #include <vector>
  #include <iostream>
@@ -17,10 +18,6 @@
  struct RNG;
  class Module;
 
- /**
-  * @short Flags for the function Console#dumpState
-  */
- enum DumpType {DUMP_DATA, DUMP_PARAMETERS, DUMP_ALL};
  /**
   * @short Enumerates factory types in a model
   */
@@ -156,8 +153,8 @@
     * of the RNG for this chain.
     *
     * @param type Flag describing which values in the model to dump. 
-    * DUMP_DATA dumps the observed stochastic nodes, DUMP_PARAMETERS
-    * dumps the unobserved stochastic nodes, and DUMP_ALL, dumps the values
+    * DATA_VALUES dumps the observed stochastic nodes, PARAMETER_VALUES
+    * dumps the unobserved stochastic nodes, and ALL_VALUES, dumps the values
     * of all named nodes in the model.
     *
     * @param chain Number of the chain for which to dump values (starting
@@ -165,7 +162,7 @@
     */
    bool dumpState(std::map<std::string,SArray> &data_table, 
 		  std::string &rng_name,
-		  DumpType type, unsigned int chain);
+		  ValueType type, unsigned int chain);
    /**
     * Returns the iteration number of the model.
     */
