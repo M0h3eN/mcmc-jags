@@ -41,6 +41,7 @@
 #include "Probit.h"
 #include "Prod.h"
 #include "Rank.h"
+#include "RankAverage.h"
 #include "Rep.h"
 #include "Round.h"
 #include "SD.h"
@@ -133,6 +134,7 @@ void BugsFunTest::setUp()
     //Sorting functions
     _order = new jags::bugs::Order;
     _rank = new jags::bugs::Rank;
+    _rank_avg = new jags::bugs::RankAverage;
     _sort = new jags::bugs::Sort;
 
     //Matrix functions
@@ -205,6 +207,7 @@ void BugsFunTest::tearDown()
     //Sorting functions
     delete _order;
     delete _rank;
+    delete _rank_avg;
     delete _sort;
 
     //Matrix functions
@@ -276,6 +279,7 @@ void BugsFunTest::npar()
     //Sorting functions
     CPPUNIT_ASSERT_EQUAL(_order->npar(), 1UL);
     CPPUNIT_ASSERT_EQUAL(_rank->npar(), 1UL);
+    CPPUNIT_ASSERT_EQUAL(_rank_avg->npar(), 1UL);
     CPPUNIT_ASSERT_EQUAL(_sort->npar(), 1UL);
 
     //Matrix functions
@@ -347,8 +351,9 @@ void BugsFunTest::name()
     CPPUNIT_ASSERT_EQUAL(string("dround"), _dround->name());
     CPPUNIT_ASSERT_EQUAL(string("dsum"), _dsum->name());
 
-    CPPUNIT_ASSERT_EQUAL(string("order"), _order->name());
-    CPPUNIT_ASSERT_EQUAL(string("rank"), _rank->name());
+    CPPUNIT_ASSERT_EQUAL(string("order"), _order->name())
+;    CPPUNIT_ASSERT_EQUAL(string("rank"), _rank->name());
+    CPPUNIT_ASSERT_EQUAL(string("rank.average"), _rank_avg->name());
     CPPUNIT_ASSERT_EQUAL(string("sort"), _sort->name());
 
     //Matrix functions
@@ -420,6 +425,7 @@ void BugsFunTest::alias()
 
     CPPUNIT_ASSERT_EQUAL(string(""), _order->alias());
     CPPUNIT_ASSERT_EQUAL(string(""), _rank->alias());
+    CPPUNIT_ASSERT_EQUAL(string(""), _rank_avg->alias());
     CPPUNIT_ASSERT_EQUAL(string(""), _sort->alias());
 
     //Matrix functions
@@ -974,6 +980,7 @@ void BugsFunTest::slap()
 
     CPPUNIT_ASSERT(neverclosed(_order, 1));
     CPPUNIT_ASSERT(neverclosed(_rank, 1));
+    CPPUNIT_ASSERT(neverclosed(_rank_avg, 1));
     CPPUNIT_ASSERT(neverclosed(_sort, 1));
 
     CPPUNIT_ASSERT(neverclosed(_inverse, 1));
@@ -1124,6 +1131,7 @@ void BugsFunTest::sort()
 
     vector<double> xord = veval(_order, x);
     vector<double> xrank = veval(_rank, x);
+    vector<double> xrank_avg = veval(_rank_avg, x);
     vector<double> xsort = veval(_sort, x);
     
     for (unsigned int i = 0; i < 8; ++i) {
@@ -1132,6 +1140,7 @@ void BugsFunTest::sort()
 
 	CPPUNIT_ASSERT_EQUAL(static_cast<double>(i), xord[k] - 1);
 	CPPUNIT_ASSERT_EQUAL(static_cast<double>(i), xrank[j] - 1);
+	CPPUNIT_ASSERT_EQUAL(xrank_avg[i], xrank[i]);
 	CPPUNIT_ASSERT_EQUAL(x[j], xsort[i]);
 	CPPUNIT_ASSERT_EQUAL(x[i], xsort[k]);
     }
@@ -1139,7 +1148,37 @@ void BugsFunTest::sort()
     vector<double> x0(0);
     CPPUNIT_ASSERT(!checkargs(_order, x0));
     CPPUNIT_ASSERT(!checkargs(_rank, x0));
+    CPPUNIT_ASSERT(!checkargs(_rank_avg, x0));
     CPPUNIT_ASSERT(!checkargs(_sort, x0));
+
+    double x1[9] = {-1.7, 3, 18, 2, -25, 8, 2, -25, 18};
+    double r1a[9] = {3, 6, 8, 4, 1, 7, 5, 2, 9}; //ties="first"
+    double r1b[9] = {3, 6, 8.5, 4.5, 1.5, 7, 4.5, 1.5, 8.5}; //ties="average"
+    vector<double> x1rank = veval(_rank, x1);
+    vector<double> x1rank_avg = veval(_rank_avg, x1);
+    for (unsigned int i = 0; i < 9; ++i) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x1rank[i], r1a[i], tol);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x1rank_avg[i], r1b[i], tol);
+    }
+
+    double x2[6] = {-6, 12.3, 5, 5, 18, 5};
+    double r2a[6] = {1, 5, 2, 3, 6, 4};
+    double r2b[6] = {1, 5, 3, 3, 6, 3};
+    vector<double> x2rank = veval(_rank, x2);
+    vector<double> x2rank_avg = veval(_rank_avg, x2);
+    for (unsigned int i = 0; i < 6; ++i) {
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x2rank[i], r2a[i], tol);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x2rank_avg[i], r2b[i], tol);
+    }
+
+    for (unsigned long n = 1; n <= 10; ++n) {
+	vector<double> ranka = veval(_rank, vector<double>(n, 1.0));
+	vector<double> rankb = veval(_rank_avg, vector<double>(n, 1.0));
+	for (unsigned long i = 0; i < n; ++i) {
+	    CPPUNIT_ASSERT_EQUAL(ranka[i], static_cast<double>(i+1));
+	    CPPUNIT_ASSERT_EQUAL(rankb[i], (n+1)/2.0);
+	}
+    }
     
     //CPPUNIT_FAIL("sort");
 }
@@ -1485,6 +1524,7 @@ void BugsFunTest::grad()
     //Sorting functions
     CPPUNIT_ASSERT(!_order->hasGradient(0));
     CPPUNIT_ASSERT(!_rank->hasGradient(0));
+    CPPUNIT_ASSERT(!_rank_avg->hasGradient(0));
     CPPUNIT_ASSERT(!_sort->hasGradient(0));
 
     //Matrix functions

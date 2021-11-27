@@ -14,7 +14,7 @@ ArcCos.cc ArcSin.cc ArcTan.cc ArcCosh.cc ArcSinh.cc ArcTanh.cc		\
 InterpLin.cc Round.cc Trunc.cc Equals.cc Prod.cc MatMult.cc		\
 Transpose.cc DSumFunc.cc DIntervalFunc.cc DRoundFunc.cc IfElse.cc	\
 Order.cc Combine.cc Rep.cc BesselI.cc BesselJ.cc BesselK.cc BesselY.cc  \
-InverseLU.cc Det.cc
+InverseLU.cc Det.cc RankAverage.cc
 
 noinst_HEADERS = LogGam.h Phi.h Sum.h Log.h Logit.h Probit.h		\
 CLogLog.h InProd.h Max.h SD.h ICLogLog.h Mean.h Sqrt.h ILogit.h Min.h	\
@@ -23,7 +23,7 @@ Sin.h Tan.h Cosh.h Sinh.h Tanh.h ArcCos.h ArcSin.h ArcTan.h ArcCosh.h	\
 ArcSinh.h ArcTanh.h InterpLin.h Round.h Trunc.h Equals.h Prod.h		\
 MatMult.h Transpose.h DSumFunc.h DIntervalFunc.h DRoundFunc.h		\
 IfElse.h Order.h Combine.h Rep.h BesselI.h BesselJ.h BesselK.h BesselY.h \
-InverseLU.h Det.h
+InverseLU.h Det.h RankAverage.h
 
 ### Test library 
 

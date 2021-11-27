@@ -32,7 +32,7 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     CPPUNIT_TEST( additive );
     CPPUNIT_TEST( linear );
     CPPUNIT_TEST( scale );
-    //CPPUNIT_TEST( sort );
+    CPPUNIT_TEST( sort );
     CPPUNIT_TEST( matrix );
 
     //CPPUNIT_TEST( inprod );
@@ -80,6 +80,7 @@ class BugsFunTest : public CppUnit::TestFixture, public JAGSFixture
     jags::ScalarFunction *_probit;
     jags::VectorFunction *_prod;
     jags::VectorFunction *_rank;
+    jags::VectorFunction *_rank_avg;
     jags::VectorFunction *_rep;
     jags::ScalarFunction *_round;
     jags::VectorFunction *_sd;
