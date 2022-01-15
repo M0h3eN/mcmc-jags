@@ -211,7 +211,7 @@ DScaledWishart::checkParameterValue(vector<double const *> const &par,
 
 
 void DScaledWishart::support(double *lower, double *upper,
-		    vector<double const *> const &par,
+		    vector<double const *> const &,
 		    vector<vector<unsigned long> > const &dims) const
 {
     unsigned long length = dims[0][0] * dims[0][1];
@@ -227,7 +227,7 @@ void DScaledWishart::support(double *lower, double *upper,
     }
 }
     
-bool DScaledWishart::isSupportFixed(vector<bool> const &fixmask) const
+bool DScaledWishart::isSupportFixed(vector<bool> const &) const
 {
     return true;
 }

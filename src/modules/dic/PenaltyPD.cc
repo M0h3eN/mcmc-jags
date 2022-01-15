@@ -30,7 +30,7 @@ namespace dic {
 			 vector<unsigned long> const &dim, 
 			 string const &monitor_name,
 			 vector<RNG *> const &rngs,
-			 unsigned int nrep, double scale)
+			 unsigned int nrep, double )
 	: Monitor(monitor_name, nodes), _nodes(nodes), _rngs(rngs),
 	  _nrep(nrep),_values(nodes.size(), 0.0), _dim(dim), _scale_cst(1.0),
 	  _nchain(rngs.size()), _n(0)
@@ -51,7 +51,7 @@ namespace dic {
 	return _dim;
     }
  
-    vector<double> const &PenaltyPD::value(unsigned int chain) const
+    vector<double> const &PenaltyPD::value(unsigned int ) const
     {
 	return _values;
     }

@@ -42,7 +42,7 @@ namespace jags {
 	    return vector<unsigned long> (1, _snodes.size());
 	}
  
-	vector<double> const &WAICMonitor::value(unsigned int chain) const
+	vector<double> const &WAICMonitor::value(unsigned int ) const
 	{
 	    return _values;
 	}

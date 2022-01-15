@@ -48,7 +48,7 @@ namespace dic {
 	return _dim;
     }
  
-    vector<double> const &PenaltyPDTotal::value(unsigned int chain) const
+    vector<double> const &PenaltyPDTotal::value(unsigned int ) const
     {
 	return _values;
     }

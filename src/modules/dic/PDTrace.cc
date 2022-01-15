@@ -41,7 +41,7 @@ namespace dic {
 	return vector<unsigned long> (1,1);
     }
  
-    vector<double> const &PDTrace::value(unsigned int chain) const
+    vector<double> const &PDTrace::value(unsigned int ) const
     {
 	return _values;
     }

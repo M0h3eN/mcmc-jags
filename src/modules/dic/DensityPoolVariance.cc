@@ -86,7 +86,7 @@ namespace dic {
 		
    }
 	
-    vector<double> const &DensityPoolVariance::value(unsigned int chain) const
+    vector<double> const &DensityPoolVariance::value(unsigned int ) const
     {
 	return _variances;
     }

@@ -79,7 +79,7 @@ namespace dic {
 		}
     }
 	
-    vector<double> const &DensityPoolMean::value(unsigned int chain) const
+    vector<double> const &DensityPoolMean::value(unsigned int ) const
     {
 	return _values;
     }

@@ -139,7 +139,7 @@ MixtureNode::MixtureNode (vector<Node const *> const &index,
 			  unsigned int nchain,
 			  MixMap const &mixmap)
     : DeterministicNode(mkDim(mixmap), nchain, mkParents(index, mixmap)),
-      _table(getTable(mixmap)), _Nindex(index.size()), _discrete(true),
+      _table(getTable(mixmap)), _nindex(index.size()), _discrete(true),
       _active_parents(nchain)
 {
     // Check validity of index argument
@@ -169,7 +169,7 @@ MixtureNode::MixtureNode (vector<Node const *> const &index,
 
     //Check discreteness 
     vector<Node const *> const &par = parents();
-    for (unsigned long i = _Nindex; i < par.size(); ++i)
+    for (unsigned long i = _nindex; i < par.size(); ++i)
     {
 	if (!par[i]->isDiscreteValued()) {
 	    _discrete = false;
@@ -192,9 +192,9 @@ MixtureNode::~MixtureNode()
 
 void MixtureNode::updateActive(unsigned int chain)
 {
-    vector<unsigned long> i(_Nindex);
+    vector<unsigned long> i(_nindex);
     vector <Node const*> const &par = parents();
-    for (unsigned long j = 0; j < _Nindex; ++j) {
+    for (unsigned long j = 0; j < _nindex; ++j) {
 	i[j] = static_cast<unsigned long>(*par[j]->value(chain));
     }
 
@@ -202,7 +202,7 @@ void MixtureNode::updateActive(unsigned int chain)
     if (_active_parents[chain] == nullptr) {
 	/*
 	std::cout << "Got " << printIndex(i) << "\nOriginally\n";
-	for (unsigned int j = 0; j < _Nindex; ++j) {
+	for (unsigned int j = 0; j < _nindex; ++j) {
 	    std::cout << par[j]->value(chain)[0] << "\n";
 	    if (jags_isna(par[j]->value(chain)[0]))
 		std::cout << "(which is  missing)\n";
@@ -227,15 +227,15 @@ Node const *MixtureNode::activeParent(unsigned int chain) const
 
 unsigned long MixtureNode::index_size() const
 {
-  return _Nindex;
+  return _nindex;
 }
 
 string MixtureNode::deparse(vector<string> const &parents) const
 {
     string name = "mixture(index=[";
 
-    vector<unsigned long> i(_Nindex);
-    for (unsigned long j = 0; j < _Nindex; ++j) {
+    vector<unsigned long> i(_nindex);
+    for (unsigned long j = 0; j < _nindex; ++j) {
 	if (j > 0) {
 	    name.append(",");
 	}
@@ -245,8 +245,8 @@ string MixtureNode::deparse(vector<string> const &parents) const
 
     /* We can't list all possible parents in a name, since there is
        no limit on the number. So we take the first and last */
-    name.append(parents[_Nindex]); //first parent
-    if (parents.size() > _Nindex + 2) {
+    name.append(parents[_nindex]); //first parent
+    if (parents.size() > _nindex + 2) {
         name.append("...");
     }
     else {
@@ -272,7 +272,7 @@ bool MixtureNode::hasGradient(Node const *arg) const
 {
     //A Mixture nodes is not differentiable with respect to the indices.
     auto par = parents();
-    for (unsigned long i = 0; i < _Nindex; ++i) {
+    for (unsigned long i = 0; i < _nindex; ++i) {
 	if (arg == par[i]) {
 	    return false;
 	}
@@ -299,7 +299,7 @@ bool MixtureNode::isClosed(set<Node const *> const &ancestors,
 
     //Check that none of the indices are in the ancestor set
     vector<Node const*> const &par = parents();
-    for (unsigned long i = 0; i < _Nindex; ++i) {
+    for (unsigned long i = 0; i < _nindex; ++i) {
 	if (ancestors.count(par[i])) {
 	    return false;
 	}
@@ -311,7 +311,7 @@ bool MixtureNode::isClosed(set<Node const *> const &ancestors,
     case DNODE_SCALE: case DNODE_ADDITIVE:
 	//Only a scale or additive function if all possible parents are scale
 	//or additive functions, respectively.
-	for (unsigned long i = _Nindex; i < par.size(); ++i) {
+	for (unsigned long i = _nindex; i < par.size(); ++i) {
 	    if (ancestors.count(par[i])==0)
 		return false;
 	}
@@ -329,9 +329,9 @@ bool MixtureNode::checkParentValues(unsigned int) const
     /*
 DeterministicNode *MixtureNode::clone(vector<Node const *> const &parents) const
 {
-    vector<Node const *> index(_Nindex);
+    vector<Node const *> index(_nindex);
     vector<Node const *>::const_iterator p = parents.begin();
-    for (unsigned int i = 0; i < _Nindex; ++i) {
+    for (unsigned int i = 0; i < _nindex; ++i) {
 	index[i] = *p;
 	++p;
     }

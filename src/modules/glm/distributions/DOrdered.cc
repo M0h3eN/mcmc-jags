@@ -22,7 +22,7 @@ namespace jags {
 	    : VectorDist(name, 2) 
 	{}
 	
-	bool DOrdered::isDiscreteValued(vector<bool> const &mask) const
+	bool DOrdered::isDiscreteValued(vector<bool> const &) const
 	{
 	    return true;
 	}
@@ -62,7 +62,7 @@ namespace jags {
 	}
 	
 	double
-	DOrdered::logDensity(double const *x, PDFType type,
+	DOrdered::logDensity(double const *x, PDFType ,
 			     vector<double const *> const &par,
 			     vector<unsigned long> const &lengths) const
 	{
@@ -85,14 +85,14 @@ namespace jags {
 	}
 
 	void DOrdered::support(double *lower, double *upper,
-			       vector<double const *> const &par,
+			       vector<double const *> const &,
 			       vector<unsigned long> const &lengths) const
 	{
 	    *lower = 1;
 	    *upper = NCUT(lengths) + 1;
 	}
 		
-	bool DOrdered::isSupportFixed(vector<bool> const &fixmask) const
+	bool DOrdered::isSupportFixed(vector<bool> const &) const
 	{
 	    return true;
 	}
@@ -103,7 +103,7 @@ namespace jags {
 	    return lengths[0] == 1 && NCUT(lengths) > 0;
 	}
 	
-	unsigned long DOrdered::length(vector<unsigned long> const &lengths) const
+	unsigned long DOrdered::length(vector<unsigned long> const &) const
 	{
 	    return 1;
 	}

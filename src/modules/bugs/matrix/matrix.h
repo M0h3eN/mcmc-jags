@@ -1,3 +1,4 @@
+
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
@@ -47,7 +48,7 @@ double logdet(double const *A, unsigned long n);
  *
  * @param n number or rows or columns in the matrix
  */
-double det(double const *A, unsigned long n);
+double det(double const *A, int n);
     
 }}
 

@@ -54,7 +54,7 @@ namespace dic {
 		}
     }
 	
-    vector<double> const &PenaltyPOPTTotalRep::value(unsigned int chain) const
+    vector<double> const &PenaltyPOPTTotalRep::value(unsigned int ) const
     {
 		// Adjust by the running mean weights:
 		(*_totalpopt).resize(_n);

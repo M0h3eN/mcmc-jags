@@ -54,7 +54,7 @@ namespace dic {
 		
    }
 	
-    vector<double> const &PenaltyPV::value(unsigned int chain) const
+    vector<double> const &PenaltyPV::value(unsigned int ) const
     {
 	return _pv;
     }

@@ -44,7 +44,7 @@ namespace dic {
 	return vector<unsigned long> (1,_values.size());
     }
  
-    vector<double> const &PDMonitor::value(unsigned int chain) const
+    vector<double> const &PDMonitor::value(unsigned int ) const
     {
 	return _values;
     }
@@ -84,7 +84,7 @@ namespace dic {
     }
 
 
-    double PDMonitor::weight(StochasticNode const *snode, unsigned int ch) const
+    double PDMonitor::weight(StochasticNode const *, unsigned int ) const
     {
 	return 1;
     }

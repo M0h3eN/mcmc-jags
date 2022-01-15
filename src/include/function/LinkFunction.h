@@ -36,7 +36,7 @@ public:
     /** Gradient of the inverse link function */
     virtual double grad(double eta) const = 0;
     /** Link functions are always differentiable */
-    bool hasGradient(unsigned long i) const;
+    bool hasGradient(unsigned long i) const override;
 };
 
 } /* namespace jags */

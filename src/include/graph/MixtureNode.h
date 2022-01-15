@@ -34,7 +34,7 @@ namespace jags {
  */
 class MixtureNode : public DeterministicNode {
     MixTab const *_table;
-    unsigned long _Nindex;
+    unsigned long _nindex;
     bool _discrete;
     std::vector<Node const *> _active_parents;
     void updateActive(unsigned int chain);

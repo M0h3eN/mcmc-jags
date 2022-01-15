@@ -39,11 +39,11 @@ namespace glm {
 	return _lp;
     }
 
-    void Outcome::update(RNG *rng)
+    void Outcome::update(RNG *)
     {
     }
 
-    void Outcome::update(double mean, double var, RNG *rng)
+    void Outcome::update(double, double, RNG *)
     {
     }
 
