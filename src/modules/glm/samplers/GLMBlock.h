@@ -51,39 +51,12 @@ namespace glm {
 	 */
 	void update(RNG *rng) override;
 	/**
-	 * Updates auxiliary variables.  The default method does
-	 * nothing.  Sampling methods that use auxiliary variables to
-	 * reduce the GLM to a linear model must provide their own
-	 * implementation.
-	 *
-	 * This function is called by updateLM.  Internally, updateLM
-	 * calculates the posterior mean "mu" by solving the equation
-	 * (A %*% mu = b) where "A" is the posterior precision. The
-	 * same dense vector is used to hold "b" (before solving the
-	 * equation) and "mu" (after solving the equation).  If
-	 * updateLM is called with parameter "chol" set to false then
-	 * updateAuxiliary is called before solving the equation: thus
-	 * the first argument (y) should contain the canonical
-	 * parameter (b).  If updateLM is called with "chol" set to
-	 * true then updateAuxiliary is called after solving the
-	 * equation: thus the first argument (y) should contain the
-	 * posterior mean.
-	 *
-	 * IMPORTANT NOTE: GLMMethod uses a parameterization in which
-	 * the current value of the parameters is considered the
-	 * origin. The value of "y" (mu or b) may need to be adjusted
-	 * for this centring by an implementation of updateAuxiliary.
-	 * 
-	 * @param y Dense vector which may be either the posterior
-	 * mean "mu" or (A %*% mu), where "A" is the posterior
-	 * precision.
-	 *
-	 * @param N Cholesky factorization of the posterior precision "A".
-	 *
-	 * @param rng Random number generator used for sampling.
+	 * Updates auxiliary variables (if any) marginalizing over the
+	 * value of the linear predictor.  The default method does
+	 * nothing. This is currently only used by the HolmesHeld
+	 * subclass and is documented in the code for that class.
 	 */
-	virtual void updateAuxiliary(cholmod_dense *y, cholmod_factor *N, 
-				     RNG *rng);
+	virtual void updateAuxiliary(cholmod_dense *w, RNG *rng);
     };
 
 }}

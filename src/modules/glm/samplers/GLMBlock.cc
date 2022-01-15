@@ -100,7 +100,7 @@ namespace glm {
 	    cholmod_free_dense(&w, glm_wk);
         }
 	
-	updateAuxiliary(u1, _factor, rng);
+	updateAuxiliary(u1, rng);
 
 	double *u1x = static_cast<double*>(u1->x);
 	if (_factor->is_ll) {
@@ -167,8 +167,7 @@ namespace glm {
 	}
     }
 
-    void GLMBlock::updateAuxiliary(cholmod_dense *b, cholmod_factor *N,
-				   RNG *rng)
+    void GLMBlock::updateAuxiliary(cholmod_dense *, RNG *)
     {
     }
 

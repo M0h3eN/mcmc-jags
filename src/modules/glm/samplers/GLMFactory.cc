@@ -36,8 +36,7 @@ namespace jags {
   Aggregates candidate Nodes with common stochastic children. 
 */
 static bool aggregate(SingletonGraphView const *candidate,
-		      set<StochasticNode const *> &stochastic_children,
-		      Graph const &graph)
+		      set<StochasticNode const *> &stochastic_children)
 {
 
     // Check that there is some overlap in stochastic children between
@@ -68,7 +67,7 @@ static bool aggregate(SingletonGraphView const *candidate,
 	
 	bool operator()(ViewScore const &x, ViewScore const &y) const {
 	    return x.second < y.second;
-	};
+	}
     };
     
     vector<SingletonGraphView*>
@@ -344,7 +343,7 @@ namespace glm {
 	    loop = false;
 	    for (unsigned int j = 1; j < candidates.size(); ++j) {
 		if (!keep[j]) {
-		    keep[j] = aggregate(candidates[j], stoch_children, graph);
+		    keep[j] = aggregate(candidates[j], stoch_children);
 		    if (keep[j]) {
 			loop = true;
 		    }
@@ -405,10 +404,10 @@ namespace glm {
 	    
 	    vector<SingletonGraphView*> sorted_candidates = 
 		sort_by_children(candidates);
-	    vector<bool> keep = get_linear_subset(sorted_candidates,
-						  fixedDesign(), true);
+	    vector<bool> keep2 = get_linear_subset(sorted_candidates,
+						   fixedDesign(), true);
 	    for (unsigned int j = 0; j < sorted_candidates.size(); ++j) {
-		if (keep[j]) {
+		if (keep2[j]) {
 		    sub_views.push_back(sorted_candidates[j]);
 		    sample_nodes.push_back(sorted_candidates[j]->node());
 		}
