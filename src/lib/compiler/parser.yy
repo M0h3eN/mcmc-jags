@@ -83,9 +83,6 @@ using jags::ParseTree;
 %precedence NEG
 %right '^'
 
-
-%token ENDL
-
 %type <ptree> node_dec
 %type <ptree> expression var
 %type <ptree> relation for_loop counter
@@ -95,8 +92,6 @@ using jags::ParseTree;
 %type <pvec> dec_list relation_list expression_list dim_list 
 %type <pvec> range_list 
 %type <pvec> product sum
-
-%token UREPCHAR
 
 %expect 2
 

@@ -16,6 +16,12 @@
 
 #include <stdexcept>
 
+/* 
+   The default error function yy_fatal_error will terminate the
+   program. To avoid this, we define our own error function which
+   throws an exception. Note: gcc -Wunused-function will generate a
+   warning about yy_fatal_error defined but not used.
+*/
 [[noreturn]] void jags_scanner_error(const char *msg);
 #define YY_FATAL_ERROR(msg) jags_scanner_error (msg)
 
@@ -81,7 +87,6 @@ BRACKET		[ \t]*\(
 [ \t\r\n\f]+            /* Eat whitespace */
 "#".*\n                 /* Eat comments */
 
-
 ([0-9]+){EXPONENT}? {
   yylval.val = atof(yytext); return DOUBLE;
 }
@@ -100,7 +105,8 @@ BRACKET		[ \t]*\(
 <<EOF>>	yyterminate();
 
 \357\277\275 {
-  throw std::logic_error("Coding error in file (UTF-8 replacement char U+FFFD found by parser)");
+    /* Slightly more informative than returning BADCHAR (See below) */
+    jags_scanner_error("Coding error in file (UTF-8 replacement char U+FFFD found by parser)");
 }
 
 . {
