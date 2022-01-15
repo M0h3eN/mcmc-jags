@@ -1354,6 +1354,7 @@ void BugsFunTest::discrete()
     //Sorting functions
     CPPUNIT_ASSERT(isdiscrete(_order, 1, always));
     CPPUNIT_ASSERT(isdiscrete(_rank, 1, always));
+    CPPUNIT_ASSERT(isdiscrete(_rank_avg, 1, never));
     CPPUNIT_ASSERT(isdiscrete(_sort, 1, all));
 
     //Matrix functions
