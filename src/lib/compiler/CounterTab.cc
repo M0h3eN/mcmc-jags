@@ -9,47 +9,47 @@ using std::string;
 
 namespace jags {
 
-CounterTab::CounterTab()
-{
-}
-
-CounterTab::~CounterTab()
-{
-    unsigned long n = _table.size();
-    for (unsigned int i = 0; i < n; i++) {
-	popCounter();
+    CounterTab::CounterTab()
+    {
     }
-}
 
-Counter * CounterTab::pushCounter(string const &name, Range const &range)
-{
-  Counter *counter = new Counter(range);
-  pair<string, Counter*> cpair(name, counter);
-  _table.push_back(cpair);
-  return counter;
-}
+    CounterTab::~CounterTab()
+    {
+	unsigned long n = _table.size();
+	for (unsigned int i = 0; i < n; i++) {
+	    popCounter();
+	}
+    }
 
-void CounterTab::popCounter()
-{
-  pair<string, Counter *> topcpair = _table.back();
-  _table.pop_back();
-  delete topcpair.second;
-}
+    Counter * CounterTab::pushCounter(string const &name, vector<unsigned long> const &index_range)
+    {
+	Counter *counter = new Counter(index_range);
+	pair<string, Counter*> cpair(name, counter);
+	_table.push_back(cpair);
+	return counter;
+    }
 
-Counter *CounterTab::getCounter(string const &name) const
-{
-  for (auto p = _table.begin(); p != _table.end(); ++p) {
-    if (name == p->first)
-      return p->second;
-  }
-  return nullptr;
-}
+    void CounterTab::popCounter()
+    {
+	pair<string, Counter *>  &topcpair = _table.back();
+	delete topcpair.second;
+	_table.pop_back();
+    }
+
+    Counter *CounterTab::getCounter(string const &name) const
+    {
+	for (auto p = _table.begin(); p != _table.end(); ++p) {
+	    if (name == p->first)
+		return p->second;
+	}
+	return nullptr;
+    }
 
     vector<unsigned long> CounterTab::counterValues() const
     {
 	vector<unsigned long> indices;
 	for (auto p = _table.begin(); p != _table.end(); ++p) {
-	    indices.push_back(p->second->front());
+	    indices.push_back(p->second->value());
 	}
 	return indices;
     }

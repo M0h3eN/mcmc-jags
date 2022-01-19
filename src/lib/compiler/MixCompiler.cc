@@ -35,6 +35,7 @@
 #include <graph/GraphMarks.h>
 #include <graph/NodeError.h>
 #include <sampler/Sampler.h>
+#include <sarray/RangeIterator.h>
 #include <util/nainf.h>
 
 #include "MixCompiler.h"

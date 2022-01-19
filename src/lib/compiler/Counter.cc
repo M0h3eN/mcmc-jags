@@ -8,17 +8,25 @@ using std::logic_error;
 
 namespace jags {
  
-Counter::Counter(Range const &range)
-  : RangeIterator(range)
-{
-  if (range.ndim(false) != 1)
-    throw logic_error("Attempt to construct Counter from non-scalar Range");
-}
+    Counter::Counter(std::vector<unsigned long> const &index_range)
+	: _index_range(index_range), _p(_index_range.begin())
+    {
+	
+    }
+    
+    void Counter::next()
+    {
+	++_p;
+    }
 
-Counter &Counter::next()
-{
-  nextLeft();
-  return *this;
-}
+    unsigned long Counter::value() const
+    {
+	return *_p;
+    }
+
+    bool Counter::atEnd() const
+    {
+	return _p == _index_range.end();
+    }
 
 } //namespace jags

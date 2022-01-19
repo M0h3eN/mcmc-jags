@@ -55,7 +55,7 @@ class Compiler {
   
   Node *getArraySubset(ParseTree const *t);
   SimpleRange VariableSubsetRange(ParseTree const *var);
-  Range CounterRange(ParseTree const *var);
+  std::vector<unsigned long>  CounterRange(ParseTree const *var);
   Node* VarGetNode(ParseTree const *var);
   Range getRange(ParseTree const *var,  SimpleRange const &default_range);
 

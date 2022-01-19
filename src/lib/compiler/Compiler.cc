@@ -369,44 +369,39 @@ SimpleRange Compiler::VariableSubsetRange(ParseTree const *var)
     }
     return SimpleRange(range.first(), range.last());
 }
-
-Range Compiler::CounterRange(ParseTree const *var)
+ 
+std::vector<unsigned long> Compiler::CounterRange(ParseTree const *var)
 {
-  /* The range expression for a counter differs from that of
-     a variable in that it is
-     1) one-dimensional
-     2) may not be empty
-     Further, no variables are created for counters in the
-     Symbol Table
-  */
-  if (var->treeClass() != P_COUNTER) {
-    throw logic_error("Expecting counter expression");
-  }
-  if (var->parameters().size() != 1) {
-    throw logic_error("Invalid counter expression");
-  }
-  Range range;
+    /* The range expression for a counter differs from that of
+       a variable in that it is
+       1) one-dimensional
+       2) may not be empty
+       Further, no variables are created for counters in the
+       Symbol Table
+    */
+    if (var->treeClass() != P_COUNTER) {
+	throw logic_error("Expecting counter expression");
+    }
+    if (var->parameters().size() != 1) {
+	throw logic_error("Invalid counter expression");
+    }
   
-  ParseTree const *prange = var->parameters()[0];
-  if (prange->treeClass() != P_RANGE) {
-    throw logic_error("Expecting range expression");
-  }
+    ParseTree const *prange = var->parameters()[0];
+    if (prange->treeClass() != P_RANGE) {
+	throw logic_error("Expecting range expression");
+    }
 
-  unsigned long size = prange->parameters().size();
-  if (size != 1) {
-    throw logic_error(string("Invalid range expression for counter ")
-		      + var->name());
-  }
-  vector<unsigned long> indices;
-  if(!indexExpression(prange->parameters()[0], indices)) {
-      CompileError(var, "Cannot evaluate range of counter", var->name());
-  }
-  if (indices.empty()) {
-    return Range();
-  }
-  else {
-      return Range(vector<vector<unsigned long> >(1, indices));
-  }
+    unsigned long size = prange->parameters().size();
+    if (size != 1) {
+	throw logic_error(string("Invalid range expression for counter ")
+			  + var->name());
+    }
+    vector<unsigned long> indices;
+    if(!indexExpression(prange->parameters()[0], indices)) {
+	CompileError(var, "Cannot evaluate range of counter", var->name());
+    }
+
+    return indices;
 }
 
     Node * 
@@ -458,7 +453,7 @@ Node *Compiler::getArraySubset(ParseTree const *p)
     
     Counter *counter = _countertab.getCounter(p->name()); //A counter
     if (counter) {
-	node = getConstant((*counter)[0], _model.nchain(), false);
+	node = getConstant(counter->value(), _model.nchain(), false);
     }
     else {
 	NodeArray *array = _model.symtab().getVariable(p->name());
@@ -1382,9 +1377,10 @@ void Compiler::traverseTree(ParseTree const *relations, CompilerMemFn fun,
 	if ((*p)->treeClass() == P_FOR) {
 	    //Expand for loops
 	    ParseTree *var = (*p)->parameters()[0];
-	    if (!isNULL(CounterRange(var))) {
+	    vector<unsigned long> counter_range = CounterRange(var);
+	    if (!counter_range.empty()) {
 		Counter *counter = _countertab.pushCounter(var->name(),
-							   CounterRange(var));
+							   counter_range);
 		for (; !counter->atEnd(); counter->next()) {
 		    traverseTree((*p)->parameters()[1], fun, false, reverse);
 		}

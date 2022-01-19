@@ -16,8 +16,8 @@ namespace jags {
      * @see Range
      */
     class RangeIterator : public std::vector<unsigned long> {
-	std::vector<std::vector<unsigned long> > _scope;
-	std::vector<unsigned long> _dim;
+	std::vector<std::vector<unsigned long>> const &_scope;
+	std::vector<unsigned long> const &_dim;
 	std::vector<unsigned long> _index;
 	unsigned int  _atend;
 	//Forbid assignment
@@ -32,7 +32,8 @@ namespace jags {
 	 * no index value corresponding to a zero dimension. In this
 	 * case a logic_error is thrown.
 	 *
-	 * @param range Range to traverse
+	 * @param range Range to traverse. This object must persist
+	 * as long as the RangeIterator.
 	 */
 	RangeIterator(Range const &range);
 	/**
