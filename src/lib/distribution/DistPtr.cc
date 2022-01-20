@@ -34,6 +34,18 @@ string const &DistPtr::name() const
 	return nullstring;
 }
 
+string DistPtr::alias() const
+{
+    if (sdist)
+	return sdist->alias();
+    else if (vdist)
+	return vdist->alias();
+    else if (adist)
+	return adist->alias();
+    else
+	return "";
+}
+    
 ScalarDist const * SCALAR(DistPtr const &p) { 
     return p.sdist; 
 }

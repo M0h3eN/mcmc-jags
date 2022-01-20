@@ -30,6 +30,7 @@ public:
     FunctionPtr(LinkFunction const *);
     bool operator==(FunctionPtr const &rhs) const;
     std::string const &name() const;
+    std::string alias() const;
     friend LinkFunction const *LINK(FunctionPtr const &p);
     friend ScalarFunction const *SCALAR(FunctionPtr const &p);
     friend VectorFunction const *VECTOR(FunctionPtr const &p);

@@ -40,6 +40,20 @@ string const &FunctionPtr::name() const
 	return nullstring;
 }
 
+string FunctionPtr::alias() const
+{
+    if (lfunc)
+	return lfunc->alias();
+    else if (sfunc)
+	return sfunc->alias();
+    else if (vfunc)
+	return vfunc->alias();
+    else if (afunc)
+	return afunc->alias();
+    else
+	return "";
+}
+    
 LinkFunction const * LINK(FunctionPtr const &p) { 
     return p.lfunc; 
 }

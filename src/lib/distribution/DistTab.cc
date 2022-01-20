@@ -1,80 +1,50 @@
 #include <config.h>
 #include <distribution/DistTab.h>
 
-#include <functional>
-#include <algorithm>
+#include <map>
 
+using std::map;
 using std::string;
-using std::binary_function;
-using std::find_if;
+using std::pair;
 
 namespace jags {
 
-typedef std::list<DistPtr> DistList;
-
-// Adaptable binary predicate for find_if algorithm 
-struct isDistName: public binary_function<DistPtr, string, bool> 
-{
-    bool operator()(DistPtr const &dist, string const &name) const
+    DistTab::DistTab()
+	: _dmap(), _nulldist()
     {
-	if (SCALAR(dist))
-	    return SCALAR(dist)->name() == name;
-	if (VECTOR(dist))
-	    return VECTOR(dist)->name() == name;
-	if (ARRAY(dist))
-	    return ARRAY(dist)->name() == name;
-	return false;
+	//Required by Solaris Studio, which won't create a default constructor
+	//with -std=c++11
     }
-};
 
-// Adaptable binary predicate for find_if algorithm 
-struct isDistAlias: public binary_function<DistPtr, string, bool> 
-{
-    bool operator()(DistPtr const &dist, string const &name) const
+    void DistTab::insert (DistPtr const &dist)
     {
-	if (name.length() == 0)
-	    return false;
-
-	if (SCALAR(dist))
-	    return SCALAR(dist)->alias() == name;
-	if (VECTOR(dist))
-	    return VECTOR(dist)->alias() == name;
-	if (ARRAY(dist))
-	    return ARRAY(dist)->alias() == name;
-
-	return false;
-    }
-};
-
-  DistTab::DistTab()
-    : _dlist(), _nulldist()
-  {
-    //Required by Solaris Studio, which won't create a default constructor
-    //with -std=c++11
-  }
-
-void DistTab::insert (DistPtr const &dist)
-{
-    DistList::const_iterator p = std::find(_dlist.begin(), _dlist.end(), dist);
-    if (p == _dlist.end())
-	_dlist.push_front(dist);
-}
-
-DistPtr const &DistTab::find(string const &name) const
-{
-    DistList::const_iterator p = 
-	find_if(_dlist.begin(), _dlist.end(), bind2nd(isDistName(), name));
-
-    if (p == _dlist.end()) {
-	p = find_if(_dlist.begin(), _dlist.end(), bind2nd(isDistAlias(), name));
+	//Insert distribution into map by name and by alias
+	string const &dname = dist.name();
+	if (!dname.empty() && _dmap.find(dname) == _dmap.end()) {
+	    pair<string, DistPtr> dpair(dname, dist);
+	    _dmap.insert(dpair);
+	}
+	string const aname = dist.alias();
+	if (!aname.empty() && _dmap.find(aname) == _dmap.end()) {
+	    pair<string, DistPtr> dpair(aname, dist);
+	    _dmap.insert(dpair);
+	}
     }
 
-    return (p == _dlist.end()) ? _nulldist : *p;
-}
+    DistPtr const &DistTab::find(string const &name) const
+    {
+	auto p = _dmap.find(name);
+	return p == _dmap.end() ? _nulldist : p->second;
+    }
 
-void DistTab::erase(DistPtr const &dist)
-{
-    _dlist.remove(dist);
-}
+    void DistTab::erase(DistPtr const &dist)
+    {
+	for (auto p = _dmap.begin(); p != _dmap.end(); ++p) {
+	    if (p->second == dist) {
+		_dmap.erase(p);
+		break;
+	    }
+	}
+    }
 
 } //namespace jags

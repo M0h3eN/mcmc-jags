@@ -2,101 +2,76 @@
 #include <function/FuncTab.h>
 #include <function/LinkFunction.h>
 
-#include <functional>
-#include <algorithm>
-
 using std::string;
-using std::binary_function;
-using std::find_if;
+using std::pair;
 
 namespace jags {
 
-typedef std::list<FunctionPtr> FuncList;
-
-// Adaptable binary predicate for find_if algorithm 
-struct isFuncName: public binary_function<FunctionPtr, string, bool> 
-{
-    bool operator()(FunctionPtr const &func, string const &name) const
+    static string const &linkName(FunctionPtr const &func)
     {
-	if (LINK(func))
-	    return LINK(func)->name() == name;
-	if (SCALAR(func))
-	    return SCALAR(func)->name() == name;
-	if (VECTOR(func))
-	    return VECTOR(func)->name() == name;
-	if (ARRAY(func))
-	    return ARRAY(func)->name() == name;
-
-	return false;
+	static const string _null = "";
+	if (LINK(func)) 
+	    return LINK(func)->linkName();
+	else
+	    return _null;
     }
-};
-
-
-// Adaptable binary predicate for find_if algorithm 
-struct isFuncAlias: public binary_function<FunctionPtr, string, bool> 
-{
-    bool operator()(FunctionPtr const &func, string const &name) const
+    
+    FuncTab::FuncTab()
+	: _fmap(), _lmap(), _nullfun()
     {
-	if (LINK(func))
-	    return LINK(func)->alias() == name;
-	if (SCALAR(func))
-	    return SCALAR(func)->alias() == name;
-	if (VECTOR(func))
-	    return VECTOR(func)->alias() == name;
-	if (ARRAY(func))
-	    return ARRAY(func)->alias() == name;
-
-	return false;
+	//Required by Solaris Studio, which won't create a default constructor
+	//with -std=c++11
     }
-};
 
-// Adaptable binary predicate for find_if algorithm
-struct isLinkName: public binary_function<FunctionPtr, string, bool> 
-{
-    bool operator()(FunctionPtr const &func, string const &name) const
+    void FuncTab::insert (FunctionPtr const &func)
     {
-	return LINK(func) != nullptr && LINK(func)->linkName() == name;
-    }
-};
-
-  FuncTab::FuncTab()
-    : _flist(), _nullfun()
-  {
-    //Required by Solaris Studio, which won't create a default constructor
-    //with -std=c++11
-  }
-
-void FuncTab::insert (FunctionPtr const &func)
-{
-    FuncList::const_iterator p = std::find(_flist.begin(), _flist.end(), func);
-    if (p == _flist.end())
-	_flist.push_front(func);
-}
-
-FunctionPtr const &FuncTab::find(string const &name) const
-{
-    FuncList::const_iterator p = 
-	find_if(_flist.begin(), _flist.end(), bind2nd(isFuncName(), name));
-
-    if (p == _flist.end()) {
-	p = find_if(_flist.begin(), _flist.end(), bind2nd(isFuncAlias(), name));
+	//Insert function into map by name and by alias
+	string const &fname = func.name();
+	if (!fname.empty() && _fmap.find(fname) == _fmap.end()) {
+	    pair<string, FunctionPtr> fpair(fname, func);
+	    _fmap.insert(fpair);
+	}
+	string const aname = func.alias();
+	if (!aname.empty() && _fmap.find(aname) == _fmap.end()) {
+	    pair<string, FunctionPtr> fpair(aname, func);
+	    _fmap.insert(fpair);
+	}
+	//Insert link functions into link map by link name
+	string const &lname = linkName(func);
+	if (!lname.empty() && _lmap.find(lname) == _lmap.end()) {
+	    pair<string, LinkFunction const *> lpair(lname, LINK(func));
+	    _lmap.insert(lpair);
+	}
     }
 
-    return (p == _flist.end()) ? _nullfun : *p;
-}
+    FunctionPtr const &FuncTab::find(string const &name) const
+    {
+	auto p = _fmap.find(name);
+	return p == _fmap.end() ? _nullfun : p->second;
+    }
 
-LinkFunction const * FuncTab::findLink (string const &name) const
-{
-    FuncList::const_iterator p =
-	find_if(_flist.begin(), _flist.end(), bind2nd(isLinkName(), name));
+    LinkFunction const * FuncTab::findLink (string const &name) const
+    {
+	auto p = _lmap.find(name);
+	return p == _lmap.end() ? nullptr : p->second;
+    }
 
-    return (p == _flist.end()) ? nullptr : LINK(*p);
-}
-
-void FuncTab::erase(FunctionPtr const &func)
-{
-    _flist.remove(func);
-
-}
+    void FuncTab::erase(FunctionPtr const &func)
+    {
+	for (auto p = _fmap.begin(); p != _fmap.end(); ++p) {
+	    if (p->second == func) {
+		_fmap.erase(p);
+		break;
+	    }
+	}
+	if (LINK(func)) {
+	    for (auto p = _lmap.begin(); p != _lmap.end(); ++p) {
+		if (p->second == LINK(func)) {
+		    _lmap.erase(p);
+		    break;
+		}
+	    }
+	}
+    }
 
 } //namespace jags

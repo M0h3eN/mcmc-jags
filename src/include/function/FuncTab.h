@@ -1,7 +1,7 @@
 #ifndef FUNC_TAB_H_
 #define FUNC_TAB_H_
 
-#include <list>
+#include <map>
 #include <string>
 
 #include <function/FunctionPtr.h>
@@ -18,8 +18,9 @@ namespace jags {
  */
 class FuncTab
 {
-    std::list<FunctionPtr> _flist;
-    FunctionPtr const _nullfun;
+    std::map<std::string, FunctionPtr> _fmap;
+    std::map<std::string, LinkFunction const *> _lmap;
+    const FunctionPtr _nullfun;
 public:
     /**
      * Constructs a new empty FuncTab

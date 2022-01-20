@@ -27,6 +27,7 @@ public:
     DistPtr(ArrayDist const *);
     bool operator==(DistPtr const &rhs) const;
     std::string const &name() const;
+    std::string alias() const;
     friend ScalarDist const *SCALAR(DistPtr const &p);
     friend VectorDist const *VECTOR(DistPtr const &p);
     friend ArrayDist const *ARRAY(DistPtr const &p);
