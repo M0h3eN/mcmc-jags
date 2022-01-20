@@ -58,9 +58,8 @@ class Compiler {
   std::vector<unsigned long>  CounterRange(ParseTree const *var);
   Node* VarGetNode(ParseTree const *var);
   Range getRange(ParseTree const *var,  SimpleRange const &default_range);
-
-  void traverseTree(ParseTree const *relations, CompilerMemFn fun,
-		    bool resetcounter=true, bool reverse=false);
+    void traverseForwards(ParseTree const *relations, CompilerMemFn fun);
+    void traverseBackwards(ParseTree const *relations, CompilerMemFn fun);
   void allocate(ParseTree const *rel);
   Node * allocateStochastic(ParseTree const *stoch_rel);
   Node * allocateLogical(ParseTree const *dtrm_rel);

@@ -128,7 +128,7 @@ void Compiler::getLHSVars(ParseTree const *relations)
        diagnostic messages when we cannot resolve a variable name.
 
        Although this function has a similar recursive structure to
-       traverseTree it expands for loops without defining a counter.
+       traverseBackwards it expands for loops without defining a counter.
     */
     
     vector<ParseTree*> const &relation_list = relations->parameters();
@@ -1149,6 +1149,7 @@ void Compiler::setConstantMask(ParseTree const *rel)
     }
 }
 
+//FIXME: This is obsolete as we allow arrays to grow dynamically
 void Compiler::getArrayDim(ParseTree const *p)
 {
     /* 
@@ -1212,7 +1213,7 @@ void Compiler::writeConstantData(ParseTree const *relations)
 
     //Now traverse the parse tree, setting node array subsets that
     //correspond to the left-hand side of any relation to be false
-    traverseTree(relations, &Compiler::setConstantMask);
+    traverseBackwards(relations, &Compiler::setConstantMask);
 
     //Create a temporary copy of the data table containing only
     //data for constant nodes
@@ -1248,7 +1249,8 @@ void Compiler::writeRelations(ParseTree const *relations)
 	   order. Without this facility, compilation of some large
 	   models can be very slow.
 	*/
-	traverseTree(relations, &Compiler::allocate, true, true);
+	traverseBackwards(relations, &Compiler::allocate);
+	traverseForwards(relations, &Compiler::allocate);
 	if (_n_resolved == 0) {
 	    if (_n_unresolved == 0) {
 		break;
@@ -1266,7 +1268,7 @@ void Compiler::writeRelations(ParseTree const *relations)
 
     if (_n_resolved == 0 && _n_unresolved > 0) {
 	_compiler_mode = ENFORCING; //See getArraySubset
-	traverseTree(relations, &Compiler::allocate);
+	traverseBackwards(relations, &Compiler::allocate);
 	
 	/*
 	   Some nodes remain unresolved. We need to identify them and
@@ -1292,7 +1294,7 @@ void Compiler::writeRelations(ParseTree const *relations)
 	  numbers on which they are used.
 	*/
 	_compiler_mode = COLLECT_UNRESOLVED; //See getArraySubset
-	traverseTree(relations, &Compiler::allocate);
+	traverseBackwards(relations, &Compiler::allocate);
 	if (_umap.empty()) {
 	    //Not clear what went wrong here, so throw a generic error message
 	    throw runtime_error("Unable to resolve relations");
@@ -1304,7 +1306,7 @@ void Compiler::writeRelations(ParseTree const *relations)
 	  Step 3: Eliminate parameters that appear on the left of a relation
 	*/
 	_compiler_mode = CLEAN_UNRESOLVED;
-	traverseTree(relations, &Compiler::allocate);
+	traverseBackwards(relations, &Compiler::allocate);
 
 	/* 
 	   Step 4: Informative error message for the user
@@ -1346,46 +1348,24 @@ void Compiler::writeRelations(ParseTree const *relations)
     _is_resolved.clear();
 }
 
-
-void Compiler::traverseTree(ParseTree const *relations, CompilerMemFn fun,
-			    bool resetcounter, bool reverse)
+void Compiler::traverseBackwards(ParseTree const *relations, CompilerMemFn FUN)
 {
     /* 
        Traverse parse tree, expanding FOR loops and applying function
        fun to relations.
 
-       In JAGS >= 4.3.0 we do a breadth first search, i.e. we process the
-       relations within each block before expanding the for loops. This
-       allows us to optionally reverse through the relations. See
-       writeRelations for more details.
+       The code is interpreted from back to front, which is most efficient
+       when the relations are written in reverse topological order.
     */
 
     vector<ParseTree*> const &relation_list = relations->parameters();
-    for (vector<ParseTree*>::const_reverse_iterator p = relation_list.rbegin(); 
-	 p != relation_list.rend(); ++p) 
+    for (auto p = relation_list.rbegin(); p != relation_list.rend(); ++p) 
     {
 	TreeClass tc = (*p)->treeClass();
 	if (tc == P_STOCHREL || tc == P_DETRMREL) {
-	    (this->*fun)(*p);
+	    (this->*FUN)(*p);
 	}
-    }
-
-    if (reverse) {
-	for (vector<ParseTree*>::const_iterator p = relation_list.begin(); 
-	     p != relation_list.end(); ++p) 
-	{
-	    //Reverse sweep through relations
-	    TreeClass tc = (*p)->treeClass();
-	    if (tc == P_STOCHREL || tc == P_DETRMREL) {
-		(this->*fun)(*p);
-	    }
-	}
-    }
-
-    for (vector<ParseTree*>::const_reverse_iterator p = relation_list.rbegin(); 
-	 p != relation_list.rend(); ++p) 
-    {
-	if ((*p)->treeClass() == P_FOR) {
+	else if (tc == P_FOR) {
 	    //Expand for loops
 	    ParseTree *var = (*p)->parameters()[0];
 	    vector<unsigned long> counter_range = CounterRange(var);
@@ -1393,35 +1373,46 @@ void Compiler::traverseTree(ParseTree const *relations, CompilerMemFn fun,
 		Counter *counter = _countertab.pushCounter(var->name(),
 							   counter_range);
 		for (; !counter->atEnd(); counter->next()) {
-		    traverseTree((*p)->parameters()[1], fun, false, reverse);
+		    traverseBackwards((*p)->parameters()[1], FUN);
 		}
 		_countertab.popCounter();
 	    }
 	}
     }
+}
 
-    if (reverse) {
-	for (vector<ParseTree*>::const_reverse_iterator p = relation_list.rbegin(); 
-	     p != relation_list.rend(); ++p) 
-	{
-	    if ((*p)->treeClass() == P_FOR) {
-		//Expand for loops
-		ParseTree *var = (*p)->parameters()[0];
-		vector<unsigned long> counter_range = CounterRange(var);
-		if (!counter_range.empty()) {
-		    Counter *counter = _countertab.pushCounter(var->name(),
-							       counter_range);
-		    for (; !counter->atEnd(); counter->next()) {
-			traverseTree((*p)->parameters()[1], fun, false, reverse);
+void Compiler::traverseForwards(ParseTree const *relations, CompilerMemFn FUN)
+{
+    /* 
+       Traverse parse tree, expanding FOR loops and applying function
+       fun to relations.
+
+       The code is interpreted from top to bottom, which is most
+       efficient when the relations are written in topological order.
+    */
+
+    vector<ParseTree*> const &relation_list = relations->parameters();
+    for (auto p = relation_list.begin(); p != relation_list.end(); ++p)
+    {
+	TreeClass tc = (*p)->treeClass();
+	if (tc == P_STOCHREL || tc == P_DETRMREL) {
+	    (this->*FUN)(*p);
+	}
+	else if (tc == P_FOR) {
+	    //Expand for loops
+	    ParseTree *var = (*p)->parameters()[0];
+	    vector<unsigned long> counter_range = CounterRange(var);
+	    if (!counter_range.empty()) {
+		Counter *counter = _countertab.pushCounter(var->name(),
+							   counter_range);
+		for (; !counter->atEnd(); counter->next()) {
+		    traverseForwards((*p)->parameters()[1], FUN);
 		}
-		    _countertab.popCounter();
-		}
+		_countertab.popCounter();
 	    }
 	}
     }
-  
 }
-
 
 Compiler::Compiler(BUGSModel &model, map<string, SArray> const &data_table)
     : _model(model), _countertab(), 
