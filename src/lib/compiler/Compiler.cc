@@ -49,6 +49,21 @@ using std::fabs;
 using std::max_element;
 
 namespace jags {
+
+    static inline bool isLocked(NodeArray const *array)
+    {
+	/* Safe version of NodeArray::isLocked which returns false
+	   when given a NULL pointer */
+	return array ? array->isLocked() : false;
+    }
+    
+    static SimpleRange const &rangeLocked(NodeArray const *array)
+    {
+	/* Version of NodeArray::range which returns a reference to
+	   a NULL range if the array is not locked */
+	static const SimpleRange _null;
+	return isLocked(array) ? array->range() : _null;
+    }
     
     static bool emptyRange(ParseTree const *var)
     {
@@ -334,8 +349,7 @@ SimpleRange Compiler::VariableSubsetRange(ParseTree const *var)
 		     name);
     }
     NodeArray *array = _model.symtab().getVariable(name);
-    SimpleRange default_range;
-    if (array && array->isLocked()) {
+    if (isLocked(array)) {
 	vector<ParseTree*> const &range_list = var->parameters();
     
 	if (range_list.empty()) {
@@ -346,10 +360,9 @@ SimpleRange Compiler::VariableSubsetRange(ParseTree const *var)
 	    CompileError(var, "Dimension mismatch in subset expression of",
 			 name);
 	}
-	default_range = array->range();
     }
 
-    Range range = getRange(var, default_range);
+    Range range = getRange(var, rangeLocked(array));
     if (isNULL(range)) {
 	return SimpleRange();
 	//CompileError(var, "Cannot evaluate subset expression for", name);
@@ -358,8 +371,10 @@ SimpleRange Compiler::VariableSubsetRange(ParseTree const *var)
     //New in 4.1.0: Enforce use of simple ranges on the LHS of a relation
     for (unsigned int i = 0; i < range.ndim(false); ++i) {
 	vector<unsigned long> const &indices = range.scope()[i];
-	for (unsigned long j = 1; j < indices.size(); ++j) {
-	    if (indices[j] != indices[j-1] + 1) {
+	unsigned long j = indices[0];
+	for (auto p = indices.begin(); p != indices.end(); ++p)
+	{
+	    if (*p != j++) {
 		string msg = string("Invalid subset expression for ") + name +
 		    "\nIndex expressions on the left hand side of a relation"
 		    + "\nmust define a contiguous, increasing set of indices";
@@ -458,11 +473,7 @@ Node *Compiler::getArraySubset(ParseTree const *p)
     else {
 	NodeArray *array = _model.symtab().getVariable(p->name());
 	if (array) {
-	    SimpleRange default_range;
-	    if (array->isLocked()) {
-		default_range = array->range();
-	    }
-	    Range subset_range = getRange(p, default_range);
+	    Range subset_range = getRange(p, rangeLocked(array));
 	    if (!isNULL(subset_range)) {
 		//A fixed subset
 		if (array->isLocked() && !array->range().contains(subset_range)) {
@@ -599,7 +610,7 @@ Node *Compiler::evalBuiltinFunction(ParseTree const *p, SymTab const &symtab)
 	 * these expressions early in the complation process.
 	 */
 	NodeArray const *array = symtab.getVariable(arg->name());
-	if (!(array && array->isLocked())) {
+	if (!isLocked(array)) {
 	    return nullptr;
 	}
 	Range subset_range = getRange(arg, array->range());
@@ -1370,7 +1381,7 @@ void Compiler::traverseTree(ParseTree const *relations, CompilerMemFn fun,
 	    }
 	}
     }
-      
+
     for (vector<ParseTree*>::const_reverse_iterator p = relation_list.rbegin(); 
 	 p != relation_list.rend(); ++p) 
     {
@@ -1385,6 +1396,26 @@ void Compiler::traverseTree(ParseTree const *relations, CompilerMemFn fun,
 		    traverseTree((*p)->parameters()[1], fun, false, reverse);
 		}
 		_countertab.popCounter();
+	    }
+	}
+    }
+
+    if (reverse) {
+	for (vector<ParseTree*>::const_reverse_iterator p = relation_list.rbegin(); 
+	     p != relation_list.rend(); ++p) 
+	{
+	    if ((*p)->treeClass() == P_FOR) {
+		//Expand for loops
+		ParseTree *var = (*p)->parameters()[0];
+		vector<unsigned long> counter_range = CounterRange(var);
+		if (!counter_range.empty()) {
+		    Counter *counter = _countertab.pushCounter(var->name(),
+							       counter_range);
+		    for (; !counter->atEnd(); counter->next()) {
+			traverseTree((*p)->parameters()[1], fun, false, reverse);
+		}
+		    _countertab.popCounter();
+		}
 	    }
 	}
     }
