@@ -10,10 +10,11 @@ class Compiler;
 #include <string>
 #include <utility>
 #include <set>
+#include <map>
 
 namespace jags {
 
-    typedef std::map<std::pair<std::string, Range>, std::set<unsigned long> > UMap;
+    typedef std::map<std::pair<std::string, Range>, std::set<unsigned long>> UMap;
     
     Node * getMixtureNode(ParseTree const * var, Compiler *compiler);
     void getMissingMixParams(ParseTree const * var, UMap &umap,
