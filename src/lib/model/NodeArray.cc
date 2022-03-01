@@ -4,6 +4,7 @@
 #include <graph/ConstantNode.h>
 #include <graph/StochasticNode.h>
 #include <graph/AggNode.h>
+#include <graph/MixtureNode.h>
 #include <sarray/RangeIterator.h>
 #include <graph/NodeError.h>
 #include <sarray/SArray.h>
@@ -57,6 +58,45 @@ static vector<unsigned long> expand(vector<unsigned long> const &dim)
 }
 
 namespace jags {
+    
+    /* 
+       Given a vector of subset indices, this function modifies the argument
+       "subsets", so that it contains a vector of pairs:
+       - Index: Possible value of the variable indices
+       - Range: Corresponding range of the array to take as a subset
+       
+       All possible values of Index are included in the vector, based on the
+       the range of the array we are taking subsets from (default_range).
+    */
+    static void getSubsetRanges(vector<pair<vector<unsigned long>, Range>> &subsets,  
+				vector<StochasticIndex> const &limits,
+				SimpleRange const &default_range)
+    {
+	unsigned long ndim = limits.size();
+
+	// Create upper and lower bounds
+	vector<unsigned long> var_offset;
+	vector<unsigned long> var_lower, var_upper;
+	vector<vector<unsigned long> > scope(ndim);
+	for (unsigned int j = 0; j < ndim; ++j) {
+	    if (limits[j].isVariable()) {
+		var_offset.push_back(j);
+		var_lower.push_back(default_range.lower()[j]);
+		var_upper.push_back(default_range.upper()[j]);
+	    }
+	    else {
+		scope[j] = limits[j].fixedIndex();
+	    }
+	}
+
+	SimpleRange var_range(var_lower, var_upper); //range of variable indices
+	for (RangeIterator p(var_range); !p.atEnd(); p.nextLeft()) {
+	    for (unsigned int k = 0; k < var_offset.size(); ++k) {
+		scope[var_offset[k]] = vector<unsigned long>(1, p[k]);
+	    }
+	    subsets.push_back(pair<vector<unsigned long>, Range>(p, Range(scope)));
+	}
+    }
 
     NodeArray::NodeArray(string const &name, vector<unsigned long> const &dim, 
 			 unsigned int nchain)
@@ -241,14 +281,68 @@ namespace jags {
 	return anode;
     }
 
-    /*
-    Node* getMixture(std::vector<StochasticIndex> const &indices,
-		     Model &model)
+    Node * NodeArray::getMixture(vector<StochasticIndex> const &indices,
+				 Model &model)
     {
+	if (!_locked) {
+	    //Can't create MixtureNodes until we stop growing the NodeArray
+	    return nullptr;
+	}
 	
-	return nullptr;//FIXME
+	//See if the mixture node exists already
+	auto p = _mixture_nodes.find(indices);
+	if (p != _mixture_nodes.end()) {
+	    return p->second;
+	}
+
+	//Separate fixed and variable indices
+	vector<vector<unsigned long>> fixed_indices;
+	vector<Node const *> variable_indices;
+	for (unsigned int i = 0; i < indices.size(); ++i) {
+	    if (!indices[i].isVariable()) {
+		fixed_indices.push_back(indices[i].fixedIndex());
+	    }
+	    else {
+		variable_indices.push_back(indices[i].variableIndex());
+	    }
+	}
+
+	//All MixtureNodes with the same fixed indices can share the
+	//same MixMap. See if a suitable MixMap exists already.
+	auto q = _mixture_maps.find(fixed_indices);
+	if (q == _mixture_maps.end()) {
+	    //No pre-existing MixMap. So create one
+	    vector<pair<vector<unsigned long>, Range>> subsets;  
+	    getSubsetRanges(subsets, indices, this->range());
+	    
+	    MixMap mixmap;
+	    for (unsigned int i = 0; i < subsets.size(); ++i) {
+		Node *subset_node =
+		    this->getSubset(subsets[i].second, model);
+		if (subset_node) {
+		    mixmap[subsets[i].first] = subset_node;
+		}
+		else {
+		    /* FIXME: In debug mode we'll have to find
+		       something smarter
+		    */
+		    return nullptr;
+		}
+	    }
+	    _mixture_maps[fixed_indices] = mixmap;
+	    q = _mixture_maps.find(fixed_indices);
+	}
+	
+	//Create new MixtureNode and add it to the Model
+	MixtureNode * mixnode = new MixtureNode(variable_indices, _nchain,
+						q->second);
+	model.addNode(mixnode);
+	
+	//Insert into map for future calls to getMixture
+	_mixture_nodes[indices] = mixnode;
+
+	return mixnode;
     }
-    */
 	  
     void NodeArray::setValue(SArray const &value, unsigned int chain)
     {

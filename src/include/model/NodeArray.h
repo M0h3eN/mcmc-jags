@@ -36,7 +36,8 @@ class NodeArray {
   std::vector<unsigned long> _offsets;
   std::map<Range, Node *> _mv_nodes;
   std::map<Range, AggNode *> _generated_nodes;
-  std::map<std::vector<StochasticIndex>, MixtureNode *> _mixture_nodes;
+  std::map<std::vector<StochasticIndex>, MixtureNode *, less_stoch_indices> _mixture_nodes;
+  std::map<std::vector<std::vector<unsigned long>>, std::map<std::vector<unsigned long>, Node const *>> _mixture_maps;  
   bool _locked;
   
   /* Grow dynamically */

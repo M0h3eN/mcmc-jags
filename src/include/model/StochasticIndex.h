@@ -26,6 +26,14 @@ namespace jags {
     bool lt(StochasticIndex const &lhs, StochasticIndex const &rhs);
     bool lt(std::vector<StochasticIndex> const &lhs,
 	    std::vector<StochasticIndex> const &rhs);
+
+    struct less_stoch_indices {
+	bool operator()(std::vector<StochasticIndex> const &lhs,
+			std::vector<StochasticIndex> const &rhs) const {
+	    return lt(lhs, rhs);
+	}
+    };
+    
 }
     
 #endif /* STOCHASTIC_INDEX_H_ */
