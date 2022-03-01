@@ -99,10 +99,10 @@ namespace jags {
     }
 
     static int getSubsetIndices(ParseTree const *var, Compiler *compiler,
-				SimpleRange const &range, vector<StochasticIndex> &limits)
+				SimpleRange const &default_range, vector<StochasticIndex> &limits)
     {
 	vector<ParseTree*> const &range_list = var->parameters();
-	unsigned long ndim = range.ndim(false);
+	unsigned long ndim = default_range.ndim(false);
 	if (range_list.size() != ndim) {
 	    throw runtime_error("Dimension mismatch taking variable subset of " + 
 				var->name());
@@ -120,11 +120,16 @@ namespace jags {
 	    switch(range_element->parameters().size()) {
 	    case 0:
 		// Index is empty, implying the whole range 
-		limits.push_back(StochasticIndex(range.scope()[i]));
+		limits.push_back(StochasticIndex(default_range.scope()[i]));
 		break;
 	    case 1:
 		p0 = range_element->parameters()[0];
-		if(!compiler->indexExpression(p0, indices)) {
+		if(compiler->indexExpression(p0, indices)) {
+		    //Fixed index
+		    limits.push_back(StochasticIndex(indices));
+		}
+		else {
+		    //Variable index
 		    Node *node = compiler->getParameter(p0);
 		    if (node == nullptr) {
 			return -1;
@@ -138,6 +143,7 @@ namespace jags {
 	    default:
 		throw logic_error("Invalid range expression");
 	    }
+	    
 	    
 	    //Check validity of subset index
 	    StochasticIndex const &ssi = limits.back();
@@ -157,7 +163,7 @@ namespace jags {
 		    ok = false;
 		}
 		for (unsigned int j = 0; j < indices.size(); ++j) {
-		    if (indices[j] < range.lower()[i] || indices[j] > range.upper()[i]) {
+		    if (indices[j] < default_range.lower()[i] || indices[j] > default_range.upper()[i]) {
 			ok = false;
 		    }
 		}
@@ -262,3 +268,4 @@ namespace jags {
 
 
 } //namespace jags
+
